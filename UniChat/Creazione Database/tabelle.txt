@@ -1,0 +1,95 @@
+CREATE TABLE users(
+    userID int NOT NULL,
+    nome varchar(20) NOT NULL,
+    cognome varchar(20) NOT NULL,
+    email varchar(50) NOT NULL,
+    password varchar(20) NOT NULL,
+    fotoProfilo varchar(50),
+    corsoStudio varchar(50),
+    moderatore bool DEFAULT false,
+    admin bool DEFAULT false,
+    PRIMARY KEY (userID),
+    UNIQUE (email));
+
+CREATE TABLE messaggi(
+    messID int NOT NULL,
+    testo varchar(200) NOT NULL,
+    data datetime NOT NULL,
+    autoreMess int,
+    PRIMARY KEY (messID),
+    FOREIGN KEY(autoreMess) REFERENCES users(userID) ON DELETE SET NULL ON UPDATE CASCADE);
+
+CREATE TABLE tag(
+    tagID int NOT NULL,
+    denominazione varchar(50),
+    PRIMARY KEY (tagID),
+    UNIQUE (denominazione));
+
+CREATE TABLE categorie(
+    categoriaID int NOT NULL,
+    nome varchar(20) NOT NULL,
+    icona varchar(50) NOT NULL,
+    descrizione varchar(50) NOT NULL,
+    moderatoreID int DEFAULT NULL,
+    PRIMARY KEY (categoriaID),
+    UNIQUE (nome),
+    FOREIGN KEY(moderatoreID) REFERENCES users(userID) ON DELETE SET NULL ON UPDATE CASCADE);
+
+CREATE TABLE valutazioni(
+    valutazioneID int NOT NULL,
+    totale int NOT NULL,
+    PRIMARY KEY (valutazioneID));
+
+CREATE TABLE votiPositivi(
+    valutazioneID int NOT NULL,
+    userID int NOT NULL,
+    PRIMARY KEY (valutazioneID, userID),
+    FOREIGN KEY (valutazioneID) REFERENCES valutazioni(valutazioneID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+CREATE TABLE votiNegativi(
+    valutazioneID int NOT NULL,
+    userID int NOT NULL,
+    PRIMARY KEY (valutazioneID, userID),
+    FOREIGN KEY (valutazioneID) REFERENCES valutazioni(valutazioneID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+CREATE TABLE threads(
+    threadID int NOT NULL,
+    titolo varchar(100) NOT NULL,
+    testo varchar(500) NOT NULL,
+    data datetime NOT NULL,
+    autoreThreadID int,
+    catThreadID int,
+    valutazioneThreadID int,
+    PRIMARY KEY (threadID),
+    FOREIGN KEY (autoreThreadID) REFERENCES users(userID) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (catThreadID) REFERENCES categorie(categoriaID) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (valutazioneThreadID) REFERENCES valutazioni(valutazioneID) ON DELETE SET NULL ON UPDATE CASCADE);
+
+CREATE TABLE tagsToThread(
+    tagID int NOT NULL,
+    threadID int NOT NULL,
+    PRIMARY KEY (tagID, threadID),
+    FOREIGN KEY (tagID) REFERENCES tag(tagID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (threadID) REFERENCES threads(threadID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+CREATE TABLE allegati(
+    allegatoID int NOT NULL,
+    path varchar(50) NOT NULL,
+    threadID int NOT NULL,
+    PRIMARY KEY (allegatoID),
+    FOREIGN KEY (threadID) REFERENCES threads(threadID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+CREATE TABLE risposte(
+    rispostaID int NOT NULL,
+    testo varchar(200) NOT NULL,
+    data datetime NOT NULL,
+    autoreRispID int,
+    threadRispID int NOT NULL,
+    PRIMARY KEY (rispostaID),
+    FOREIGN KEY (autoreRispID) REFERENCES users(userID) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (threadRispID) REFERENCES threads(threadID) ON DELETE CASCADE ON UPDATE CASCADE);
+
+ALTER TABLE threads
+ADD FULLTEXT (titoloThread);

@@ -1,0 +1,8 @@
+INSERT INTO users(userID, nome, cognome, email, password, fotoProfilo, corsoStudio, moderatore, admin)
+VALUES (1, 'Anonimo', 'Sconosciuto', 'nessuna@student.univaq.it', 'nessuna', 'predefinito.jpg', 'sconosciuto', false, false);
+
+INSERT INTO categorie(categoriaID, nome, icona, descrizione, moderatoreID)
+VALUES (1, 'altro', 'predefinito.jpg', 'La sa Nino', null);
+
+INSERT INTO tag(tagID, denominazione)
+VALUES (1, 'altro');
