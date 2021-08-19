@@ -6,9 +6,9 @@
     class EAdmin extends EModeratore
     {
 
-        public function __construct(int $_id, string $_nome, string $_cognome, string $_email, string $_password, ?string $_fotoProfilo, ?string $_corsoStudio, ?ECategoria $categoriaGestita)
+        public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio, ?ECategoria $categoriaGestita)
         {
-            parent::__construct($_id, $_nome, $_cognome, $_email, $_password, $_fotoProfilo, $_corsoStudio, $categoriaGestita);
+            parent::__construct($id, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
         }
 
         public function creaCategoria(int $categoriaID, string $nomeCategoria, ?string $icona, string $descrizione): ECategoria
@@ -16,10 +16,6 @@
             return new ECategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
         }
 
-        public function creaTag(int $tagID, string $denominazione): Etag
-        {
-            return new Etag($tagID, $denominazione);
-        }
 
         public function creaModeratore(?EUser $user, ?ECategoria $categoria): ?EModeratore
         {
