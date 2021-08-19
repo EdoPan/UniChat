@@ -16,7 +16,7 @@
         $r = $vedi->elencaCategorie();
         print_r($r);
     }
-*/
+
 
 $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 $stmt = $pdo->query("SELECT titoloThread FROM threads WHERE MATCH (titoloThread) AGAINST ('Problema di analisi 2')");
@@ -29,7 +29,7 @@ ricerca per titolo
 ricerca per titolo e categoria/e
 ricerca per titolo e tag/s
 ricerca per titolo, categoria/e e tag/s
-/*
+
 $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 $sql = ("DELETE FROM valutazioni WHERE valutazioneID = " . 2);
 $stmt = $pdo->prepare($sql);
