@@ -4,19 +4,99 @@
 
 class FUser
 {
+    private static $instance = null;
 
-    public static function existsByEmail(string $email): bool
+    private function __construct()
     {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT userID FROM users WHERE email = '" . $email . "'");
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            return true;
-        } else {
-            return false;
+    }
+
+    public static function getInstance()
+    {
+        if(self::$instance == null){
+            $classe =__CLASS__;
+            self::$instance = new $classe;
+        }
+        return self::$instance;
+    }
+
+    public function load(int $userID): ?EUser
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $query1 = $pdo->query("SELECT * FROM users WHERE userID = " . $userID);
+            $righeQuery1 = $query1->fetchAll(PDO::FETCH_ASSOC);
+            if (count($righeQuery1) == 1) {
+                $recordUser = $righeQuery1[0];
+                $userID = (int)$recordUser["userID"];
+                $nome = $recordUser["nome"];
+                $cognome = $recordUser["cognome"];
+                $email = $recordUser["email"];
+                $password = $recordUser["password"];
+                $fotoProfiloID = $recordUser["fotoProfiloID"];
+
+                $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
+                if (!isset($fotoProfilo)) {
+                    return null;
+                }
+
+                $corsoStudio = $recordUser["corsoStudio"];
+                $user = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
+                return $user;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e){
+            return null;
         }
     }
 
+    private function loadFotoProfilo(int $fotoID): ?array
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $query2 = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
+            $righeQuery2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+            if (count($righeQuery2) == 1) {
+                $recordFoto = $righeQuery2[0];
+                $fotoProfilo = array(
+                    "id" => $recordFoto["fotoID"],
+                    "nome" => $recordFoto["nome"],
+                    "dimensione" => $recordFoto["dimensione"],
+                    "tipo" => $recordFoto["tipo"],
+                    "immagine" => $recordFoto["immagine"]
+                );
+                return $fotoProfilo;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public static function existsByEmail(string $email): ?bool
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $stmt = $pdo->query("SELECT userID FROM users WHERE email = '" . $email . "'");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    /*
     public static function getLastID(): int
     {
         $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
@@ -24,6 +104,7 @@ class FUser
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return (int)$row[0]["id"];
     }
+    */
 
     public static function store(EUser $u): bool
     {
@@ -59,27 +140,6 @@ class FUser
             return true;
         } else {
             return false;
-        }
-    }
-
-    public static function load(int $userID): ?EUser
-    {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT * FROM users WHERE userID = " . $userID);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $record = $rows[0];
-            $userID = (int)$record["userID"];
-            $nome = $record["nome"];
-            $cognome = $record["cognome"];
-            $email = $record["email"];
-            $password = $record["password"];
-            $fotoProfilo = $record["fotoProfilo"];
-            $corsoStudio = $record["corsoStudio"];
-            $user = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
-            return $user;
-        } else {
-            return null;
         }
     }
 
