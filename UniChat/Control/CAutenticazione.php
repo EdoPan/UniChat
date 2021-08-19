@@ -8,32 +8,33 @@
         {
         }
 
-        public function registrazione(string $nome, string $cognome, string $email, string $password, ?string $fotoProfilo, ?string $corsoStudio): bool
+        public function registrazione(string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio): bool
         {
             if(FUser::existsByEmail($email) == false){
-                $userID = FUser::getLastID() + 1;
-                $u = new EUser($userID, $nome, $cognome,$email, $password, $fotoProfilo, $corsoStudio);
+                $userID = null;
+                $u = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
                 $result = FUser::store($u);
             } else {
                 $result = false;
             }
             return $result;
+            mail($u->getEmail(), 'Iscrizione UniChat', 'Congratulazioni' .$u->getNome() .$u->getCognome() .'la registrazione su UniChat è andata a buon fine!');
         }
 
         public function login(string $email, string $password): bool
         {
-            $result = FUser::exists($email, $password);
+            $user = FUser::loadByEmail($email);
+            $result = $user->verificaPassword($password);
             return $result;
         }
 
-        public function recuperoPassword(string $email): string
+        public function recuperoPassword(string $email): void
         {
             $user = FUser::loadByEmail($email);
             if(isset($user)){
-                $password = $user->getPassword();
-                return $password;
+                $password = rand(6) ; //Qui bisognerà chiamare il metodo che sta sviluppando Antonio
+                mail($email, 'Recupero password', "La tua password temporanea è: ".$password); //https://www.html.it/pag/68800/inviare-email-con-php/
             } else {
-                return "";
             }
 
         }

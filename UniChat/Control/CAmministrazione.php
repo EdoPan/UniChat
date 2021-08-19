@@ -6,23 +6,15 @@
     {
         public function __construct(){}
 
-        public function aggiungiCategoria(int $adminID, string $nomeCategoria, ?string $icona, string $descrizione): bool
+        public function aggiungiCategoria(int $adminID, string $nomeCategoria, array $icona, string $descrizione): bool
         {
             $admin = FUser::loadAdmin($adminID);
-            $categoriaID = FCategoria::getLastID() + 1;
+            $categoriaID = null;
             $categoria = $admin->creaCategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
             $result = FCategoria::store($categoria);
             return $result;
         }
 
-        public function aggiungiTag(int $adminID, string $denominazione):bool
-        {
-            $a = FUser::loadAdmin($adminID);
-            $tagID = FTag::getLastID() + 1;
-            $tag = $a->creaTag($tagID, $denominazione);
-            $result = FTag::store($tag);
-            return $result;
-        }
 
         public function aggiungiModeratore(int $adminID, int $userID, int $categoriaID): bool
         {
@@ -58,6 +50,16 @@
                 $categoria = $mod->getCategoriaGestita();
                 FCategoria::updateNoModer($categoria);
                 $result = FUser::updateToUser($mod);
+            } else {
+                $result = false;
+            }
+            return $result;
+        }
+
+        public function rimuoviUser(int $adminID, int $userID){
+            if(FUser::isAdmin($adminID)){
+                $user = FUser::load($userID);
+                $result = FUser::delete($user->getID()); //Manca nel Fondation il metodo delete che mediante l'userID fa saltare l'utente dal database
             } else {
                 $result = false;
             }
