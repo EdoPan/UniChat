@@ -6,60 +6,68 @@
     {
         public function __construct(){}
 
+
         public function aggiungiCategoria(int $adminID, string $nomeCategoria, array $icona, string $descrizione): bool
         {
-            $admin = FUser::loadAdmin($adminID);
+            $pm = FPersistentManager::getInstance();
+            $admin = $pm->load(ENTITY_ADMIN, PROPERTY_DEFAULT, $adminID);
             $categoriaID = null;
             $categoria = $admin->creaCategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
-            $result = FCategoria::store($categoria);
+            $result = $pm->store(ENTITY_CATEGORIA, $categoria);
             return $result;
         }
 
 
         public function aggiungiModeratore(int $adminID, int $userID, int $categoriaID): bool
         {
-            $admin = FUser::loadAdmin($adminID);
-            $user = FUser::load($userID);
-            $categoria = FCategoria::load($categoriaID);
+            $pm = FPersistentManager::getInstance();
+            $admin = $pm->load(ENTITY_ADMIN, PROPERTY_DEFAULT, $adminID);
+            $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
+            $categoria = $pm->load(ENTITY_CATEGORIA, PROPERTY_DEFAULT, $categoriaID);
             $mod = $admin->creaModeratore($user, $categoria);
             if(isset($mod)){
-                FCategoria::update($categoria, $mod);
-                $result = FUser::updateMod($mod);
+                $result = $pm->updateModeratoreCategoria($categoria, $mod); //FUser::updateMod($mod)
             } else {
                 $result = false;
             }
             return $result;
         }
+
 
         public function rimuoviCategoria(int $adminID, int $categoriaID): bool
         {
-            if(FUser::isAdmin($adminID)){
-                $mod = FUser::loadModeratoreCategoria($categoriaID);
-                FUser::update($mod);
-                FThread::updateByCategoriaID($categoriaID);
-                $result = FCategoria::delete($categoriaID);
+            $pm = FPersistentManager::getInstance();
+            if($pm->isA(ENTITY_ADMIN, $adminID)){
+                $mod = $pm->load(ENTITY_MODERATORE, PROPERTY_BY_CATEGORIA, $categoriaID); //Da discutere con Antonio
+                $pm->update(ENTITY_USER,PROPERTY_DEFAULT, $mod);
+                $pm->update(ENTITY_THREAD, PROPERTY_BY_CATEGORIA, $categoriaID);
+                $result = $pm->delete(ENTITY_CATEGORIA, PROPERTY_DEFAULT, $categoriaID);
             } else {
                 $result = false;
             }
             return $result;
         }
+
 
         public function rimuoviModeratore(int $adminID, int $moderatoreID){
-            if(FUser::isAdmin($adminID)){
-                $mod = FUser::loadMod($moderatoreID);
+            $pm = FPersistentManager::getInstance();
+            if($pm->isA(ENTITY_ADMIN, $adminID)){
+                $mod = $pm->loadMod(ENTITY_MODERATORE, PROPERTY_DEFAULT, $moderatoreID);
                 $categoria = $mod->getCategoriaGestita();
-                FCategoria::updateNoModer($categoria);
-                $result = FUser::updateToUser($mod);
+                $pm->rimoviModeratoreCategoria($categoria);
+                $result = $pm->update(ENTITY_USER, PROPERTY_DEFAULT, $mod); //Era updateToUser
             } else {
                 $result = false;
             }
             return $result;
         }
 
+
         public function rimuoviUser(int $adminID, int $userID){
-            if(FUser::isAdmin($adminID)){
-                $user = FUser::load($userID);
-                $result = FUser::delete($user->getID()); //Manca nel Fondation il metodo delete che mediante l'userID fa saltare l'utente dal database
+            $pm = FPersistentManager::getInstance();
+            if($pm->isA(ENTITY_ADMIN, $adminID)){
+                $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
+                $result = $pm->delete(ENTITY_USER, PROPERTY_DEFAULT, $user->getID()); //Manca nel Fondation il metodo delete che mediante l'userID fa saltare l'utente dal database
             } else {
                 $result = false;
             }
