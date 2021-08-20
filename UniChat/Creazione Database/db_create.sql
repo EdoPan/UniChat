@@ -53,6 +53,7 @@ CREATE TABLE categorie(
     iconaID int DEFAULT 1,
     descrizione varchar(75) NOT NULL DEFAULT '',
     PRIMARY KEY (categoriaID),
+    UNIQUE (nome),
     FOREIGN KEY (moderatoreID) REFERENCES users(userID) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (iconaID) REFERENCES icone(iconaID) ON DELETE SET NULL ON UPDATE CASCADE
 );
