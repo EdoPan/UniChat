@@ -25,23 +25,24 @@ class FUser
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $query1 = $pdo->query("SELECT * FROM users WHERE userID = " . $userID);
-            $righeQuery1 = $query1->fetchAll(PDO::FETCH_ASSOC);
-            if (count($righeQuery1) == 1) {
-                $recordUser = $righeQuery1[0];
-                $userID = (int)$recordUser["userID"];
-                $nome = $recordUser["nome"];
-                $cognome = $recordUser["cognome"];
-                $email = $recordUser["email"];
-                $password = $recordUser["password"];
-                $fotoProfiloID = $recordUser["fotoProfiloID"];
+
+            $stmt = $pdo->query("SELECT * FROM users WHERE userID = " . $userID);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                $userID = (int)$record["userID"];
+                $nome = $record["nome"];
+                $cognome = $record["cognome"];
+                $email = $record["email"];
+                $password = $record["password"];
+                $fotoProfiloID = $record["fotoProfiloID"];
 
                 $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
                 if (!isset($fotoProfilo)) {
                     return null;
                 }
 
-                $corsoStudio = $recordUser["corsoStudio"];
+                $corsoStudio = $record["corsoStudio"];
                 $user = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
                 return $user;
             } else {
@@ -58,21 +59,202 @@ class FUser
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $query2 = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
-            $righeQuery2 = $query2->fetchAll(PDO::FETCH_ASSOC);
-            if (count($righeQuery2) == 1) {
-                $recordFoto = $righeQuery2[0];
+
+            $stmt = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
                 $fotoProfilo = array(
-                    "id" => $recordFoto["fotoID"],
-                    "nome" => $recordFoto["nome"],
-                    "dimensione" => $recordFoto["dimensione"],
-                    "tipo" => $recordFoto["tipo"],
-                    "immagine" => $recordFoto["immagine"]
+                    "id" => $record["fotoID"],
+                    "nome" => $record["nome"],
+                    "dimensione" => $record["dimensione"],
+                    "tipo" => $record["tipo"],
+                    "immagine" => $record["immagine"]
                 );
                 return $fotoProfilo;
             } else {
                 return null;
             }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function loadMod(int $userID): ?EModeratore
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+            $stmt = $pdo->query("SELECT * FROM users, categorie WHERE moderatore = true AND = moderatoreID AND userID = " . $userID);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                $userID = (int)$record["userID"];
+                $nome = $record["nome"];
+                $cognome = $record["cognome"];
+                $email = $record["email"];
+                $password = $record["password"];
+
+                $fotoProfiloID = $record["fotoProfiloID"];
+                $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
+                if (!isset($fotoProfilo)) {
+                    return null;
+                }
+
+                $corsoStudio = $record["corsoStudio"];
+
+                $categoriaID = (int)$record["categoriaID"];
+                $fCategoria = FCategoria::getInstance();
+                $categoriaGestita = $fCategoria->load($categoriaID);
+                if (!isset($categoriaGestita)) {
+                    return null;
+                }
+
+                $moderatore = new EModeratore($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
+                return $moderatore;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    public function loadAdmin(int $adminID): ?EAdmin
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+            $stmt = $pdo->query("SELECT * FROM users WHERE admin = true AND userID = " . $adminID);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                $userID = (int)$record["userID"];
+                $nome = $record["nome"];
+                $cognome = $record["cognome"];
+                $email = $record["email"];
+                $password = $record["password"];
+
+                $fotoProfiloID = $record["fotoProfiloID"];
+                $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
+                if (!isset($fotoProfilo)) {
+                    return null;
+                }
+
+                $corsoStudio = $record["corsoStudio"];
+                $admin = new EAdmin($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, null);
+                return $admin;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    public function loadByEmail(string $email): ?object
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+            $stmt = $pdo->query("SELECT userID FROM users WHERE email = '" . $email . "'");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                if ((int)$record["moderatore"] == 1) {
+                    $user = $this->loadMod((int)$record["userID"]);
+                } else if ((int)$record["admin"] == 1) {
+                    $user = $this->loadAdmin();
+                } else {
+                    $user = $this->load();
+                }
+                return $user;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    public function loadModeratoreCategoria(int $categoriaID): ?EModeratore
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+            $stmt = $pdo->query("SELECT userID FROM users, categorie WHERE userID = moderatoreID AND categoriaID = " . $categoriaID);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                $userID = (int)$record["userID"];
+
+                $moderatore = $this->loadMod($userID);
+
+                return $moderatore;
+            } else {
+                return null;
+            }
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    public function store(EUser $u): ?bool
+    {
+        $userID = $u->getId();
+        $nome = $u->getNome();
+        $cognome = $u->getCognome();
+        $email = $u->getEmail();
+        $password = $u->getPassword();
+        $fotoProfilo = $u->getFotoProfilo();
+        $corsoStudio = $u->getCorsoStudio();
+
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+            $fotoProfiloID = $this->storeFotoProfilo($fotoProfilo, $pdo);
+            if (!isset($fotoProfiloID)) {
+                return null;
+            }
+
+            $sql = ("INSERT INTO users(userID, nome, cognome, email, password, fotoProfiloID, corsoStudio, moderatore, admin)
+                    VALUES (:userID, :nome, :cognome, :email, :password, :fotoProfiloID, :corsoStudio, false, false)");
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute(array(
+                ':userID' => $userID,
+                ':nome' => $nome,
+                ':cognome' => $cognome,
+                ':email' => $email,
+                ':password' => $password,
+                ':fotoProfiloID' => $fotoProfilo,
+                ':corsoStudio' => $corsoStudio
+            ));
+            return $result;
+        } catch (PDOException $e){
+            return null;
+        }
+    }
+
+    private function storeFotoProfilo(array $fotoProfilo, PDO $pdo): ?int{
+        $nome = $fotoProfilo["nome"];
+        $dimensione = $fotoProfilo["dimensione"];
+        $tipo = $fotoProfilo["tipo"];
+        $immagine = $fotoProfilo["immagine"];
+
+        try {
+            $query = $pdo->query("INSERT INTO fotoprofilo(nome, dimensione, tipo, immagine) VALUES ('$nome','$dimensione','$tipo','$immagine')");
+            $fotoProfiloId = (int)$pdo->lastInsertId();
+            return $fotoProfiloId;
         } catch (PDOException $e) {
             return null;
         }
@@ -106,31 +288,6 @@ class FUser
     }
     */
 
-    public static function store(EUser $u): bool
-    {
-        $userID = $u->getId();
-        $nome = $u->getNome();
-        $cognome = $u->getCognome();
-        $email = $u->getEmail();
-        $password = $u->getPassword();
-        $fotoProfilo = $u->getFotoProfilo();
-        $corsoStudio = $u->getCorsoStudio();
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $sql = ("INSERT INTO users(userID, nome, cognome, email, password, fotoProfilo, corsoStudio, moderatore, admin)
-                    VALUES (:userID, :nome, :cognome, :email, :password, :fotoProfilo, :corsoStudio, false, false)");
-        $stmt = $pdo->prepare($sql);
-        $result = $stmt->execute(array(
-            ':userID' =>  $userID,
-            ':nome' => $nome,
-            ':cognome' => $cognome,
-            ':email' => $email,
-            ':password' => $password,
-            ':fotoProfilo' => $fotoProfilo,
-            ':corsoStudio' => $corsoStudio
-        ));
-        return $result;
-    }
-
     public static function exists(string $email, string $password): bool
     {
         $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
@@ -143,49 +300,6 @@ class FUser
         }
     }
 
-    public static function loadMod(int $userID): ?EModeratore
-    {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT * FROM users, categorie WHERE userID = moderatoreID AND userID = " . $userID);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $record = $rows[0];
-            $userID = (int)$record["userID"];
-            $nome = $record["nome"];
-            $cognome = $record["cognome"];
-            $email = $record["email"];
-            $password = $record["password"];
-            $fotoProfilo = $record["fotoProfilo"];
-            $corsoStudio = $record["corsoStudio"];
-            $categoriaID = (int)$record["categoriaID"];
-            $nomeCat = $record["nomeCategoria"];
-            $icona = $record["icona"];
-            $descrizione = $record["descrizione"];
-            $categoriaGestita = new ECategoria($categoriaID, $nomeCat, $icona, $descrizione);
-            $moderatore = new EModeratore($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
-            return $moderatore;
-        } else {
-            return null;
-        }
-    }
-
-    public static function loadByEmail(string $email): ?EUser
-    {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT * FROM users WHERE email = '" . $email . "'");
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $record = $rows[0];
-            if((int)$record["moderatore"] == 1){
-                $user = self::loadMod((int)$record["userID"]);
-            } else {
-                $user = self::load((int)$record["userID"]);
-            }
-            return $user;
-        } else {
-            return null;
-        }
-    }
 
     public static function isModeratore(int $userID): bool
     {
@@ -211,26 +325,6 @@ class FUser
         }
     }
 
-    public static function loadAdmin(int $adminID): ?EAdmin
-    {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT * FROM users WHERE admin = true AND userID = " . $adminID);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $record = $rows[0];
-            $userID = (int)$record["userID"];
-            $nome = $record["nome"];
-            $cognome = $record["cognome"];
-            $email = $record["email"];
-            $password = $record["password"];
-            $fotoProfilo = $record["fotoProfilo"];
-            $corsoStudio = $record["corsoStudio"];
-            $admin = new EAdmin($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, null);
-            return $admin;
-        } else {
-            return null;
-        }
-    }
 
     public static function updateMod(EModeratore $mod): bool
     {
@@ -244,31 +338,6 @@ class FUser
         return $result;
     }
 
-    public static function loadModeratoreCategoria(int $categoriaID): ?EModeratore
-    {
-        $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-        $stmt = $pdo->query("SELECT * FROM users, categorie WHERE userID = moderatoreID AND categoriaID = " . $categoriaID);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (count($rows) == 1) {
-            $record = $rows[0];
-            $userID = (int)$record["userID"];
-            $nome = $record["nome"];
-            $cognome = $record["cognome"];
-            $email = $record["email"];
-            $password = $record["password"];
-            $fotoProfilo = $record["fotoProfilo"];
-            $corsoStudio = $record["corsoStudio"];
-            $categoriaID = (int)$record["categoriaID"];
-            $nomeCat = $record["nomeCategoria"];
-            $icona = $record["icona"];
-            $descrizione = $record["descrizione"];
-            $categoriaGestita = new ECategoria($categoriaID, $nomeCat, $icona, $descrizione);
-            $moderatore = new EModeratore($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
-            return $moderatore;
-        } else {
-            return null;
-        }
-    }
 
     public static function update(EModeratore $mod): bool
     {
