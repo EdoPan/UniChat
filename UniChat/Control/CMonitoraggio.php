@@ -21,7 +21,7 @@
                 FValutazione::deleteByThread($threadID);
                 $result = FThread::delete($threadID);
             } elseif (FUser::isModeratore($userID) == true){
-                $mod = FUser::loadMod($userID);
+                $mod = FUser::loadModeratore($userID);
                 $cat = FCategoria::loadCategoriaThread($threadID);
                 if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
                     FValutazione::deleteByThread($threadID);
@@ -38,7 +38,7 @@
             if (FUser::isAdmin($userID) == true){
                 $result = FRisposta::delete($rispostaID);
             } elseif (FUser::isModeratore($userID) == true){
-                $mod = FUser::loadMod($userID);
+                $mod = FUser::loadModeratore($userID);
                 $cat = FCategoria::loadCategoriaThread($threadID);
                 if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
                     $result = FRisposta::delete($rispostaID);
