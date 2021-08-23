@@ -5,17 +5,27 @@
 
     class EModeratore extends EUser
     {
+        // Attributi
 
+        /**
+         * Oggetto di tipo ECategoria. Indica la categoria gestita dal moderatore.
+         * @var ?ECategoria
+         */
         private ?ECategoria $categoriaGestita;
 
-        public function __construct(int $_id, string $_nome, string $_cognome, string $_email,string $_password, ?string $_fotoProfilo, ?string $_corsoStudio, ?ECategoria $categoriaGestita)
+
+        //Costruttore
+        public function __construct(int $_id, string $_nome, string $_cognome, string $_email,string $_password, ?array $_fotoProfilo, ?string $_corsoStudio, ?ECategoria $categoriaGestita)
         {
             parent::__construct($_id, $_nome, $_cognome, $_email, $_password, $_fotoProfilo, $_corsoStudio);
             $this->categoriaGestita = $categoriaGestita;
 
         }
 
+        //Metodi
+
         /**
+         * Metodo che restituisce la categoria associata al moderatore.
          * @return ECategoria
          */
         public function getCategoriaGestita(): ECategoria
@@ -24,6 +34,7 @@
         }
 
         /**
+         * Metodo che imposta la categoria associata al moderatore.
          * @param ECategoria $categoriaGestita
          */
         public function setCategoriaGestita(ECategoria $categoriaGestita): void
@@ -32,6 +43,7 @@
         }
 
         /**
+         * Verifica se un thread appartiene alla categoria gestita da tale moderatore.
          * @param EThread
          * @return bool
          */

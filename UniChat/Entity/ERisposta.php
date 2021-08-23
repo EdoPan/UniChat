@@ -6,12 +6,42 @@
     class ERisposta
     {
 
+        //Attributi
+
+        /**
+         * Data della risposta.
+         * @var string
+         */
+
         private static string $formatoData = "Y-m-d H:i:s";
 
+        /**
+         * Numero identificativo della risposta.
+         * @var int
+         */
+
         private int $id;
+
+        /**
+         * Testo della risposta.
+         * @var string
+         */
+
         private string $testo;
+
+        /**
+         *
+         * @var string|false
+         */
         private string $data;
-        private EUser $autoreRisposta;
+
+        /**
+         * Autore della risposta.
+         * @var EUser
+         */
+        private ?EUser $autoreRisposta;
+
+        //Costruttore
 
         public function __construct(int $id, string $testo, EUser $autoreRisposta)
         {
@@ -24,6 +54,7 @@
         }
 
         /**
+         * Metodo che restituisce l'id della risposta.
          * @return int
          */
         public function getId(): int
@@ -32,6 +63,7 @@
         }
 
         /**
+         * Metodo che restituisce il testo della risposta.
          * @return string
          */
         public function getTesto(): string
@@ -40,6 +72,7 @@
         }
 
         /**
+         * Metodo che restituisce la data della risposta.
          * @return false|string
          */
         public function getData()
@@ -48,6 +81,7 @@
         }
 
         /**
+         * Metodo che restituisce l'utente autore della risposta.
          * @return EUser
          */
         public function getAutoreRisposta(): EUser
@@ -56,6 +90,7 @@
         }
 
         /**
+         * Metodo che imposta l'id della risposta.
          * @param int $id
          */
         public function setId(int $id): void
@@ -64,6 +99,7 @@
         }
 
         /**
+         * Metodo che imposta il testo della risposta.
          * @param string $testo
          */
         public function setTesto(string $testo): void
@@ -72,7 +108,7 @@
         }
 
         /**
-         *
+         * Metodo che imposta la data della risposta.
          */
         public function setData(): void
         {
@@ -80,6 +116,7 @@
         }
 
         /**
+         * Metodo che imposta l'autore della risposta.
          * @param EUser $autoreRisposta
          */
         public function setAutoreRisposta(EUser $autoreRisposta): void
