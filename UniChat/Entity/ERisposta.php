@@ -9,7 +9,7 @@
         //Attributi
 
         /**
-         * Data della risposta.
+         * Atttributo statico per formato data della risposta.
          * @var string
          */
 
@@ -30,7 +30,7 @@
         private string $testo;
 
         /**
-         *
+         * Data della risposta.
          * @var string|false
          */
         private string $data;

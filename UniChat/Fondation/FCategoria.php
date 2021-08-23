@@ -3,8 +3,38 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
+/**
+ * Classe Foundation di Categoria. Conosce la tabella "Categorie".
+ */
+
+
     class FCategoria
     {
+
+        /**
+         * Caricamento di tutte le categorie dal DB all'interno di un array.
+         * @return array
+         */
+        public static function loadAll(): array
+        {
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $stmt = $pdo->query("SELECT * FROM categorie");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $categorie = array();
+            foreach ($rows as $record){
+                $cateID = (int)$record["categoriaID"];
+                $categorie[] = self::load($cateID);
+
+            }
+            return $categorie;
+        }
+
+        /**
+         * Recupero di un oggetto di tipo ECategoria dal DB.
+         * @param int $categoriaID
+         * @return ECategoria|null
+         */
+
         public static function load(int $categoriaID): ?ECategoria
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
@@ -22,6 +52,12 @@
                 return null;
             }
         }
+
+        /**
+         * Recupero di una categoria di un Thread dal proprio ID.
+         * @param int $threadID
+         * @return ECategoria|null
+         */
 
         public static function loadCategoriaThread(int $threadID): ?ECategoria
         {
@@ -41,13 +77,11 @@
             }
         }
 
-        public static function getLastID(): int
-        {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT MAX(categoriaID) AS id FROM categorie");
-            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return (int)$row[0]["id"];
-        }
+        /**
+         * Scrittura in DB di un oggetto di tipo Categoria.
+         * @param ECategoria $categoria
+         * @return bool
+         */
 
         public static function store(ECategoria $categoria): bool
         {
@@ -68,6 +102,12 @@
             return $result;
         }
 
+        /**
+         * Assegnazione di un moderatore ad una categoria.
+         * @param ECategoria|null $categoria
+         * @param EModeratore $mod
+         * @return bool
+         */
         public static function update(?ECategoria $categoria, EModeratore $mod): bool
         {
             $categoriaID = $categoria->getId();
@@ -83,6 +123,12 @@
 
         }
 
+        /**
+         * >Eliminazione di una categoria da DB.
+         * @param int $categoriaID
+         * @return bool
+         */
+
         public static function delete(int $categoriaID): bool
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
@@ -91,6 +137,25 @@
             $result = $stmt->execute();
             return $result;
         }
+
+        /**
+         * Recupero dell'ID dell'ultima categoria inserita.
+         * @return int
+         */
+
+        public static function getLastID(): int
+        {
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $stmt = $pdo->query("SELECT MAX(categoriaID) AS id FROM categorie");
+            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return (int)$row[0]["id"];
+        }
+
+        /**
+         * Rimozione di un moderatore dalla categoria.
+         * @param ECategoria $categoria
+         * @return bool
+         */
 
         public static function updateNoModer(ECategoria $categoria): bool
         {
@@ -103,24 +168,5 @@
             return $result;
         }
 
-        public static function loadAll(): array
-        {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT * FROM categorie");
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $categorie = array();
-            foreach ($rows as $record){
-                $cateID = (int)$record["categoriaID"];
-                $categorie[] = self::load($cateID);
-                /*
-                $cateID = (int)$record["categoriaID"];
-                $nome = $record["nomeCategoria"];
-                $icona = $record["icona"];
-                $descrizione = $record["descrizione"];
-                $categoria = new ECategoria($cateID, $nome, $icona, $descrizione);
-                $categorie[] = $categoria;
-                */
-            }
-            return $categorie;
-        }
+
     }
