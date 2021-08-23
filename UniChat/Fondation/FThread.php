@@ -5,6 +5,137 @@
 
     class FThread
     {
+
+        private static $instance = null;
+
+        private function __construct()
+        {
+        }
+
+        public static function getInstance(): FThread
+        {
+            if(self::$instance == null){
+                $classe = __CLASS__;
+                self::$instance = new $classe;
+            }
+            return self::$instance;
+        }
+
+        public function load(int $threadID): ?EThread
+        {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+                $stmt = $pdo->query("SELECT * FROM threads WHERE threadID = " . $threadID);
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $row = $rows[0];
+                    $titolo = $row["titolo"];
+                    $testo = $row["testo"];
+                    $data = $row["data"];
+
+                    $autoreThreadID = $row["autoreThreadID"];
+                    $fUser = FUser::getInstance();
+                    $autoreThread = $fUser->load($autoreThreadID);
+
+                    $catThreadID = $row["catThreadID"];
+                    $fCategoria = FCategoria::getInstance();
+                    $categoriaThread = $fCategoria->load($catThreadID);
+
+                    $valutazioneThreadID = $row["valutazioneThreadID"];
+                    $fValutazione = FValutazione::getInstance();
+                    $valutazioneThread = $fValutazione->load($valutazioneThreadID);
+
+                    $allegatiThread = $this->loadAllegatiByThreadID($threadID);
+                    if (!isset($allegatiThread)){
+                        return null;
+                    }
+
+                    $fRisposte = FRisposta::getInstance();
+                    $riposteThread = $fRisposte->loadRisposteThread($threadID);
+
+                    $thread = new EThread($threadID, $titolo, $testo, $data, $allegatiThread, $autoreThread,
+                        $categoriaThread, $valutazioneThread, $riposteThread);
+                    return $thread;
+                } else {
+                    return null;
+                }
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
+        private function loadAllegatiByThreadID(int $threadID): ?array
+        {
+            try {
+                $allegati = array();
+
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+                $stmt = $pdo->query("SELECT * FROM allegati WHERE threadID = " . $threadID);
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($rows as $row) {
+                    $allegatoID = $row["allegatoID"];
+                    $nome = $row["nome"];
+                    $dimensione = $row["dimensione"];
+                    $tipo = $row["tipo"];
+                    $file = $row["file"];
+                    $fotoProfilo = array(
+                        "id" => $allegatoID,
+                        "nome" => $nome,
+                        "dimensione" => $dimensione,
+                        "tipo" => $tipo,
+                        "file" => $file
+                    );
+                    $allegati[] = $fotoProfilo;
+                }
+                return $allegati;
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
+        public function loadThreadPiuDiscussoPerCategoria(int $categoriaID): ?EThread
+        {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+                $stmt = $pdo->query("SELECT threadID, COUNT(*) AS numRisposte FROM threads, risposte 
+                                    WHERE threadRispID = threadID AND catThreadID = " . $categoriaID .
+                                    " GROUP BY threadID ORDER BY numRisposte DESC, data DESC LIMIT 1");
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $threadID = $rows[0]["threadID"];
+                $thread = $this->load($threadID);
+                return $thread;
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
+        public function loadThreadMaxValutazionePerCategoria(int $categoriaID): ?Ethread
+        {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+                $stmt = $pdo->query("SELECT threadID FROM threads, valutazioni WHERE valutazioneThreadID = valutazioneID 
+                                     AND catThreadID = " . $categoriaID . " ORDER BY totale DESC, data DESC LIMIT 1");
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $threadID = $rows[0]["threadID"];
+                $thread = $this->load($threadID);
+                return $thread;
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
         public static function getLastID(): int
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
