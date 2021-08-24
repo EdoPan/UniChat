@@ -19,7 +19,7 @@ CREATE TABLE users(
     cognome varchar(30) NOT NULL,
     email varchar(60) NOT NULL,
     password char(60) NOT NULL,
-    fotoProfiloID int DEFAULT 1,
+    fotoProfiloID int,
     corsoStudio varchar(75) DEFAULT 'Sconosciuto',
     moderatore boolean NOT NULL DEFAULT false,
     admin boolean NOT NULL DEFAULT false,
@@ -31,7 +31,7 @@ CREATE TABLE users(
 
 CREATE TABLE messaggi(
     messID int NOT NULL auto_increment,
-    autoreMessID int DEFAULT 1,
+    autoreMessID int,
     testo varchar(300) NOT NULL,
     data datetime NOT NULL,
     PRIMARY KEY (messID),
@@ -50,8 +50,8 @@ CREATE TABLE icone(
 CREATE TABLE categorie(
     categoriaID int NOT NULL auto_increment,
     moderatoreID int DEFAULT NULL,
-    nome varchar(25) NOT NULL ,
-    iconaID int DEFAULT 1,
+    nome varchar(25) NOT NULL,
+    iconaID int,
     descrizione varchar(75) NOT NULL DEFAULT '',
     PRIMARY KEY (categoriaID),
     UNIQUE (nome),
@@ -83,8 +83,8 @@ CREATE TABLE votinegativi(
 
 CREATE TABLE threads(
     threadID int NOT NULL auto_increment,
-    autoreThreadID int DEFAULT 1,
-    catThreadID int DEFAULT 1,
+    autoreThreadID int,
+    catThreadID int,
     valutazioneThreadID int,
     titolo varchar(200) NOT NULL,
     testo varchar(600) NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE allegati(
 
 CREATE TABLE risposte(
     rispostaID int NOT NULL auto_increment,
-    autoreRispID int DEFAULT 1,
+    autoreRispID int,
     threadRispID int NOT NULL,
     testo varchar(600) NOT NULL,
     data datetime NOT NULL,
