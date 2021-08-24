@@ -14,7 +14,7 @@ class FUser
     private static $instance = null;
 
     /**
-     * Construttore di default
+     * Costruttore di default.
      */
     private function __construct()
     {
@@ -27,7 +27,7 @@ class FUser
     public static function getInstance(): FUser
     {
         if(self::$instance == null){
-            $classe =__CLASS__;
+            $classe = __CLASS__;
             self::$instance = new $classe;
         }
         return self::$instance;
@@ -474,6 +474,7 @@ class FUser
                 $pdo->beginTransaction();
                 $fotoProfiloID = $this->storeFotoProfilo($pdo, $fotoProfilo);
                 if (!isset($fotoProfiloID)) {
+                    $pdo->rollBack();
                     return false;
                 }
 
@@ -552,13 +553,6 @@ class FUser
      * @return bool
      */
     public function delete(int $userID): bool{
-        /*
-         * se rimuovo un utente devo:
-         * - mettere l'utente di default ai messaggi
-         * - mettere l'utente di default ai thread
-         * - mettere l'utente di default alle risposte
-         * - rimuovere la sua foto profilo se non era quella di default
-         */
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
