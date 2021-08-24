@@ -25,6 +25,7 @@ CREATE TABLE users(
     admin boolean NOT NULL DEFAULT false,
     PRIMARY KEY (userID),
     UNIQUE (email),
+    INDEX (email),
     FOREIGN KEY (fotoProfiloID) REFERENCES fotoprofilo(fotoID) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -100,7 +101,7 @@ CREATE TABLE allegati(
     nome varchar(20) NOT NULL,
     dimensione varchar(20) NOT NULL,
     tipo varchar(20) NOT NULL,
-    immagine longblob NOT NULL,
+    file longblob NOT NULL,
     PRIMARY KEY (allegatoID),
     FOREIGN KEY (threadID) REFERENCES threads(threadID) ON DELETE CASCADE ON UPDATE CASCADE
 );
