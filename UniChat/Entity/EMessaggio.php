@@ -4,17 +4,45 @@
     require_once __DIR__ . "\..\utility.php";
 
 
-    class EMessaggio
+/**
+ * La classe EMessaggio ci permette di instanziare messaggi di chat.
+ */
+class EMessaggio
     {
 
-        private static string $formatoData = "Y-m-d H:i:s";
+    /**
+     * Imposta il formato del metodo data.
+     * @var string
+     */
+    private static string $formatoData = "Y-m-d H:i:s";
 
-        private int $id;
-        private string $testo;
-        private string $data;
-        private EUser $autoreMessaggio;
+    /**
+     * Identificativo dell'oggetto EMessaggio.
+     * @var int
+     */
+    private int $id;
+    /**
+     * Testo del messaggio.
+     * @var string
+     */
+    private string $testo;
+    /**
+     * Data di pubblicazione del messaggio.
+     * @var string|false
+     */
+    private string $data;
+    /**
+     * Utente che ha pubblicato il messaggio.
+     * @var EUser
+     */
+    private EUser $autoreMessaggio;
 
-        public function __construct(?int $id, string $testo, EUser $autoreMessaggio)
+    /**
+     * @param int|null $id
+     * @param string $testo
+     * @param EUser $autoreMessaggio
+     */
+    public function __construct(?int $id, string $testo, EUser $autoreMessaggio)
         {
             if(isset($id)){
                 $this->id = $id;
@@ -27,49 +55,80 @@
         }
 
 
-        public function getId(): int
+    /**
+     * Metodo per ottenere l'identificativo dell'oggetto EMessaggio.
+     * @return int
+     */
+    public function getId(): int
         {
             return $this->id;
         }
 
 
-        public function getTesto(): string
+    /**
+     * Metodo per ottenere il testo del messaggio.
+     * @return string
+     */
+    public function getTesto(): string
         {
             return $this->testo;
         }
 
 
-        public function getData()
+    /**
+     * Metodo per ottenere la data del messaggio.
+     * @return false|string
+     */
+    public function getData()
         {
             return $this->data;
         }
 
 
-        public function getAutoreMessaggio(): EUser
+    /**
+     * Metodo per ottenere l'utente che ha pubblicato il messaggio.
+     * @return EUser
+     */
+    public function getAutoreMessaggio(): EUser
         {
             return $this->autoreMessaggio;
         }
 
 
-        public function setId(int $id): void
+    /**
+     * Metodo per impostare l'identificativo dell'oggetto EMessaggio.
+     * @param int $id
+     */
+    public function setId(int $id): void
         {
             $this->id = $id;
         }
 
 
-        public function setTesto(string $testo): void
+    /**
+     * Metodo per impostare il testo del messaggio.
+     * @param string $testo
+     */
+    public function setTesto(string $testo): void
         {
             $this->testo = $testo;
         }
 
 
-        public function setData(): void
+    /**
+     * Metodo per impostare la data del messaggio.
+     */
+    public function setData(): void
         {
             $this->data = date(self::$formatoData);
         }
 
 
-        public function setAutoreMessaggio(EUser $autoreMessaggio): void
+    /**
+     * Metodo per impostare l'utente che ha pubblicato il messaggio.
+     * @param EUser $autoreMessaggio
+     */
+    public function setAutoreMessaggio(EUser $autoreMessaggio): void
         {
             $this->autoreMessaggio = $autoreMessaggio;
         }

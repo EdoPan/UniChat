@@ -2,12 +2,27 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
-    class CInterazione
+/**
+ * Classe di controllo contenente tutti i metodi di interazione alla piattaforma UniChat.
+ */
+class CInterazione
     {
-        public function __construct(){}
+    /**
+     *
+     */
+    public function __construct(){}
 
 
-        public function creaThread(int $userID, string $titolo, int $categoriaID, string $testo, ?array $allegati): bool
+    /**
+     * Metodo responsabile della creazione di un oggetto Thread e relativo salvataggio su DB.
+     * @param int $userID
+     * @param string $titolo
+     * @param int $categoriaID
+     * @param string $testo
+     * @param array|null $allegati
+     * @return bool
+     */
+    public function creaThread(int $userID, string $titolo, int $categoriaID, string $testo, ?array $allegati): bool
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
@@ -22,7 +37,15 @@
         }
 
 
-        public function rispondiThread(int $userID, string $testo, int $threadID): bool
+    /**
+     * Metodo responsabile della creazione di una risposta ad uno specifico thread e relativo
+     * salvataggio di quest'ultima su DB.
+     * @param int $userID
+     * @param string $testo
+     * @param int $threadID
+     * @return bool
+     */
+    public function rispondiThread(int $userID, string $testo, int $threadID): bool
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
@@ -33,7 +56,14 @@
         }
 
 
-        public function valutaThread(int $userID, int $valore, int $threadID): bool
+    /**
+     * Metodo responsabile della valutazione di un thread e relativo salvataggio di quest'ultima su DB.
+     * @param int $userID
+     * @param int $valore
+     * @param int $threadID
+     * @return bool
+     */
+    public function valutaThread(int $userID, int $valore, int $threadID): bool
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->load(ENTITY_USER, PROPERT_DEFAULT, $userID);
@@ -44,7 +74,14 @@
         }
 
 
-        public function creaMessaggio(string $testo, string $data, int $userID): bool
+    /**
+     * Metodo responsabile della creazione di un messaggio sulla chat e relativo salvataggio su DB.
+     * @param string $testo
+     * @param string $data
+     * @param int $userID
+     * @return bool
+     */
+    public function creaMessaggio(string $testo, string $data, int $userID): bool
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
