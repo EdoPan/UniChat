@@ -32,8 +32,14 @@ require_once __DIR__ . "\..\utility.php";
             }
         }
 
+        /**
+         * Recupero degli ultimi messaggi inseriti.
+         * @param int $numero
+         * @return array
+         */
 
-        public static function loadUltimiMessaggi(int $numero): Array
+
+        public static function loadUltimiMessaggi(int $numero): ?Array
 
         {
 
@@ -41,26 +47,85 @@ require_once __DIR__ . "\..\utility.php";
             $stmt=$pdo->query("SELECT * FROM messaggi ORDER BY messID DESC" );
             $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
             $messaggi=array();
-            for ($i=0; $i++; $i< $numero) {
-                $record =$rows[$i];
-                $messID = (int)$record["messID"];
-                $autore = $record["autoreMessID"];
-                $testo = $record["testo"];
-                $data = $record["data"];
-                $messaggio = new EMessaggio($messID, $testo, $autore);
-                $messaggi[]=$messaggio;
+            if (count($rows)!=0) {
+
+                for ($i=0; $i< $numero; $i++) {
+                    $record =$rows[$i];
+                    $messID = (int)$record["messID"];
+                    $autore = $record["autoreMessID"];
+                    $testo = $record["testo"];
+                    $data = $record["data"];
+                    $messaggio = new EMessaggio($messID, $testo, $autore);
+                    $messaggi[]=$messaggio;
+                }
+
+                return $messaggi;
+
             }
 
-            return $messaggi;
+            else {
+                return "Non ci sono messaggi inseriti.";
+            }
 
         }
 
+        /**
+         * Recupero messaggi di un utente desiderato.
+         * @param int $UserID
+         * @return array|null
+         */
 
 
+        public static function loadMessaggiByUtente (int $UserID): ?Array
 
+        {
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $stmt=$pdo->query("SELECT * FROM messaggi, users WHERE autoreMessID=userID AND userID=" . $UsersID );
+            $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
+            $messutente=array();
+            if (count($rows)!=0) {
+                foreach($rows as $messaggio ) {
+                    $messID = (int)$messaggio["messID"];
+                    $autore = $messaggio["autoreMessID"];
+                    $testo = $messaggio["testo"];
+                    $data = $messaggio["data"];
+                    $mess = new EMessaggio($messID, $testo, $autore);
+                    $messutente[]=$mess;
+                }
 
+                return $messutente;
+            }
 
+            else {
+               return "L'utente selezionato non ha inserito messaggi.";
+            }
 
+        }
+
+        /**
+         * Scrittura in DB di un oggetto di tipo messaggio.
+         * @param EMessaggio $messaggio
+         * @return bool
+         */
+
+        public static function store(EMessaggio $messaggio): bool
+        {
+            $messaggioID = $messaggio->getId()
+            $messaggioAutore = $messaggio->getAutoreMessaggio();
+            $messaggioTesto = $messaggio->getTesto();
+            $messaggioData = $messaggio->getData();
+            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+            $sql = ("INSERT INTO messaggi(messaggioID, messaggioAutore, messaggioTesto, messaggioData)
+                    VALUES (:messaggioID, :messaggioAutore, :messaggioTesto, :messaggioData)");
+            $stmt = $pdo->prepare($sql);
+            $result = $stmt->execute(array(
+                ':messaggioID' =>  $messaggioID,
+                ':messaggioAutore' => $messaggioTesto,
+                ':messaggioTesto' => $messaggioTesto,
+                ':messaggioData' => $messaggioData
+            ));
+            return $result;
+        }
 
         /**
          * Rimozione messaggio da DB.
