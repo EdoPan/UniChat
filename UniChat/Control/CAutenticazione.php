@@ -2,15 +2,31 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
-    class CAutenticazione
+/**
+ * Classe di controllo contenente tutti i metodi relativi alle operazioni di autenticazione alla piattaforma UniChat.
+ */
+class CAutenticazione
     {
-        public function __construct(){}
+    /**
+     *
+     */
+    public function __construct(){}
 
 
-        public function registrazione(string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio): bool
+    /**
+     * Metodo responsabile della registrazione di un utente alla piattaforma UniChat.
+     * @param string $nome
+     * @param string $cognome
+     * @param string $email
+     * @param string $password
+     * @param array $fotoProfilo
+     * @param string|null $corsoStudio
+     * @return bool
+     */
+    public function registrazione(string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio): bool
         {
             $pm = FPersistentManager::getInstance();
-            if($pm->existsUser($email, $password) == false){
+            if($pm->existsUserByEmail($email) == false){
                 $userID = null;
                 $u = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
                 $result = $pm->store(ENTITY_USER, $u);
@@ -22,7 +38,13 @@
         }
 
 
-        public function login(string $email, string $password): bool
+    /**
+     * Metodo responsabile del login alla piattaforma UniChat.
+     * @param string $email
+     * @param string $password
+     * @return bool
+     */
+    public function login(string $email, string $password): bool
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->loadUserByEmail($email);
@@ -31,7 +53,11 @@
         }
 
 
-        public function recuperoPassword(string $email): void
+    /**
+     * Metodo responsabile del recupero della password dell'utente mediante l'email.
+     * @param string $email
+     */
+    public function recuperoPassword(string $email): void
         {
             $pm = FPersistentManager::getInstance();
             $user = $pm->loadUserByEmail($email);
