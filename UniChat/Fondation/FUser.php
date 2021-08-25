@@ -45,9 +45,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT * FROM users WHERE userID = " . $userID);
+            $sql = ("SELECT * FROM users WHERE userID = :userID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':userID' => $userID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -90,9 +93,13 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
             $stmt = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
+            $sql = ("SELECT * FROM fotoprofilo WHERE fotoID = :fotoID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                'fotoID' => $fotoID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -125,9 +132,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT * FROM users, categorie WHERE moderatore = true AND = moderatoreID AND userID = " . $moderatoreID);
+            $sql = ("SELECT * FROM users, categorie WHERE moderatore = true AND userID = moderatoreID AND userID = :userID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':userID' => $moderatoreID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -180,9 +190,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT * FROM users WHERE admin = true AND userID = " . $adminID);
+            $sql = ("SELECT * FROM users WHERE admin = true AND userID = :userID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':userID' => $adminID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -223,9 +236,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT userID, moderatore, admin FROM users WHERE email = '" . $email . "'");
+            $sql = ("SELECT userID, moderatore, admin FROM users WHERE email = :email");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':email' => $email
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -261,9 +277,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT userID FROM users, categorie WHERE userID = moderatoreID AND categoriaID = " . $categoriaID);
+            $sql = ("SELECT userID FROM users, categorie WHERE userID = moderatoreID AND categoriaID = :categoriaID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':categoriaID' => $categoriaID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
@@ -295,10 +314,13 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $query = $pdo->query("SELECT fotoProfiloID FROM users WHERE userID = " . $userID);
-            $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+            $query = ("SELECT fotoProfiloID FROM users WHERE userID = :userID");
+            $s = $pdo->prepare($query);
+            $s->execute(array(
+                ':userID' => $userID
+            ));
+            $rows = $s->fetchAll(PDO::FETCH_ASSOC);
             $fotoProfiloID = (int)$rows[0]["fotoProfiloID"];
 
             /*
@@ -456,7 +478,6 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
             /*
              * Gestione delle operazioni di store in base alla foto profilo scelta dall'utente.
@@ -545,7 +566,7 @@ class FUser
 
     /**
      * Permette di rimuovere un utente dalla base dati. Quando un utente viene eliminato allora tutti i suoi thread,
-     * messaggi e risposte vengono assegnate ad un utente di default. Per quanto rigaurda il giudizio espresso per i
+     * messaggi e risposte vengono assegnate ad un utente di default. Per quanto riguarda il giudizio espresso per i
      * thread, il valore non viene decrementato ma l'utente viene rimosso dall'elenco degli utenti che ha espresso il
      * giudizio. Se l'utente era un moderatore allora questo viene rimosso da tale ruolo.
      * Restituisce true se l'operazione va buon fine, false altrimenti.
@@ -556,10 +577,13 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT fotoProfiloID FROM users WHERE userID = " . $userID);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $query = ("SELECT fotoProfiloID FROM users WHERE userID = :userID");
+            $s = $pdo->prepare($query);
+            $s->execute(array(
+                ':userID' => $userID
+            ));
+            $rows = $s->fetchAll(PDO::FETCH_ASSOC);
             $fotoProfiloID = (int)$rows[0]["fotoProfiloID"];
 
             /*
@@ -641,8 +665,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT userID FROM users WHERE email = '" . $email . "'");
+
+            $sql = ("SELECT userID FROM users WHERE email = :email");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':email' => $email
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 return true;
@@ -665,9 +693,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT * FROM users WHERE moderatore = true AND userID = " . $userID);
+            $sql = ("SELECT * FROM users WHERE moderatore = true AND userID = :userID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':userID' => $userID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 return true;
@@ -690,9 +721,12 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
-            $stmt = $pdo->query("SELECT * FROM users WHERE admin = true AND userID = " . $userID);
+            $sql = ("SELECT * FROM users WHERE admin = true AND userID = :userID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':userID' => $userID
+            ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 return true;
@@ -720,7 +754,6 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
             $stmt = $pdo->query("SELECT userID, moderatore, admin FROM users ORDER BY cognome LIMIT " . $rigaPartenza . ", " . $numeroRighe);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -730,11 +763,17 @@ class FUser
                  * Verifica della tipologia di utente da caricare e poi aggiungere all'array da restituire.
                  */
                 if ((int)$row["moderatore"] == 1) {
-                    $users[] = $this->loadModeratore((int)$row["userID"]);
+                    $user= $this->loadModeratore((int)$row["userID"]);
                 } else if ((int)$row["admin"] == 1) {
-                    $users[] = $this->loadAdmin((int)$row['userID']);
+                    $user = $this->loadAdmin((int)$row['userID']);
                 } else {
-                    $users[] = $this->load((int)$row['userID']);
+                    $user = $this->load((int)$row['userID']);
+                }
+
+                if(isset($user)){
+                    $users[] = $user;
+                } else {
+                    return null;
                 }
             }
             return $users;
