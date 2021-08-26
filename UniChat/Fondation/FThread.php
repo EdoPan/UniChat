@@ -37,8 +37,13 @@ class FThread
 
     /**
      * Restituisce l'oggeto EThread, memorizzato nel database, avente come id quello passato come paramentro.
-     * Qualora la foto profilo dell'utente non fosse presente, vi fossero problemi con la comunicazione con il database,
-     * o vi fossero errori di varia natura allora viene restituito null.
+     * Per ottenere un oggetto EThread è necessario recuperare diversi oggetti dalla base dati, nel caso non fosse
+     * possibile o vi fossero altri errori di varia natura allora viene restituito null.
+     * Gli oggetti da recuperare sono:
+     * - EUser;
+     * - ECategoria;
+     * - EValutazione;
+     * - ERisposta.
      * @param int $threadID
      * @return EThread|null
      */
@@ -91,7 +96,7 @@ class FThread
                     }
 
                     /*
-                     * recupero degli allegati associati al thread.
+                     * Recupero degli allegati associati al thread.
                      */
                     $allegatiThread = $this->loadAllegatiByThreadID($threadID);
                     if (!isset($allegatiThread)){
@@ -267,6 +272,8 @@ class FThread
         }
 
     /**
+     * Permette di memorizzare nella base dati un oggetto EThread.
+     * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
      * @param EThread $thread
      * @return bool
      */
