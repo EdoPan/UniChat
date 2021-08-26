@@ -6,8 +6,7 @@
 /**
  * EAdmin è il nostro super user, l'utente in grado di poter gestire qualunque cosa sulla piattaforma UniChat.
  */
-class EAdmin extends EModeratore
-    {
+class EAdmin extends EModeratore {
 
     /**
      * @param int|null $id
@@ -20,9 +19,9 @@ class EAdmin extends EModeratore
      * @param ECategoria|null $categoriaGestita
      */
     public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio, ?ECategoria $categoriaGestita)
-        {
-            parent::__construct($id, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
-        }
+    {
+        parent::__construct($id, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
+    }
 
     /**
      * Metodo responsabile della creazione di una categoria.
@@ -33,10 +32,9 @@ class EAdmin extends EModeratore
      * @return ECategoria
      */
     public function creaCategoria(int $categoriaID, string $nomeCategoria, ?string $icona, string $descrizione): ECategoria
-        {
-            return new ECategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
-        }
-
+    {
+        return new ECategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
+    }
 
     /**
      * Metodo responsabile della creazione di un moderatore.
@@ -45,13 +43,13 @@ class EAdmin extends EModeratore
      * @return EModeratore|null
      */
     public function creaModeratore(?EUser $user, ?ECategoria $categoria): ?EModeratore
-        {
+    {
 
-            //Controllo per verificare se l'utente e la categoria da moderare esistono.
-            if(isset($user) and isset($categoria)){
-                return new EModeratore($user->getId(), $user->getNome(), $user->getCognome(), $user->getEmail(), $user->getPassword(), $user->getFotoProfilo(), $user->getCorsoStudio(), $categoria);
-            } else {
-                return null;
-            }
+        //Controllo per verificare se l'utente e la categoria da moderare esistono.
+        if(isset($user) and isset($categoria)){
+            return new EModeratore($user->getId(), $user->getNome(), $user->getCognome(), $user->getEmail(), $user->getPassword(), $user->getFotoProfilo(), $user->getCorsoStudio(), $categoria);
+        } else {
+            return null;
         }
     }
+}
