@@ -461,6 +461,8 @@ class FUser
             /*
              * Gestione delle operazioni di store in base alla foto profilo scelta dall'utente.
              */
+
+
             if ($fotoProfilo["id"] != 1) {
 
                 /*

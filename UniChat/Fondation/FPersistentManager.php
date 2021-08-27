@@ -3,7 +3,7 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
-    class FPersistentManager
+    class FPersistentManager  //DA BUTTARE TUTTO
     {
 
         private EUser $u;

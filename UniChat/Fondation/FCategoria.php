@@ -12,10 +12,36 @@
     {
 
         /**
+         * Instanza della classe FCategoria, si utilizza per il singleton.
+         * @var null
+         */
+        private static $instance = null;
+
+        /**
+         * Construttore di default
+         */
+        private function __construct()
+        {
+        }
+
+        /**
+         * Restituisce l'instanza di FCategoria. Se già esistente restituisce quella esistente, altrimenti la crea.
+         * @return FCategoria
+         */
+        public static function getInstance(): FUser
+        {
+            if(self::$instance == null){
+                $classe =__CLASS__;
+                self::$instance = new $classe;
+            }
+            return self::$instance;
+        }
+
+        /**
          * Caricamento di tutte le categorie dal DB all'interno di un array.
          * @return array
          */
-        public static function loadAll(): array
+        public function loadAll(): array
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
             $stmt = $pdo->query("SELECT * FROM categorie");
@@ -29,29 +55,6 @@
             return $categorie;
         }
 
-        /**
-         * Recupero di un oggetto di tipo ECategoria dal DB.
-         * @param int $categoriaID
-         * @return ECategoria|null
-         */
-
-        public static function load(int $categoriaID): ?ECategoria
-        {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT * FROM categorie WHERE categoriaID = " . $categoriaID);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows) == 1) {
-                $record = $rows[0];
-                $cateID = (int)$record["categoriaID"];
-                $nome = $record["nomeCategoria"];
-                $icona = $record["icona"];
-                $descrizione = $record["descrizione"];
-                $categoria = new ECategoria($cateID, $nome, $icona, $descrizione);
-                return $categoria;
-            } else {
-                return null;
-            }
-        }
 
         /**
          * Recupero icona categoria.
@@ -59,26 +62,78 @@
          * @return array|null
          */
 
-        public static function loadIcona (int $iconaID): ?array
+        private function loadIcona (int $iconaID): ?array
         {
 
-            $pdo=new PDO ("mysql:host=localhost, dbname=testing", "root", "pippo");
-            $stmt=$pdo->query("SELECT * FROM categorie AS c, icona AS i WHERE c.iconaID=i.iconaID AND i.iconaID=".$iconaID);
-            $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows)==1) {
-                $record=$rows[0];
-                $icona=array();
-                $icona[0]=(int)$record["iconaID"];
-                $icona[1]=$record["nome"];
-                $icona[2]=$record["dimensione"];
-                $icona[3]=$record["tipo"];
-                $icona[4]=["immagine"];
+            try {
+                $dbconnection=FConnection::getInstance();
+                $pdo=$dbconnection->connect;
 
-                return $icona;
-            }
-            else {
+                $pdo=new PDO ("mysql:host=localhost, dbname=testing", "root", "pippo");
+                $stmt=$pdo->query("SELECT * FROM icona WHERE iconaID=".$iconaID);
+                $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows)==1) {
+                    $record=$rows[0];
+                    $icona=array(
+                        "id"=>(int)$record["iconaID"],
+                        "nome"=>$record["nome"],
+                        "dimensione"=>$record["dimensione"],
+                        "tipo"=>$record["tipo"],
+                        "immagine"=>$record["immagine"] );
+
+                    return $icona;
+                }
+                else {
+                    return null;
+                }
+            } catch (PDOException $e) {
                 return null;
             }
+
+
+        }
+
+        /**
+         * Recupero di un oggetto di tipo ECategoria dal DB.
+         * @param int $categoriaID
+         * @return ECategoria|null
+         */
+
+        public function load(int $categoriaID): ?ECategoria
+        {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+                $stmt = $pdo->query("SELECT * FROM categorie WHERE categoriaID = " . $categoriaID);
+
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $record = $rows[0];
+                    $cateID = (int)$record["categoriaID"];
+                    $nome = $record["nomeCategoria"];
+
+                    /*
+                    * Recupero icona della categoria
+                    */
+                    $idIcona = $record["iconaID"];
+                    $icona = $this->loadIcona($idIcona);
+                    if (!isset($icona)) {
+                        return null;
+                    }
+
+                    $descrizione = $record["descrizione"];
+                    $categoria = new ECategoria($cateID, $nome, $icona, $descrizione);
+                    return $categoria;
+                } else {
+                    return null;
+                }
+            } catch (PDOException $e) {
+                return null;
+
+            }
+
         }
 
         /**
@@ -87,22 +142,40 @@
          * @return ECategoria|null
          */
 
-        public static function loadCategoriaThread(int $threadID): ?ECategoria
+        public function loadCategoriaThread(int $threadID): ?ECategoria
         {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT * FROM categorie, threads WHERE catThreadID = categoriaID AND threadID = " . $threadID);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows) == 1) {
-                $record = $rows[0];
-                $cateID = (int)$record["categoriaID"];
-                $nome = $record["nomeCategoria"];
-                $icona = $record["icona"];
-                $descrizione = $record["descrizione"];
-                $categoria = new ECategoria($cateID, $nome, $icona, $descrizione);
-                return $categoria;
-            } else {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo=$dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+                $stmt = $pdo->query("SELECT * FROM categorie, threads WHERE catThreadID = categoriaID AND threadID = " . $threadID);
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $record = $rows[0];
+                    $cateID = (int)$record["categoriaID"];
+                    $nome = $record["nomeCategoria"];
+
+
+                    /*
+                    * Recupero icona della categoria
+                    */
+                    $idIcona = $record["iconaID"];
+                    $icona = $this->loadIcona($idIcona);
+                    if (!isset($icona)) {
+                        return null;
+                    }
+
+
+                    $descrizione = $record["descrizione"];
+                    $categoria = new ECategoria($cateID, $nome, $icona, $descrizione);
+                    return $categoria;
+                } else {
+                    return null;
+                }
+            } catch (PDOException $e) {
                 return null;
             }
+
         }
 
         /**
@@ -111,23 +184,117 @@
          * @return bool
          */
 
-        public static function store(ECategoria $categoria): bool
+        public function store(ECategoria $categoria): bool
         {
             $categoriaID = $categoria->getId();
             $nomeCategoria = $categoria->getNome();
             $icona = $categoria->getIcona();
             $descrizione = $categoria->getDescrizione();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $sql = ("INSERT INTO categorie(categoriaID, nomeCategoria, icona, descrizione)
-                    VALUES (:categoriaID, :nomeCategoria, :icona, :descrizione)");
-            $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute(array(
-                ':categoriaID' =>  $categoriaID,
-                ':nomeCategoria' => $nomeCategoria,
-                ':icona' => $icona,
-                ':descrizione' => $descrizione
-            ));
-            return $result;
+
+
+            try {
+
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+
+
+                /*
+                * Gestione delle operazioni di store in base alla icona della categoria.
+                */
+
+
+                if ($iconaCat["id"] != 1) {
+
+                    /*
+                     * L'admin ha caricato un'icona diversa da quella di default. Vengono eseguite delle operazioni
+                     * in maniera consecutiva, ma solo se queste avvengono tutte correttamente allora viene modificata la
+                     * base dati.
+                     * Tali operazioni sono:
+                     * - memorizzazione della nuova icona;
+                     * - memorizzazione della nuova categoria.
+                     */
+
+                    $pdo->beginTransaction();
+                    $iconaCategoriaID = $this->storeIcona($pdo, $iconaCat);
+                    if (!isset($iconaCategoriaID)) {
+                        return false;
+                    }
+
+                    $sql = ("INSERT INTO categorie(categoriaID, moderatoreID, nome, iconaID, descrizione)
+                    VALUES (:categoriaID, :moderatoreID, :nome, :iconaID, :descrizione)");
+                    $stmt = $pdo->prepare($sql);
+                    $result = $stmt->execute(array(
+                        ':categoriaID' =>  $categoriaID,
+                        ':nomeCategoria' => $nomeCategoria,
+                        ':icona' => $icona,
+                        ':descrizione' => $descrizione
+                    ));
+
+                    if($result){
+                        $pdo->commit();
+                    } else {
+                        $pdo->rollBack();
+                    }
+                } else {
+
+                    /*
+                     * L'admin ha impostato l'icona di default. Deve essere seguita la sola operazione di
+                     * memorizzazione della categoria e in particolare viene posto ad 1 il campo iconaCategoriaID.
+                     */
+                    $sql = ("INSERT INTO categoria(categoriaID, moderatoreID, nome, iconaID, descrizione)
+                    VALUES (:categoriaID, :moderatoreID, :nome, :iconaID, :descrione)");
+                    $stmt = $pdo->prepare($sql);
+                    $result = $stmt->execute(array(
+                        ':categoriaID' =>  $categoriaID,
+                        ':moderatoreID'=> $moderatoreID,
+                        ':nome' => $nome,
+                        ':iconaID' => 1,
+                        ':descrizione' => $descrizione
+                    ));
+                }
+                return $result;
+            } catch (PDOException $e){
+                return false;
+            }
+
+
+
+
+                    return $result;
+
+
+
+
+            }
+
+
+
+
+        }
+
+
+         /**
+          * Permette di memorizzare nella base dati una nuova icona della categoria.
+          * Se l'operazione va a buon fine viene restituito l'id assegnato all'icona nella base dati, altrimenti
+          * viene restituito null.
+          * @param PDO $pdo
+          * @param array $iconaCat
+          * @return int|null
+          */
+     private function storeIcona(PDO $pdo, array $iconaCat): ?int{
+            $nome = $iconaCat["nome"];
+            $dimensione = $iconaCat["dimensione"];
+            $tipo = $iconaCat["tipo"];
+            $immagine = $iconaCat["immagine"];
+
+            try {
+                $query = $pdo->query("INSERT INTO icona(nome, dimensione, tipo, immagine) VALUES ('$nome','$dimensione','$tipo','$immagine')");
+                $iconaCategoriaID = (int)$pdo->lastInsertId();
+                return $iconaCategoriaID;
+            } catch (PDOException $e) {
+                return null;
+            }
         }
 
         /**
@@ -136,7 +303,7 @@
          * @param EModeratore $mod
          * @return bool
          */
-        public static function update(?ECategoria $categoria, EModeratore $mod): bool
+        public function update(?ECategoria $categoria, EModeratore $mod): bool
         {
             $categoriaID = $categoria->getId();
             $moderatoreID = $mod->getId();
@@ -157,7 +324,7 @@
          * @return bool
          */
 
-        public static function delete(int $categoriaID): bool
+        public function delete(int $categoriaID): bool
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
             $sql = ("DELETE FROM categorie WHERE categoriaID = " . $categoriaID);
@@ -171,7 +338,7 @@
          * @return int
          */
 
-        public static function getLastID(): int
+        public function getLastID(): int
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
             $stmt = $pdo->query("SELECT MAX(categoriaID) AS id FROM categorie");
@@ -185,7 +352,7 @@
          * @return bool
          */
 
-        public static function updateNoModer(ECategoria $categoria): bool
+        public function rimuoviModeratore(ECategoria $categoria): bool
         {
             $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
             $sql = ("UPDATE categorie SET moderatoreID = NULL WHERE categoriaID = :categoriaID");
