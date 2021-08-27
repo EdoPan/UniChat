@@ -187,7 +187,7 @@
         public function store(ECategoria $categoria): bool
         {
             $categoriaID = $categoria->getId();
-            $nomeCategoria = $categoria->getNome();
+            $nome = $categoria->getNome();
             $icona = $categoria->getIcona();
             $descrizione = $categoria->getDescrizione();
 
@@ -221,12 +221,12 @@
                         return false;
                     }
 
-                    $sql = ("INSERT INTO categorie(categoriaID, moderatoreID, nome, iconaID, descrizione)
-                    VALUES (:categoriaID, :moderatoreID, :nome, :iconaID, :descrizione)");
+                    $sql = ("INSERT INTO categorie(categoriaID, nome, iconaID, descrizione)
+                    VALUES (:categoriaID, :nome, :iconaID, :descrizione)");
                     $stmt = $pdo->prepare($sql);
                     $result = $stmt->execute(array(
                         ':categoriaID' =>  $categoriaID,
-                        ':nomeCategoria' => $nomeCategoria,
+                        ':nome' => $nome,
                         ':icona' => $icona,
                         ':descrizione' => $descrizione
                     ));
@@ -242,12 +242,11 @@
                      * L'admin ha impostato l'icona di default. Deve essere seguita la sola operazione di
                      * memorizzazione della categoria e in particolare viene posto ad 1 il campo iconaCategoriaID.
                      */
-                    $sql = ("INSERT INTO categoria(categoriaID, moderatoreID, nome, iconaID, descrizione)
-                    VALUES (:categoriaID, :moderatoreID, :nome, :iconaID, :descrione)");
+                    $sql = ("INSERT INTO categoria(categoriaID, nome, iconaID, descrizione)
+                    VALUES (:categoriaID, :nome, :iconaID, :descrione)");
                     $stmt = $pdo->prepare($sql);
                     $result = $stmt->execute(array(
                         ':categoriaID' =>  $categoriaID,
-                        ':moderatoreID'=> $moderatoreID,
                         ':nome' => $nome,
                         ':iconaID' => 1,
                         ':descrizione' => $descrizione
@@ -257,19 +256,6 @@
             } catch (PDOException $e){
                 return false;
             }
-
-
-
-
-                    return $result;
-
-
-
-
-            }
-
-
-
 
         }
 
@@ -307,14 +293,24 @@
         {
             $categoriaID = $categoria->getId();
             $moderatoreID = $mod->getId();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $sql = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
-            $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute(array(
-                ':moderatoreID' =>  $moderatoreID,
-                ':categoriaID' => $categoriaID
-            ));
-            return $result;
+
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+
+                $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
+                $sql = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
+
+                $stmt = $pdo->prepare($sql);
+                $result = $stmt->execute(array(
+                    ':moderatoreID' =>  $moderatoreID,
+                    ':categoriaID' => $categoriaID
+                ));
+                return $result;
+
+            } catch (PDOException $e) {
+                return false;
+            }
 
         }
 
