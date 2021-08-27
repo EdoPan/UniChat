@@ -27,7 +27,7 @@ class CAutenticazione {
         if($pm->existsUserByEmail($email) == false){
             $userID = null;
             $u = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
-            $result = $pm->store(ENTITY_USER, $u);
+            $result = $pm->store(FPersistentManager::ENTITY_USER, $u);
         } else {
             $result = false;
         }
@@ -59,7 +59,7 @@ class CAutenticazione {
         $user = $pm->loadUserByEmail($email);
         if(isset($user)){
             $password = $user->generaPassword();
-            $pm->update(ENTITY_USER,PROPERTY_DEFAULT, $user);
+            $pm->update(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $user);
             mail($email, 'Recupero password', "La tua password temporanea è: ".$password); //https://www.html.it/pag/68800/inviare-email-con-php/
         } else {
         }

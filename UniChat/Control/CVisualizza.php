@@ -18,7 +18,7 @@ class CVisualizza {
     public function elencaCategorie(): array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(ENTITY_CATEGORIA, PROPERTY_DEFAULT, null, 1, 10); //FCategoria::loadAll(); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //FCategoria::loadAll(); //min: 1, max: 10
         return $result;
     }
 
@@ -30,7 +30,7 @@ class CVisualizza {
     public function threadPiùDiscusso(int $categoriaID): EThread
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->load(ENTITY_THREAD, PROPERTY_PIU_DISCUSSO_CATEGORIA, $categoriaID);
+        $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_PIU_DISCUSSO_CATEGORIA, $categoriaID);
         return $result;
 
     }
@@ -43,7 +43,7 @@ class CVisualizza {
     public function threadValutazionePiùAlta(int $categoriaID): EThread
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->load(ENTITY_THREAD, PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA, $categoriaID);
+        $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA, $categoriaID);
         return $result;
     }
 
@@ -54,7 +54,7 @@ class CVisualizza {
     public function elencaUsers(): array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(ENTITY_USER, PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
         return $result;
     }
 
@@ -65,7 +65,7 @@ class CVisualizza {
     public function elencaModeratori(): array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(ENTITY_MODERATORE, PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
         return $result;
     }
 
@@ -80,9 +80,9 @@ class CVisualizza {
     {
         $pm = FPersistentManager::getInstance();
         if (isset($categorieIDs)) {
-            $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs);
+            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs);
         } else {
-            $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO, $titoloThread, null);
+            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $titoloThread, null);
         }
         return $result;
     }
@@ -95,7 +95,7 @@ class CVisualizza {
     public function elencaThreads(int $categoriaID): array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(ENTITY_THREAD, PROPERTY_BY_CATEGORIA, $categoriaID, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, 1, 10); //min: 1, max: 10
         return $result;
     }
 
@@ -113,7 +113,7 @@ class CVisualizza {
     public function loadChat(): array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(ENTITY_MESSAGGIO, PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
         return $result;
     }
 
@@ -125,7 +125,7 @@ class CVisualizza {
     public function showProfile(int $userID): EUser
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
+        $result = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
         return $result;
     }
 
@@ -137,7 +137,7 @@ class CVisualizza {
     ): EUser
     {
         $pm = FPersistentManager::getInstance();
-        $user = $pm->load(ENTITY_USER, PROPERTY_DEFAULT, $userID);
+        $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
         $user->getNome();
         $user->getCognome();
         $user->getEmail();

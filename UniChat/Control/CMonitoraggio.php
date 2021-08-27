@@ -20,8 +20,8 @@ class CMonitoraggio {
     public function rimuoviMessaggio(int $userID, int $messID): bool
     {
         $pm = FPersistentManager::getInstance();
-        if($pm->isA(ENTITY_MODERATORE, $userID) == true or $pm->isA(ENTITY_ADMIN, $userID) == true){
-            $result = $pm->delete(ENTITY_MESSAGGIO, PROPERTY_DEFAULT, $messID);
+        if($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true or $pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true){
+            $result = $pm->delete(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, $messID);
         } else {
             $result = false;
         }
@@ -37,15 +37,15 @@ class CMonitoraggio {
     public function rimuoviThread(int $userID, int $threadID): bool
     {
         $pm = FPersistentManager::getInstance();
-        if ($pm->isA(ENTITY_ADMIN, $userID) == true){
-            $pm->delete(ENTITY_VALUTAZIONE, PROPERTY_BY_THREAD, $threadID); //FValutazione::deleteByThread($threadID);
-            $result = $pm->delete(ENTITY_THREAD, PROPERTY_DEFAULT, $threadID); //FThread::delete($threadID);
-        } elseif ($pm->isA(ENTITY_MODERATORE, $userID) == true){
-            $mod = $pm->load(ENTITY_MODERATORE, PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
-            $cat = $pm->load(ENTITY_CATEGORIA, PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
+        if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true){
+            $pm->delete(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID); //FValutazione::deleteByThread($threadID);
+            $result = $pm->delete(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FThread::delete($threadID);
+        } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true){
+            $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
+            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
             if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
-                $pm->delete(ENTITY_VALUTAZIONE, PROPERTY_BY_THREAD, $threadID); //FValutazione::deleteByThread($threadID);
-                $result = $pm->delete(ENTITY_THREAD, PROPERTY_DEFAULT, $threadID); //FThread::delete($threadID);
+                $pm->delete(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID); //FValutazione::deleteByThread($threadID);
+                $result = $pm->delete(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FThread::delete($threadID);
             }
         } else {
             $result = false;
@@ -63,13 +63,13 @@ class CMonitoraggio {
     public function rimuoviRisposte(int $userID, int $rispostaID, int $threadID): bool
     {
         $pm = FPersistentManager::getInstance();
-        if ($pm->isA(ENTITY_ADMIN, $userID) == true){
-            $result = $pm->delete(ENTITY_RISPOSTA, PROPERTY_DEFAULT, $rispostaID); //FRisposta::delete($rispostaID);
-        } elseif ($pm->isA(ENTITY_MODERATORE, $userID) == true){
-            $mod = $pm->load(ENTITY_MODERATORE, PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
-            $cat = $pm->load(ENTITY_CATEGORIA, PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
+        if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true){
+            $result = $pm->delete(FPersistentManager::ENTITY_RISPOSTA, FPersistentManager::PROPERTY_DEFAULT, $rispostaID); //FRisposta::delete($rispostaID);
+        } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true){
+            $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
+            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
             if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
-                $result = $pm->delete(ENTITY_RISPOSTA, PROPERTY_DEFAULT, $rispostaID); //FRisposta::delete($rispostaID);
+                $result = $pm->delete(FPersistentManager::ENTITY_RISPOSTA, FPersistentManager::PROPERTY_DEFAULT, $rispostaID); //FRisposta::delete($rispostaID);
             }
         } else {
             $result = false;
