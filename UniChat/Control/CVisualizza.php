@@ -76,33 +76,16 @@ class CVisualizza {
      * @param array|null $categorieIDs
      * @return array
      */
-    public function ricerca($selettore, string $titoloThread, ?array $categorieIDs): array
+    public function ricerca(string $titoloThread, ?array $categorieIDs): array
     {
         $pm = FPersistentManager::getInstance();
-        if($selettore == SEARCH_TYPE_TITOLO) {
-            $result = $pm->ricercaThreads($selettore, $titoloThread, null);
+        if (isset($categorieIDs)) {
+            $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs);
         } else {
-            $result = $pm->ricercaThreads($selettore, $titoloThread, $categorieIDs);
+            $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO, $titoloThread, null);
         }
         return $result;
     }
-
-    /*
-    public function ricercaPerTitoloCategoria(string $titoloThread, array $categorieIDs): array
-    {
-        $pm = FPersistentManager::getInstance();
-        $selettore =
-        $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs);
-        return $result;
-    }
-
-    public function ricercaPerTitolo(string $titoloThread): array
-    {
-        $pm = FPersistentManager::getInstance();
-        $result = $pm->ricercaThreads(SEARCH_TYPE_TITOLO, $titoloThread); //Terzo parametro del metodo non necessario!
-        return $result;
-    }
-    */
 
     /**
      * Metodo responsabile della visualizzazione di 10 threads.
