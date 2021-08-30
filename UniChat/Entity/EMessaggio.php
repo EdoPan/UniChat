@@ -44,7 +44,7 @@ class EMessaggio {
      * @param string $testo
      * @param EUser $autoreMessaggio
      */
-    public function __construct(?int $id, string $testo, EUser $autoreMessaggio)
+    public function __construct(?int $id, string $testo, ?string $data, EUser $autoreMessaggio)
     {
         if(isset($id)){
             $this->id = $id;

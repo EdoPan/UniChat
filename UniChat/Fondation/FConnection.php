@@ -28,7 +28,7 @@ class FConnection
      * Nome del database che si vuole utilizzare
      * @var string
      */
-    private static string $database = "UniChat";
+    private static string $database = "unichat";
 
     /**
      * Instanza della classe FConnection, si utilizza per il singleton
@@ -44,9 +44,9 @@ class FConnection
 
     /**
      * Restituisce l'instanza di FConnection. Se già esistente restituisce quella esistente, altrimenti la crea.
-     * @return FConnenction
+     * @return FConnection
      */
-    public static function getInstance(): FConnenction
+    public static function getInstance(): FConnection
     {
         $classe = __CLASS__;
         if(self::$instance == null){

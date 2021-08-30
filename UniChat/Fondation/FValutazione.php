@@ -203,26 +203,22 @@ class FValutazione
      * Permette di memorizzare nella base dati un oggetto EValutazione.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
      * @param EValutazione $valutazione
-     * @return bool
+     * @return int
      */
-    public function store(EValutazione $valutazione): bool
+    public function store(PDO $pdo, EValutazione $valutazione): ?int
     {
-        $valutazioneID = $valutazione->getId();
         $totale = $valutazione->getTotale();
 
         try {
-            $dbConnection = FConnection::getInstance();
-            $pdo = $dbConnection->connect();
-
-            $sql = ("INSERT INTO valutazioni(valutazioneID, totale) VALUES (:valutazioneID, :totale)");
+            $sql = ("INSERT INTO valutazioni(totale) VALUES (:totale)");
             $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute(array(
-                ':valutazioneID' => $valutazioneID,
+            $stmt->execute(array(
                 ':totale' => $totale
             ));
+            $result = (int)$pdo->lastInsertId();
             return $result;
         } catch (PDOException $e) {
-            return false;
+            return null;
         }
     }
 

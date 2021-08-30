@@ -278,4 +278,15 @@ class EThread
     {
         $this->risposte = $risposte;
     }
+
+
+    /**
+     * Restituisce il numero di risposte presenti nel thread.
+     * @return int
+     */
+    public function contaRisposte(): int
+    {
+        $numRisposte = count($this->risposte);
+        return $numRisposte;
+    }
     }

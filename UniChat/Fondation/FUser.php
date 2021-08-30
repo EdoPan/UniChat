@@ -226,7 +226,7 @@ class FUser
     }
 
     /**
-     * Restituisce un Euser, un EModeratore o un EAdmin, dato l'id che lo identifica nel database.
+     * Restituisce un Euser, un EModeratore o un EAdmin, dato l'email fornita in fase di registrazione.
      * Qualora non vi fosse un utente con quella email o errori di varia natura, viene restituito null.
      * @param string $email
      * @return EUser|null
@@ -467,7 +467,6 @@ class FUser
      */
     public function store(EUser $user): bool
     {
-        $userID = $user->getId();
         $nome = $user->getNome();
         $cognome = $user->getCognome();
         $email = $user->getEmail();
@@ -501,16 +500,15 @@ class FUser
                     return false;
                 }
 
-                $sql = ("INSERT INTO users(userID, nome, cognome, email, password, fotoProfiloID, corsoStudio, moderatore, admin)
-                    VALUES (:userID, :nome, :cognome, :email, :password, :fotoProfiloID, :corsoStudio, false, false)");
+                $sql = ("INSERT INTO users(nome, cognome, email, password, fotoProfiloID, corsoStudio, moderatore, admin)
+                    VALUES (:nome, :cognome, :email, :password, :fotoProfiloID, :corsoStudio, false, false)");
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
-                    ':userID' => $userID,
                     ':nome' => $nome,
                     ':cognome' => $cognome,
                     ':email' => $email,
                     ':password' => $password,
-                    ':fotoProfiloID' => $fotoProfilo,
+                    ':fotoProfiloID' => $fotoProfiloID,
                     ':corsoStudio' => $corsoStudio
                 ));
                 if($result){
@@ -524,11 +522,10 @@ class FUser
                  * L'utente ha impostato la foto di profilo di default. Deve essere seguita la sola operazione di
                  * memorizzazione dell'utente e in particolare viene posto ad 1 il campo fotoProfiloID.
                  */
-                $sql = ("INSERT INTO users(userID, nome, cognome, email, password, fotoProfiloID, corsoStudio, moderatore, admin)
-                    VALUES (:userID, :nome, :cognome, :email, :password, :fotoProfiloID, :corsoStudio, false, false)");
+                $sql = ("INSERT INTO users(nome, cognome, email, password, fotoProfiloID, corsoStudio, moderatore, admin)
+                    VALUES (:nome, :cognome, :email, :password, :fotoProfiloID, :corsoStudio, false, false)");
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
-                    ':userID' => $userID,
                     ':nome' => $nome,
                     ':cognome' => $cognome,
                     ':email' => $email,
