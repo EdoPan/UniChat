@@ -62,10 +62,10 @@ class CAmministrazione {
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
-            $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
-            $pm->update(FPersistentManager::ENTITY_USER,FPersistentManager::PROPERTY_DEFAULT, $mod);
-            $pm->update(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
-            $result = $pm->delete(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+            //$mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
+            //$pm->update(FPersistentManager::ENTITY_USER,FPersistentManager::PROPERTY_DEFAULT, $mod);
+            //$pm->update(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
+            $result = $pm->delete(FPersistentManager::ENTITY_CATEGORIA, $categoriaID);
         } else {
             $result = false;
         }
@@ -83,10 +83,10 @@ class CAmministrazione {
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
-            $mod = $pm->loadMod(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
+            $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
             $categoria = $mod->getCategoriaGestita();
-            $pm->rimoviModeratoreCategoria($categoria);
-            $result = $pm->update(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $mod); //Era updateToUser
+            $pm->rimuoviModeratoreCategoria($categoria);
+            $result = $pm->update(FPersistentManager::ENTITY_USER, $mod); //Era updateToUser
         } else {
             $result = false;
         }
@@ -105,7 +105,7 @@ class CAmministrazione {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
             $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-            $result = $pm->delete(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+            $result = $pm->delete(FPersistentManager::ENTITY_USER, $user->getID());
         } else {
             $result = false;
         }

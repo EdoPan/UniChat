@@ -27,7 +27,7 @@ class CVisualizza {
      * @param int $categoriaID
      * @return EThread
      */
-    public function threadPiùDiscusso(int $categoriaID): EThread
+    public function threadPiuDiscusso(int $categoriaID): EThread
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_PIU_DISCUSSO_CATEGORIA, $categoriaID);
@@ -40,7 +40,7 @@ class CVisualizza {
      * @param int $categoriaID
      * @return EThread
      */
-    public function threadValutazionePiùAlta(int $categoriaID): EThread
+    public function threadValutazionePiuAlta(int $categoriaID): EThread
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA, $categoriaID);
@@ -80,9 +80,9 @@ class CVisualizza {
     {
         $pm = FPersistentManager::getInstance();
         if (isset($categorieIDs)) {
-            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs);
+            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloThread, $categorieIDs, 0, 10);
         } else {
-            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $titoloThread, null);
+            $result = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $titoloThread, null, 0, 10);
         }
         return $result;
     }

@@ -59,9 +59,8 @@ class CAutenticazione {
         $user = $pm->loadUserByEmail($email);
         if(isset($user)){
             $password = $user->generaPassword();
-            $pm->update(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $user);
+            $pm->update(FPersistentManager::ENTITY_USER, $user);
             mail($email, 'Recupero password', "La tua password temporanea è: ".$password); //https://www.html.it/pag/68800/inviare-email-con-php/
-        } else {
         }
     }
 }

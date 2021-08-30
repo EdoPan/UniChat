@@ -29,7 +29,7 @@ class CInterazione {
         $valutazione = new EValutazione($valutazioneID, null, null, null);
         $pm->store(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
         $threadID = null;
-        $thread = new EThread($threadID, $titolo, $testo, $allegati, $user, $cat, $valutazione, null);
+        $thread = new EThread($threadID, $titolo, $testo, null, $allegati, $user, $cat, $valutazione, null);
         $result = $pm->store(FPersistentManager::ENTITY_THREAD, $thread);
         return $result;
     }
@@ -62,10 +62,10 @@ class CInterazione {
     public function valutaThread(int $userID, int $valore, int $threadID): bool
     {
         $pm = FPersistentManager::getInstance();
-        $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERT_DEFAULT, $userID);
-        $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+        $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
+        $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
         $valutazione->valuta($user, $valore);
-        $result = $pm->update(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_DEFAULT, $valutazione);
+        $result = $pm->update(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
         return $result;
     }
 
@@ -104,7 +104,7 @@ class CInterazione {
         $user->setCognome($cognome);
         $user->setFotoProfilo($fotoProfilo);
         $user->setCorsoStudio($corsoStudio);
-        $result = $pm->update(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $user);
+        $result = $pm->update(FPersistentManager::ENTITY_USER, $user);
         return $result;
     }
 }
