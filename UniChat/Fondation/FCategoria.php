@@ -57,7 +57,7 @@
 
                 }
                 return $categorie;
-            } catch (PDOException e) {
+            } catch (PDOException $e) {
                 return null;
             }
 
@@ -212,7 +212,7 @@
                 */
 
 
-                if ($iconaCat["id"] != 1) {
+                if ($icona["id"] != 1) {
 
                     /*
                      * L'admin ha caricato un'icona diversa da quella di default. Vengono eseguite delle operazioni
@@ -224,7 +224,7 @@
                      */
 
                     $pdo->beginTransaction();
-                    $iconaCategoriaID = $this->storeIcona($pdo, $iconaCat);
+                    $iconaCategoriaID = $this->storeIcona($pdo, $icona);
                     if (!isset($iconaCategoriaID)) {
                         return false;
                     }
@@ -351,6 +351,7 @@
          * Inoltre il moderatore viene rimosso dalla sua carica e torna ad essere un "semplice" User.
          * Restituisce true se l'operazione va a buon fine, false altrimenti.
          * @param int $categoriaID
+         * @param EModeratore $moderatore
          * @return bool
          */
 
@@ -426,7 +427,7 @@
         /**
          * Rimozione di un moderatore dalla categoria e rimozione dell'utente dal ruolo di moderatore.
          * @param ECategoria $categoria
-         * @param Moderatore $moderatore
+         * @param EModeratore $moderatore
          * @return bool
          */
 

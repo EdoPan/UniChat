@@ -43,12 +43,18 @@
 
         //Costruttore
 
-        public function __construct(int $id, string $testo, EUser $autoreRisposta)
+        public function __construct(int $id, string $testo, ?string $data, EUser $autoreRisposta)
         {
 
             $this->id = $id;
             $this->testo = $testo;
-            $this->data = date(self::$formatoData);
+
+            if ($data!=null) {
+                $this->data=$data;
+            } else {
+                $this->data = date(self::$formatoData);
+            }
+
             $this->autoreRisposta = $autoreRisposta;
 
         }

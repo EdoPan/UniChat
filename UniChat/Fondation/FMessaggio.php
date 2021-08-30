@@ -8,27 +8,80 @@ require_once __DIR__ . "\..\utility.php";
  */
     class FMessaggio
     {
+
+        /**
+         * Instanza della classe FMessaggio, si utilizza per il singleton.
+         * @var null
+         */
+        private static $instance = null;
+
+        /**
+         * Construttore di default
+         */
+        private function __construct()
+        {
+        }
+
+        /**
+         * Restituisce l'instanza di FMessaggio. Se già esistente restituisce quella esistente, altrimenti la crea.
+         * @return FMessaggio
+         */
+        public static function getInstance(): FMessaggio
+        {
+            if(self::$instance == null){
+                $classe =__CLASS__;
+                self::$instance = new $classe;
+            }
+            return self::$instance;
+        }
+
+
         /**
          * Recupero di un Messaggio da DB.
          * @param int $messaggioID
          * @return EMessaggio|null
          */
-        public static function load(int $messaggioID): ?EMessaggio
+        public function load(int $messaggioID): ?EMessaggio
         {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt = $pdo->query("SELECT * FROM messaggi WHERE messID = " . $messaggioID);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows) == 1) {
-                $record = $rows[0];
-                $messID = (int)$record["messID"];
-                $autore = $record["autoreMessID"];
-                $testo = $record["testo"];
-                $data = $record["data"];
-                $messaggio = new EMessaggio($messID, $testo, $autore);
+            try {
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
 
-                return $messaggio;
-            } else {
-                return null;
+                $sql=("SELECT * FROM messaggi WHERE messID = " . $messaggioID);
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(array(
+                    ':messaggioID' => $messaggioID
+                ));
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $record = $rows[0];
+                    $messID = (int)$record["messID"];
+
+
+                    /*
+                    * Recupero dell'utente autore del messaggio.
+                    */
+                    $autore = $record["autoreMessID"];
+                    $fUser = FUser::getInstance();
+                    $autoreMessaggio = $fUser->load($autore);
+                    if (!isset($autoreMessaggio)) {
+                        return null;
+                    }
+
+
+                    $testo = $record["testo"];
+                    $data = $record["data"];
+
+
+                    $messaggio = new EMessaggio($messID, $testo, $data, $autore);
+
+                    return $messaggio;
+                } else {
+                    return null;
+                }
+
+            }catch (PDOException $e) {
+                return false;
             }
         }
 
@@ -39,34 +92,42 @@ require_once __DIR__ . "\..\utility.php";
          */
 
 
-        public static function loadUltimiMessaggi(int $numero): ?Array
+        public function loadUltimiMessaggi(int $numero): ?Array
 
         {
 
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt=$pdo->query("SELECT * FROM messaggi ORDER BY messID DESC" );
-            $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
-            $messaggi=array();
-            if (count($rows)!=0) {
+            try {
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
+                $stmt=$pdo->query("SELECT * FROM messaggi ORDER BY messID DESC LIMIT ($numero)" );
 
-                for ($i=0; $i< $numero; $i++) {
-                    $record =$rows[$i];
-                    $messID = (int)$record["messID"];
-                    $autore = $record["autoreMessID"];
-                    $testo = $record["testo"];
-                    $data = $record["data"];
-                    $messaggio = new EMessaggio($messID, $testo, $autore);
-                    $messaggi[]=$messaggio;
+                $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                $messaggi=array();
+
+                foreach ($rows as $row) {
+                        $messID = (int)$row["messID"];
+
+                        /*
+                        * Recupero dell'utente autore del messaggio.
+                        */
+                        $autore = $row["autoreMessID"];
+                        $fUser = FUser::getInstance();
+                        $autoreMessaggio = $fUser->load($autore);
+                        if (!isset($autoreMessaggio)) {
+                            return null;
+                        }
+
+                        $testo = $row["testo"];
+                        $data = $row["data"];
+                        $messaggio = new EMessaggio($messID, $testo, $data, $autoreMessaggio);
+                        $messaggi[]=$messaggio;
                 }
 
                 return $messaggi;
 
-            }
-
-            else {
-                return "Non ci sono messaggi inseriti.";
-            }
-
+                }catch(PDOException $e) {
+                    return false;
+                }
         }
 
         /**
@@ -76,31 +137,67 @@ require_once __DIR__ . "\..\utility.php";
          */
 
 
-        public static function loadMessaggiByUtente (int $UserID): ?Array
+        public static function loadMessaggiByUtente (int $userID): ?Array
 
         {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $stmt=$pdo->query("SELECT * FROM messaggi, users WHERE autoreMessID=userID AND userID=" . $UsersID );
-            $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
-            $messutente=array();
-            if (count($rows)!=0) {
-                foreach($rows as $messaggio ) {
-                    $messID = (int)$messaggio["messID"];
-                    $autore = $messaggio["autoreMessID"];
-                    $testo = $messaggio["testo"];
-                    $data = $messaggio["data"];
-                    $mess = new EMessaggio($messID, $testo, $autore);
-                    $messutente[]=$mess;
+            try {
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
+                $stmt=$pdo->query("SELECT * FROM messaggi WHERE autoreMessID=" . $userID );
+
+                $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                $messutente=array();
+
+                foreach ($rows as $row) {
+                    $messID = (int)$row["messID"];
+
+                    /*
+                    * Recupero dell'utente autore del messaggio.
+                    */
+                    $fUser = FUser::getInstance();
+                    $autoreMessaggio = $fUser->load($userID);
+                    if (!isset($autoreMessaggio)) {
+                        return null;
+                    }
+
+                    $testo = $row["testo"];
+                    $data = $row["data"];
+                    $messaggio = new EMessaggio($messID, $testo, $data, $autoreMessaggio);
+                    $messutente[]=$messaggio;
                 }
 
                 return $messutente;
-            }
 
-            else {
-               return "L'utente selezionato non ha inserito messaggi.";
+            }catch(PDOException $e) {
+                return null;
             }
 
         }
+
+        /**
+         * Permette di modificare l'autore dei messaggi scritti da un utente, la modifica comporta che il nuovo autore
+         * risulta essere l'utente di default. Il metodo viene richiamato nel momento in cui l'utente che aveva scritto
+         * i messaggi viene eliminato dalla base dati.
+         * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
+         * @param PDO $pdo
+         * @param int $userID
+         * @return bool
+         */
+        public function updateUserID(PDO $pdo, int $userID): bool
+        {
+            try {
+                $sql = ("UPDATE messaggi SET autoreMessID = 1 WHERE autoreMessID = :userID");
+                $stmt = $pdo->prepare($sql);
+                $result = $stmt->execute(array(
+                    ':userID' => $userID
+                ));
+                return $result;
+            } catch (PDOException $e) {
+                return false;
+            }
+        }
+
+
 
         /**
          * Scrittura in DB di un oggetto di tipo messaggio.
@@ -110,21 +207,34 @@ require_once __DIR__ . "\..\utility.php";
 
         public static function store(EMessaggio $messaggio): bool
         {
-            $messaggioID = $messaggio->getId()
+
+            $messaggioID = $messaggio->getId();
             $messaggioAutore = $messaggio->getAutoreMessaggio();
             $messaggioTesto = $messaggio->getTesto();
             $messaggioData = $messaggio->getData();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $sql = ("INSERT INTO messaggi(messaggioID, messaggioAutore, messaggioTesto, messaggioData)
+
+
+            try {
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
+
+
+                $sql = ("INSERT INTO messaggi(messaggioID, messaggioAutore, messaggioTesto, messaggioData)
                     VALUES (:messaggioID, :messaggioAutore, :messaggioTesto, :messaggioData)");
-            $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute(array(
-                ':messaggioID' =>  $messaggioID,
-                ':messaggioAutore' => $messaggioTesto,
-                ':messaggioTesto' => $messaggioTesto,
-                ':messaggioData' => $messaggioData
-            ));
-            return $result;
+                $stmt = $pdo->prepare($sql);
+                $result = $stmt->execute(array(
+                    ':messaggioID' =>  $messaggioID,
+                    ':messaggioAutore' => $messaggioAutore,
+                    ':messaggioTesto' => $messaggioTesto,
+                    ':messaggioData' => $messaggioData
+                ));
+                return $result;
+
+            } catch (PDOException $e) {
+                return false;
+            }
+
+
         }
 
         /**
@@ -134,10 +244,20 @@ require_once __DIR__ . "\..\utility.php";
          */
         public static function delete(int $messID): bool
         {
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
-            $sql = ("DELETE FROM messaggi WHERE messID = " . $messID);
-            $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute();
-            return $result;
+
+            try {
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
+
+                $sql = ("DELETE FROM messaggi WHERE messID = " . $messID);
+
+                $stmt = $pdo->prepare($sql);
+                $result = $stmt->execute();
+                return $result;
+
+            } catch(PDOException $e)  {
+                return false;
+            }
+
         }
     }

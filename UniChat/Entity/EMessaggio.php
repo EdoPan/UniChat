@@ -52,7 +52,11 @@ class EMessaggio {
             $this->id = 0;
         }
         $this->testo = $testo;
-        $this->data = date(self::$formatoData);
+        if ($data!=null) {
+            $this->data=$data;
+        } else {
+            $this->data = date(self::$formatoData);
+        }
         $this->autoreMessaggio = $autoreMessaggio;
     }
 

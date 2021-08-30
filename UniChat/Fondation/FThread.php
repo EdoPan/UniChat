@@ -369,7 +369,7 @@ class FThread
         }
 
     /**
-     * Peremette di rimuovere un thread dalla base dati. Quando un thread viene eliminato allora viene rimossa anche la
+     * Permette di rimuovere un thread dalla base dati. Quando un thread viene eliminato allora viene rimossa anche la
      * valutazione, tutti gli allegati e tutte le risposte ad esso associati.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
      * @param int $threadID
