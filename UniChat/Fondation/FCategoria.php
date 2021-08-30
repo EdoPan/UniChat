@@ -426,6 +426,7 @@
         /**
          * Rimozione di un moderatore dalla categoria e rimozione dell'utente dal ruolo di moderatore.
          * @param ECategoria $categoria
+         * @param Moderatore $moderatore
          * @return bool
          */
 
@@ -448,12 +449,10 @@
                 ));
 
                 if ($resultUpdtoUser== true && $result == true) {
-                   // $pdo->query("COMMIT");
-                    //$pdo->query("UNLOCK TABLES");
+
                     return true;
                 } else {
-                  //  $pdo->query("ROLLBACK");
-                  //  $pdo->query("UNLOCK TABLES");
+
                     return false;
                 }
 
