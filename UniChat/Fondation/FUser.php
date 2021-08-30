@@ -226,7 +226,7 @@ class FUser
     }
 
     /**
-     * Restituisce un Euser, un EModeratore o un EAdmin, dato l'id che lo identifica nel database.
+     * Restituisce un Euser, un EModeratore o un EAdmin, dato l'email fornita in fase di registrazione.
      * Qualora non vi fosse un utente con quella email o errori di varia natura, viene restituito null.
      * @param string $email
      * @return EUser|null
