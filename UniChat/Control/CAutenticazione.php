@@ -31,7 +31,7 @@ class CAutenticazione {
         } else {
             $result = false;
         }
-        mail($u->getEmail(), 'Iscrizione UniChat', 'Congratulazioni' .$u->getNome() .$u->getCognome() .'la registrazione su UniChat è andata a buon fine!');
+        mail($email, 'Iscrizione UniChat', 'Congratulazioni' .$nome .$cognome .'la registrazione su UniChat è andata a buon fine!');
         return $result;
     }
 
