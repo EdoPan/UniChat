@@ -17,21 +17,23 @@ class CAutenticazione {
      * @param string $cognome
      * @param string $email
      * @param string $password
-     * @param array $fotoProfilo
+     * @param null|array $fotoProfilo
      * @param string|null $corsoStudio
      * @return bool
      */
-    public function registrazione(string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio): bool
+    public function registrazione(string $nome, string $cognome, string $email, string $password, ?array $fotoProfilo, ?string $corsoStudio): bool
     {
         $pm = FPersistentManager::getInstance();
         if($pm->existsUserByEmail($email) == false){
             $userID = null;
             $u = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
             $result = $pm->store(FPersistentManager::ENTITY_USER, $u);
+            if($result == true) {
+                mail($email, 'Iscrizione UniChat', 'Congratulazioni' .$nome .$cognome .'la registrazione su UniChat è andata a buon fine!');
+            }
         } else {
             $result = false;
         }
-        mail($email, 'Iscrizione UniChat', 'Congratulazioni' .$nome .$cognome .'la registrazione su UniChat è andata a buon fine!');
         return $result;
     }
 
@@ -45,7 +47,11 @@ class CAutenticazione {
     {
         $pm = FPersistentManager::getInstance();
         $user = $pm->loadUserByEmail($email);
-        $result = $user->verificaPassword($password);
+        if(isset($user)) {
+            $result = $user->verificaPassword($password);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
@@ -53,14 +59,19 @@ class CAutenticazione {
      * Metodo responsabile del recupero della password dell'utente mediante l'email.
      * @param string $email
      */
-    public function recuperoPassword(string $email): void
+    public function recuperoPassword(string $email): bool
     {
         $pm = FPersistentManager::getInstance();
         $user = $pm->loadUserByEmail($email);
         if(isset($user)){
             $password = $user->generaPassword();
-            $pm->update(FPersistentManager::ENTITY_USER, $user);
-            mail($email, 'Recupero password', "La tua password temporanea è: ".$password); //https://www.html.it/pag/68800/inviare-email-con-php/
+            $result = $pm->update(FPersistentManager::ENTITY_USER, $user);
+            if($result == true) {
+                mail($email, 'Recupero password', "La tua password temporanea è: ".$password);
+            }
+        } else {
+            $result = false;
         }
+        return $result;
     }
 }

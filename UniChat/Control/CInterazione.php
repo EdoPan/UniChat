@@ -25,12 +25,15 @@ class CInterazione {
         $pm = FPersistentManager::getInstance();
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
         $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
-        $valutazioneID = null;
-        $valutazione = new EValutazione($valutazioneID, null, null, null);
-        $pm->store(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
-        $threadID = null;
-        $thread = new EThread($threadID, $titolo, $testo, null, $allegati, $user, $cat, $valutazione, null);
-        $result = $pm->store(FPersistentManager::ENTITY_THREAD, $thread);
+        if(isset($user) and isset($cat)){
+            $valutazioneID = null;
+            $valutazione = new EValutazione($valutazioneID, null, null, null);
+            $threadID = null;
+            $thread = new EThread($threadID, $titolo, $testo, null, $allegati, $user, $cat, $valutazione, null);
+            $result = $pm->store(FPersistentManager::ENTITY_THREAD, $thread);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
@@ -46,9 +49,13 @@ class CInterazione {
     {
         $pm = FPersistentManager::getInstance();
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-        $rispID = null;
-        $risposta = new ERisposta($rispID, $testo, $user);
-        $result = $pm->storeRispostaThread($risposta, $threadID);
+        if(isset($user)) {
+            $rispID = null;
+            $risposta = new ERisposta($rispID, $testo, null, $user);
+            $result = $pm->storeRispostaThread($risposta, $threadID);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
@@ -64,8 +71,12 @@ class CInterazione {
         $pm = FPersistentManager::getInstance();
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
         $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-        $valutazione->valuta($user, $valore);
-        $result = $pm->update(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
+        if(isset($user) and isset($valutazione)) {
+            $valutazione->valuta($user, $valore);
+            $result = $pm->update(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
@@ -76,35 +87,42 @@ class CInterazione {
      * @param int $userID
      * @return bool
      */
-    public function creaMessaggio(string $testo, string $data, int $userID): bool
+    public function creaMessaggio(string $testo, int $userID): bool
     {
         $pm = FPersistentManager::getInstance();
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-        $id = null;
-        $messaggio = new EMessaggio($id, $testo, $data, $user);
-        $result = $pm->store(FPersistentManager::ENTITY_MESSAGGIO, $messaggio);
+        if(isset($user)) {
+            $id = null;
+            $messaggio = new EMessaggio($id, $testo, null, $user);
+            $result = $pm->store(FPersistentManager::ENTITY_MESSAGGIO, $messaggio);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
     /**
      * Metodo responsabile per la modifica ed il salvataggio delle informazioni dell'utente.
      * @param int $userID
-     * @param string $nome
-     * @param string $cognome
+     * @param string $password
      * @param array $fotoProfilo
      * @param string $corsoStudio
      * @return bool
      */
     public function editPersonalProfile(int $userID, //Ancora non sappiamo come recuperare l'id dell'utente dalla sessione attuale!
-        string $nome, string $cognome, array $fotoProfilo, string $corsoStudio): bool
+        string $password, array $fotoProfilo, string $corsoStudio): bool
     {
         $pm = FPersistentManager::getInstance();
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-        $user->setNome($nome);
-        $user->setCognome($cognome);
-        $user->setFotoProfilo($fotoProfilo);
-        $user->setCorsoStudio($corsoStudio);
-        $result = $pm->update(FPersistentManager::ENTITY_USER, $user);
+        if(isset($user)) {
+
+            $user->setPassword($password);
+            $user->setFotoProfilo($fotoProfilo);
+            $user->setCorsoStudio($corsoStudio);
+            $result = $pm->update(FPersistentManager::ENTITY_USER, $user);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 }

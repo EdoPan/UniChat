@@ -137,12 +137,7 @@ class CVisualizza {
     ): EUser
     {
         $pm = FPersistentManager::getInstance();
-        $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-        $user->getNome();
-        $user->getCognome();
-        $user->getEmail();
-        $user->getFotoProfilo();
-        $user->getCorsoStudio();
-        return $user;
+        $result = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
+        return $result;
     }
 }

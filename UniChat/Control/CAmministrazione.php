@@ -23,9 +23,13 @@ class CAmministrazione {
     {
         $pm = FPersistentManager::getInstance();
         $admin = $pm->load(FPersistentManager::ENTITY_ADMIN, FPersistentManager::PROPERTY_DEFAULT, $adminID);
-        $categoriaID = null;
-        $categoria = $admin->creaCategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
-        $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
+        if(isset($admin)) {
+            $categoriaID = null;
+            $categoria = $admin->creaCategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
+            $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
+        } else {
+            $result = false;
+        }
         return $result;
     }
 
@@ -43,9 +47,13 @@ class CAmministrazione {
         $admin = $pm->load(FPersistentManager::ENTITY_ADMIN, FPersistentManager::PROPERTY_DEFAULT, $adminID);
         $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
         $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
-        $mod = $admin->creaModeratore($user, $categoria);
-        if(isset($mod)){
-            $result = $pm->updateModeratoreCategoria($categoria, $mod); //FUser::updateMod($mod)
+        if(isset($admin) and isset($user) and isset($categoria)) {
+            $mod = $admin->creaModeratore($user, $categoria);
+            if(isset($mod)){
+                $result = $pm->updateModeratoreCategoria($categoria, $mod); //FUser::updateMod($mod)
+            } else {
+                $result = false;
+            }
         } else {
             $result = false;
         }
@@ -62,9 +70,6 @@ class CAmministrazione {
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
-            //$mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
-            //$pm->update(FPersistentManager::ENTITY_USER,FPersistentManager::PROPERTY_DEFAULT, $mod);
-            //$pm->update(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID);
             $result = $pm->delete(FPersistentManager::ENTITY_CATEGORIA, $categoriaID);
         } else {
             $result = false;
@@ -84,9 +89,10 @@ class CAmministrazione {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
             $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
-            $categoria = $mod->getCategoriaGestita();
-            $pm->rimuoviModeratoreCategoria($categoria);
-            $result = $pm->update(FPersistentManager::ENTITY_USER, $mod); //Era updateToUser
+            if(isset($mod)) {
+                $categoria = $mod->getCategoriaGestita();
+                $result = $pm->rimuoviModeratoreCategoria($categoria->getID(), $mod);
+            }
         } else {
             $result = false;
         }
@@ -104,8 +110,7 @@ class CAmministrazione {
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
-            $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
-            $result = $pm->delete(FPersistentManager::ENTITY_USER, $user->getID());
+            $result = $pm->delete(FPersistentManager::ENTITY_USER, $userID);
         } else {
             $result = false;
         }
