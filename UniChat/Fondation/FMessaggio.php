@@ -207,26 +207,22 @@ require_once __DIR__ . "\..\utility.php";
 
         public static function store(EMessaggio $messaggio): bool
         {
-
-            $messaggioID = $messaggio->getId();
-            $messaggioAutore = $messaggio->getAutoreMessaggio();
-            $messaggioTesto = $messaggio->getTesto();
-            $messaggioData = $messaggio->getData();
-
+            $autoreMessID = $messaggio->getAutoreMessaggio()->getId();
+            $testo = $messaggio->getTesto();
+            $data = $messaggio->getData();
 
             try {
                 $dbConnection=FConnection::getInstance();
                 $pdo=$dbConnection->connect();
 
 
-                $sql = ("INSERT INTO messaggi(messaggioID, messaggioAutore, messaggioTesto, messaggioData)
-                    VALUES (:messaggioID, :messaggioAutore, :messaggioTesto, :messaggioData)");
+                $sql = ("INSERT INTO messaggi(autoreMessID, testo, data)
+                    VALUES (:autoreMessID, :testo, :data)");
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
-                    ':messaggioID' =>  $messaggioID,
-                    ':messaggioAutore' => $messaggioAutore,
-                    ':messaggioTesto' => $messaggioTesto,
-                    ':messaggioData' => $messaggioData
+                    ':autoreMessID' => $autoreMessID,
+                    ':testo' => $testo,
+                    ':data' => $data
                 ));
                 return $result;
 

@@ -43,10 +43,13 @@
 
         //Costruttore
 
-        public function __construct(int $id, string $testo, ?string $data, EUser $autoreRisposta)
+        public function __construct(?int $id, string $testo, ?string $data, EUser $autoreRisposta)
         {
-
-            $this->id = $id;
+            if (isset($id)) {
+                $this->id = $id;
+            } else {
+                $this->id = 0;
+            }
             $this->testo = $testo;
 
             if ($data!=null) {

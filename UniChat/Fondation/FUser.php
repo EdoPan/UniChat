@@ -616,7 +616,6 @@ class FUser
             $resultDeleteUser = $stmt->execute(array(
                 ':userID' => $userID
             ));
-            print("qui");
 
             if ($resultDeleteFotoProfilo == true && $resultUpdateThread == true && $resultUpdateMessaggi == true && $resultUpdateRisposte == true && $resultDeleteUser == true) {
                 $pdo->query("COMMIT");

@@ -26,9 +26,9 @@ class FValutazione
      */
     public static function getInstance(): FValutazione
     {
-        $classe = __CLASS__;
-        if (self::$instance == null) {
-            self::$instance == new $classe;
+        if(self::$instance == null){
+            $classe = __CLASS__;
+            self::$instance = new $classe;
         }
         return self::$instance;
     }
@@ -36,7 +36,7 @@ class FValutazione
     /**
      * Restituisce un oggetto EValutazione, memorizzato nel database, dato l'identificativo. Per ottenere un oggetto
      * EValutazione è necessario anche recuperare gli oggetti EUser, ovvero gli utenti, che hanno espresso il proprio
-     * giudizio. Se tali oggetti non fossero recuperabili o vi fossero problemi di varia natura allora viene restituto
+     * giudizio. Se tali oggetti non fossero recuperabili o vi fossero problemi di varia natura allora viene restituito
      * null.
      * @param int $valutazioneID
      * @return EValutazione|null
@@ -46,7 +46,6 @@ class FValutazione
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-
             /*
              * Recupero del totale della valutazione.
              */
@@ -56,12 +55,12 @@ class FValutazione
                 ':valutazioneID' => $valutazioneID
             ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $totale = $rows[0]["totale"];
+            $totale = (int)$rows[0]["totale"];
 
             /*
              * Recupero utenti che hanno espresso una valutazione positiva.
              */
-            $query2 = ("SELECT * FROM valutazioni, votipositivi WHERE valutazioni.valutazioneID = votipositivi.valutazioneID AND valutazioni.valutazioneID = :valutazioneID");
+            $query2 = ("SELECT userID FROM valutazioni, votipositivi WHERE valutazioni.valutazioneID = votipositivi.valutazioneID AND valutazioni.valutazioneID = :valutazioneID");
             $stmt = $pdo->prepare($query2);
             $stmt->execute(array(
                 ":valutazioneID" => $valutazioneID
@@ -69,9 +68,9 @@ class FValutazione
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $utentiPositivi = array();
             foreach ($rows as $row) {
-                $userID = $row["userID"];
-                $fThread = FThread::getInstance();
-                $user = $fThread->load($userID);
+                $userID = (int)$row["userID"];
+                $fUser = FUser::getInstance();
+                $user = $fUser->load($userID);
                 if (isset($user)) {
                     $utentiPositivi[] = $user;
                 } else {
@@ -82,7 +81,7 @@ class FValutazione
             /*
              * Recupero utenti che hanno espresso una valutazione negativa.
              */
-            $query3 = ("SELECT * FROM valutazioni, votinegativi WHERE valutazioni.valutazioneID = votinegativi.valutazioneID AND valutazioni.valutazioneID = :valutazioneID");
+            $query3 = ("SELECT userID FROM valutazioni, votinegativi WHERE valutazioni.valutazioneID = votinegativi.valutazioneID AND valutazioni.valutazioneID = :valutazioneID");
             $stmt = $pdo->prepare($query3);
             $stmt->execute(array(
                 ":valutazioneID" => $valutazioneID
@@ -90,9 +89,9 @@ class FValutazione
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $utentiNegativi = array();
             foreach ($rows as $row) {
-                $userID = $row["userID"];
-                $fThread = FThread::getInstance();
-                $user = $fThread->load($userID);
+                $userID = (int)$row["userID"];
+                $fUser = FUser::getInstance();
+                $user = $fUser->load($userID);
                 if (isset($user)) {
                     $utentiNegativi[] = $user;
                 } else {
@@ -118,7 +117,6 @@ class FValutazione
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-
             $sql = ("SELECT valutazioneID FROM valutazioni, threads WHERE valutazioneThreadID = valutazioneID AND threadID = :threadID");
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(
@@ -202,6 +200,7 @@ class FValutazione
     /**
      * Permette di memorizzare nella base dati un oggetto EValutazione.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
+     * @param PDO $pdo
      * @param EValutazione $valutazione
      * @return int
      */

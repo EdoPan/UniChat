@@ -68,7 +68,7 @@ class FThread
                     /*
                      * Recupero dell'utente autore del thread.
                      */
-                    $autoreThreadID = $row["autoreThreadID"];
+                    $autoreThreadID = (int)$row["autoreThreadID"];
                     $fUser = FUser::getInstance();
                     $autoreThread = $fUser->load($autoreThreadID);
                     if (!isset($autoreThread)) {
@@ -78,7 +78,7 @@ class FThread
                     /*
                      * Recupero della categoria a cui appartiene il thread.
                      */
-                    $catThreadID = $row["catThreadID"];
+                    $catThreadID = (int)$row["catThreadID"];
                     $fCategoria = FCategoria::getInstance();
                     $categoriaThread = $fCategoria->load($catThreadID);
                     if(!isset($categoriaThread)) {
@@ -88,7 +88,7 @@ class FThread
                     /*
                      * Recupero della valutazione associata al thread.
                      */
-                    $valutazioneThreadID = $row["valutazioneThreadID"];
+                    $valutazioneThreadID = (int)$row["valutazioneThreadID"];
                     $fValutazione = FValutazione::getInstance();
                     $valutazioneThread = $fValutazione->load($valutazioneThreadID);
                     if(!isset($valutazioneThread)) {
@@ -180,16 +180,15 @@ class FThread
                 $dbConnection = FConnection::getInstance();
                 $pdo = $dbConnection->connect();
 
-                /** @noinspection SqlAggregates */
                 $sql = ("SELECT threadID, COUNT(*) AS numRisposte FROM threads, risposte 
                             WHERE threadRispID = threadID AND catThreadID = :categoriaID 
-                            GROUP BY threadID ORDER BY numRisposte DESC, data DESC LIMIT 1");
+                            GROUP BY threadID ORDER BY numRisposte DESC, threadID DESC LIMIT 1");
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute(array(
                     ':categoriaID' => $categoriaID
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $threadID = $rows[0]["threadID"];
+                $threadID = (int)$rows[0]["threadID"];
                 $thread = $this->load($threadID);
                 return $thread;
             } catch (PDOException $e) {
@@ -217,7 +216,7 @@ class FThread
                     ':categoriaID' => $categoriaID
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $threadID = $rows[0]["threadID"];
+                $threadID = (int)$rows[0]["threadID"];
                 $thread = $this->load($threadID);
                 return $thread;
             } catch (PDOException $e) {

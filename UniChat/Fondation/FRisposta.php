@@ -118,7 +118,7 @@
                      * Recupero dell'utente autore della risposta.
                      */
 
-                    $autoreRispID = $row["autoreRispID"];
+                    $autoreRispID = (int)$row["autoreRispID"];
                     $fUser = FUser::getInstance();
                     $autoreRisposta = $fUser->load($autoreRispID);
                     if (!isset($autoreRisposta)) {
@@ -259,26 +259,22 @@
 
         public static function store(ERisposta $risposta, int $threadID): bool
         {
-            $rispostaID = $risposta->getId();
             $user = $risposta->getAutoreRisposta();
             $testo = $risposta->getTesto();
             $dataRisposta = $risposta->getData();
-
             try {
                 $dbConnection = FConnection::getInstance();
                 $pdo = $dbConnection->connect();
 
-                $sql = ("INSERT INTO risposte(rispostaID, testoRisposta, dataRisposta, autoreRispID, threadRispID)
-                        VALUES (:rispostaID, :testoRisposta, :dataRisposta, :autoreRispID, :threadRispID)");
+                $sql = ("INSERT INTO risposte(testo, data, autoreRispID, threadRispID)
+                        VALUES (:testoRisposta, :dataRisposta, :autoreRispID, :threadRispID)");
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
-                    ':rispostaID' => $rispostaID,
                     ':testoRisposta' => $testo,
                     ':dataRisposta' => $dataRisposta,
                     ':autoreRispID' => $user->getId(),
                     ':threadRispID' => $threadID
                 ));
-
                 return $result;
             } catch (PDOException $e) {
                 return false;

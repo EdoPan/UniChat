@@ -161,13 +161,13 @@
                 if (count($rows) == 1) {
                     $record = $rows[0];
                     $cateID = (int)$record["categoriaID"];
-                    $nome = $record["nomeCategoria"];
+                    $nome = $record["nome"];
 
 
                     /*
                     * Recupero icona della categoria
                     */
-                    $idIcona = $record["iconaID"];
+                    $idIcona = (int)$record["iconaID"];
                     $icona = $this->loadIcona($idIcona);
                     if (!isset($icona)) {
                         return null;
