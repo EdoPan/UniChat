@@ -15,7 +15,7 @@ class CAmministrazione {
      * Metodo responsabile della creazione di una nuova categoria e relativo salvataggio di quest'ultima su DB.
      * @param int $adminID
      * @param string $nomeCategoria
-     * @param array $icona
+     * @param array|null $icona
      * @param string $descrizione
      * @return bool
      */
@@ -82,9 +82,9 @@ class CAmministrazione {
      * salvataggio di questa condizione nel DB.
      * @param int $adminID
      * @param int $moderatoreID
-     * @return false
+     * @return bool
      */
-    public function rimuoviModeratore(int $adminID, int $moderatoreID)
+    public function rimuoviModeratore(int $adminID, int $moderatoreID): bool
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
@@ -92,6 +92,8 @@ class CAmministrazione {
             if(isset($mod)) {
                 $categoria = $mod->getCategoriaGestita();
                 $result = $pm->rimuoviModeratoreCategoria($categoria->getID(), $mod);
+            } else {
+                $result = false;
             }
         } else {
             $result = false;
@@ -104,9 +106,9 @@ class CAmministrazione {
      * eliminazione di quest ultimo dal DB.
      * @param int $adminID
      * @param int $userID
-     * @return false
+     * @return bool
      */
-    public function rimuoviUser(int $adminID, int $userID)
+    public function rimuoviUser(int $adminID, int $userID): bool
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_ADMIN, $adminID)){
