@@ -83,7 +83,6 @@ class CInterazione {
     /**
      * Metodo responsabile della creazione di un messaggio sulla chat e relativo salvataggio su DB.
      * @param string $testo
-     * @param string $data
      * @param int $userID
      * @return bool
      */
