@@ -13,21 +13,21 @@ class CVisualizza {
 
     /**
      * Metodo responsabile della visualizzazione di 10 categorie.
-     * @return array
+     * @return array|null
      */
-    public function elencaCategorie(): array
+    public function elencaCategorie(): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //FCategoria::loadAll(); //min: 1, max: 10
+        $result = $pm->loadAllCategorie(); //FCategoria::loadAll(); //min: 1, max: 10
         return $result;
     }
 
     /**
      * Metodo responsabile della visualizzazione del thread più discusso in una categoria.
      * @param int $categoriaID
-     * @return EThread
+     * @return EThread|null
      */
-    public function threadPiuDiscusso(int $categoriaID): EThread
+    public function threadPiuDiscusso(int $categoriaID): ?EThread
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_PIU_DISCUSSO_CATEGORIA, $categoriaID);
@@ -38,9 +38,9 @@ class CVisualizza {
     /**
      * Metodo responsabile della visualizzazione del thread con valutazione più elevata in una categoria.
      * @param int $categoriaID
-     * @return EThread
+     * @return EThread|null
      */
-    public function threadValutazionePiuAlta(int $categoriaID): EThread
+    public function threadValutazionePiuAlta(int $categoriaID): ?EThread
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA, $categoriaID);
@@ -49,9 +49,9 @@ class CVisualizza {
 
     /**
      * Metodo responsabile della visualizzazione di 10 users.
-     * @return array
+     * @return array|null
      */
-    public function elencaUsers(): array
+    public function elencaUsers(): ?array
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->loadEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
@@ -60,9 +60,9 @@ class CVisualizza {
 
     /**
      * Metodo responsabile della visualizzazione di 10 moderatori.
-     * @return array
+     * @return array|null
      */
-    public function elencaModeratori(): array
+    public function elencaModeratori(): ?array
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->loadEntities(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
@@ -74,9 +74,9 @@ class CVisualizza {
      * @param $selettore
      * @param string $titoloThread
      * @param array|null $categorieIDs
-     * @return array
+     * @return array|null
      */
-    public function ricerca(string $titoloThread, ?array $categorieIDs): array
+    public function ricerca(string $titoloThread, ?array $categorieIDs): ?array
     {
         $pm = FPersistentManager::getInstance();
         if (isset($categorieIDs)) {
@@ -90,9 +90,9 @@ class CVisualizza {
     /**
      * Metodo responsabile della visualizzazione di 10 threads.
      * @param int $categoriaID
-     * @return array
+     * @return array|null
      */
-    public function elencaThreads(int $categoriaID): array
+    public function elencaThreads(int $categoriaID): ?array
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, 1, 10); //min: 1, max: 10
@@ -108,9 +108,9 @@ class CVisualizza {
 
     /**
      * Metodo responsabile della visualizzazione di 10 messaggi della chat.
-     * @return array
+     * @return array|null
      */
-    public function loadChat(): array
+    public function loadChat(): ?array
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->loadEntities(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
@@ -120,9 +120,9 @@ class CVisualizza {
     /**
      * Metodo responsabile della visualizzazione di un profilo utente.
      * @param int $userID
-     * @return EUser
+     * @return EUser|null
      */
-    public function showProfile(int $userID): EUser
+    public function showProfile(int $userID): ?EUser
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
@@ -131,10 +131,10 @@ class CVisualizza {
 
     /**
      * Metodo responsabile della visualizzazione del profilo personale.
-     * @return EUser
+     * @return EUser|null
      */
     public function showPersonalProfile(int $userID //Ancora non sappiamo come recuperare l'id dell'utente dalla sessione attuale!
-    ): EUser
+    ): ?EUser
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
