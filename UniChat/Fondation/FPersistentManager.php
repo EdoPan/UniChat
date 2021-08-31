@@ -489,12 +489,13 @@ class FPersistentManager
     /**
      * Permette di rimuovere l'assegnazione del ruolo di moderatore di una categoria ad un utente.
      * Se l'operazione va buon fine allora viene resituito true, false altrimenti.
-     * @param ECategoria $categoria
+     * @param int $categoriaID
+     * @param EModeratore $moderatore
      * @return bool
      */
-    public function rimuoviModeratoreCategoria(ECategoria $categoria): bool
+    public function rimuoviModeratoreCategoria(int $categoriaID, EModeratore $moderatore): bool
     {
         $fCategoria = FCategoria::getInstance();
-        return $fCategoria->rimuoviModeratore($categoria);
+        return $fCategoria->rimuoviModeratore($categoriaID, $moderatore);
     }
 }
