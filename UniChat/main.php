@@ -94,3 +94,56 @@ print($user->getPassword());
     $t = new EThread(1, "Problema di analisi 2", "Ma come si fa..", $allegati, $u, $c, $tags, $v, $risposte);
     print($t->getRisposte()[0]->getAutoreRisposta()->getNome());
     */
+/* CAPITOLO CHIUSO TRANNE PER LE EMAIL
+$cAutenticazione = new CAutenticazione();
+$result = $cAutenticazione->login("email.finta@email.com", "7R4SPPDbxTD4JL4kNom2xK6sfudDpF");
+if ($result) {
+    print ("TUTTO OK!");
+} else {
+    print("OPSS!");
+}
+*/
+
+$cAmministrazione = new CAmministrazione();
+$cAutenticazione = new CAutenticazione();
+$cInterazione = new CInterazione();
+$cMonitoraggio = new CMonitoraggio();
+$cVisualizza = new CVisualizza();
+//$result = $cAutenticazione->registrazione("Marta", "Verdi", "marta.verdi1@email.com", "passqord5", null, "Matematica");
+//$result = $cAutenticazione->registrazione("Luigi", "Siti", "luigi.siti@email.com", "pass", null, "Fisica");
+
+//$result = $cAmministrazione->aggiungiCategoria(3, "DISIM", null, "Qui troverai i threads del DISIM.");
+//$result = $cAmministrazione->aggiungiModeratore(3, 6, 6);
+//$result = $cAmministrazione->rimuoviCategoria(3, 5);
+//$result = $cAmministrazione->rimuoviModeratore(3, 12);
+//$result = $cAmministrazione->rimuoviUser(3, 12);
+//$result = $cInterazione->creaThread(3, "Questo è un thread.", 6, "Un testo di prova per un thread di prova.", null);
+//$result = $cInterazione->creaThread(6, "Questo è un thread.", 5, "Un testo di prova per un thread di prova.", null);
+//$result = $cInterazione->creaThread(3, "Problema di Cauchy", 6, "Un testo di prova per un thread di prova.", null);
+//$result = $cInterazione->rispondiThread(11, "Questa è un risposta di prova per un thread di prova, un'altra volta.", 14);
+//$result = $cInterazione->rispondiThread(6, "Tutto ok", 14);
+//$result = $cInterazione->rispondiThread(13, "Sarebbe.", 14);
+//$fValutazione = FValutazione::getInstance();
+//$fUser = FUser::getInstance();
+//$result = $cInterazione->valutaThread(11, -1, 15);
+//$result = true;
+//$result = $cInterazione->creaMessaggio("Ci voleva", 6);
+//$marta = $fUser->load(13);
+//$fotoProfilo = $marta->getFotoProfilo();
+//$result = $cInterazione->editPersonalProfile(13, "nuovaPass", $fotoProfilo, "Economia");
+//$result = $cAutenticazione->login("marta.verdi1@email.com", "nuovaPass");
+
+//$result = $cMonitoraggio->rimuoviMessaggio(6, 2);
+//$result = $cMonitoraggio->rimuoviThread(6, 6);
+//$result = $cMonitoraggio->rimuoviRisposte(6, 9, 14);
+//$result = $cVisualizza->elencaCategorie();
+//$result = $cVisualizza->threadPiuDiscusso(6);
+$result = $cVisualizza->threadValutazionePiuAlta(6);
+print($result->getId());
+/*
+if ($result) {
+    print ("TUTTO OK!");
+} else {
+    print("OPSS!");
+}
+*/
