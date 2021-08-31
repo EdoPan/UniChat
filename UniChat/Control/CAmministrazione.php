@@ -19,7 +19,7 @@ class CAmministrazione {
      * @param string $descrizione
      * @return bool
      */
-    public function aggiungiCategoria(int $adminID, string $nomeCategoria, array $icona, string $descrizione): bool
+    public function aggiungiCategoria(int $adminID, string $nomeCategoria, ?array $icona, string $descrizione): bool
     {
         $pm = FPersistentManager::getInstance();
         $admin = $pm->load(FPersistentManager::ENTITY_ADMIN, FPersistentManager::PROPERTY_DEFAULT, $adminID);
