@@ -45,6 +45,8 @@ class CMonitoraggio {
             if(isset($mod) and isset($cat)) {
                 if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
                     $result = $pm->delete(FPersistentManager::ENTITY_THREAD, $threadID); //FThread::delete($threadID);
+                } else {
+                    $result = false;
                 }
             } else {
                 $result = false;
@@ -70,10 +72,12 @@ class CMonitoraggio {
             $result = $pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID); //FRisposta::delete($rispostaID);
         } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true){
             $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
-            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
+            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID); //FCategoria::loadCategoriaThread($threadID);
             if(isset($mod) and isset($cat)) {
                 if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
                     $result = $pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID); //FRisposta::delete($rispostaID);
+                } else {
+                    $result = false;
                 }
             } else {
                 $result = false;
