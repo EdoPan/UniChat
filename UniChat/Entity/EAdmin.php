@@ -25,13 +25,13 @@ class EAdmin extends EModeratore {
 
     /**
      * Metodo responsabile della creazione di una categoria.
-     * @param int $categoriaID
+     * @param int|null $categoriaID
      * @param string $nomeCategoria
-     * @param string|null $icona
+     * @param array|null $icona
      * @param string $descrizione
      * @return ECategoria
      */
-    public function creaCategoria(int $categoriaID, string $nomeCategoria, ?string $icona, string $descrizione): ECategoria
+    public function creaCategoria(?int $categoriaID, string $nomeCategoria, ?array $icona, string $descrizione): ECategoria
     {
         return new ECategoria($categoriaID, $nomeCategoria, $icona, $descrizione);
     }

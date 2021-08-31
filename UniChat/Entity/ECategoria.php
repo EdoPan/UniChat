@@ -38,14 +38,18 @@ class ECategoria {
     private string $descrizione;
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @param string $nome
      * @param array|null $icona
      * @param string $descrizione
      */
-    public function __construct(int $id, string $nome, ?array $icona, string $descrizione)
+    public function __construct(?int $id, string $nome, ?array $icona, string $descrizione)
     {
-        $this->id = $id;
+        if(isset($id)){
+            $this->id = $id;
+        } else {
+            $this->id = 0;
+        }
         $this->nome = $nome;
         if(isset($icona)){
             $this->icona = $icona;
