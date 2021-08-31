@@ -63,7 +63,7 @@ class FUser
                 /*
                  * Recupero foto profilo dell'utente.
                  */
-                $fotoProfiloID = $record["fotoProfiloID"];
+                $fotoProfiloID = (int)$record["fotoProfiloID"];
                 $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
                 if (!isset($fotoProfilo)) {
                     return null;
@@ -150,7 +150,7 @@ class FUser
                 /*
                  * Recupero foto profilo del moderatore.
                  */
-                $fotoProfiloID = $record["fotoProfiloID"];
+                $fotoProfiloID = (int)$record["fotoProfiloID"];
                 $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
                 if (!isset($fotoProfilo)) {
                     return null;
@@ -208,7 +208,7 @@ class FUser
                 /*
                  * Recupero foto profilo.
                  */
-                $fotoProfiloID = $record["fotoProfiloID"];
+                $fotoProfiloID = (int)$record["fotoProfiloID"];
                 $fotoProfilo = $this->loadFotoProfilo($fotoProfiloID);
                 if (!isset($fotoProfilo)) {
                     return null;
@@ -419,12 +419,11 @@ class FUser
      * Permette di assegnare ad un utente il ruolo di moderatore di una categoria.
      * Viene restituito true se l'operazione va buon fine, false altrimenti.
      * @param PDO $pdo
-     * @param EModeratore $moderatore
+     * @param int $moderatoreID
      * @return bool
      */
-    public function updateToModeratore(PDO $pdo, EModeratore $moderatore): bool  //usato da FCategoria->update
+    public function updateToModeratore(PDO $pdo, int $moderatoreID): bool  //usato da FCategoria->update
     {
-        $moderatoreID = $moderatore->getId();
         try {
             $sql = ("UPDATE users SET moderatore = true WHERE userID = :moderatoreID");
             $stmt = $pdo->prepare($sql);
@@ -441,12 +440,11 @@ class FUser
      * Permette di rimuovere un utente dal ruolo di moderatore di una categoria.
      * Viene restituito true se l'operazione va a buon fine, false altrimenti.
      * @param PDO $pdo
-     * @param EModeratore $moderatore
+     * @param int $moderatoreID
      * @return bool
      */
-    public function updateToUser(PDO $pdo, EModeratore $moderatore): bool  //usato da FCategoria->rimuoviModeratore
+    public function updateToUser(PDO $pdo, int $moderatoreID): bool  //usato da FCategoria->rimuoviModeratore
     {
-        $moderatoreID = $moderatore->getId();
         try {
             $sql = ("UPDATE users SET moderatore = false WHERE userID = :moderatoreID");
             $stmt = $pdo->prepare($sql);
@@ -584,7 +582,6 @@ class FUser
             ));
             $rows = $s->fetchAll(PDO::FETCH_ASSOC);
             $fotoProfiloID = (int)$rows[0]["fotoProfiloID"];
-
             /*
              * La rimozione dell'utente richiede una serie di operazioni che devono essere eseguite una di seguito
              * all'altra e con mutua esclusione sulle tabelle della base dati che ne sono coinvolte. Le operazioni
@@ -597,7 +594,7 @@ class FUser
              * - rimozione dell'utente.
              */
             $pdo->query("SET autocommit = 0");
-            $pdo->query("LOCK TABLES threads WRITE, messaggi WRITE, risposte WRITE");
+            $pdo->query("LOCK TABLES threads WRITE, messaggi WRITE, risposte WRITE, users WRITE");
 
             $resultDeleteFotoProfilo = true;
             if ($fotoProfiloID != 1) {
@@ -613,11 +610,14 @@ class FUser
             $fRisposta = FRisposta::getInstance();
             $resultUpdateRisposte = $fRisposta->updateUserID($pdo, $userID);
 
-            $sql = "DELETE FROM users WHERE userID = :userID";
+
+            $sql = ("DELETE FROM users WHERE userID = :userID");
             $stmt = $pdo->prepare($sql);
             $resultDeleteUser = $stmt->execute(array(
                 ':userID' => $userID
             ));
+            print("qui");
+
             if ($resultDeleteFotoProfilo == true && $resultUpdateThread == true && $resultUpdateMessaggi == true && $resultUpdateRisposte == true && $resultDeleteUser == true) {
                 $pdo->query("COMMIT");
                 $pdo->query("UNLOCK TABLES");

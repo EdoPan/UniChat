@@ -74,11 +74,11 @@
         {
 
             try {
-                $dbconnection=FConnection::getInstance();
-                $pdo=$dbconnection->connect;
+                $dbConnection=FConnection::getInstance();
+                $pdo=$dbConnection->connect();
 
 
-                $stmt=$pdo->query("SELECT * FROM icona WHERE iconaID=".$iconaID);
+                $stmt=$pdo->query("SELECT * FROM icone WHERE iconaID=".$iconaID);
                 $rows=$stmt->fetchAll(PDO::FETCH_ASSOC);
                 if (count($rows)==1) {
                     $record=$rows[0];
@@ -120,12 +120,12 @@
                 if (count($rows) == 1) {
                     $record = $rows[0];
                     $cateID = (int)$record["categoriaID"];
-                    $nome = $record["nomeCategoria"];
+                    $nome = $record["nome"];
 
                     /*
                     * Recupero icona della categoria
                     */
-                    $idIcona = $record["iconaID"];
+                    $idIcona = (int)$record["iconaID"];
                     $icona = $this->loadIcona($idIcona);
                     if (!isset($icona)) {
                         return null;
@@ -194,7 +194,6 @@
 
         public function store(ECategoria $categoria): bool
         {
-            $categoriaID = $categoria->getId();
             $nome = $categoria->getNome();
             $icona = $categoria->getIcona();
             $descrizione = $categoria->getDescrizione();
@@ -229,11 +228,10 @@
                         return false;
                     }
 
-                    $sql = ("INSERT INTO categorie(categoriaID, nome, iconaID, descrizione)
-                    VALUES (:categoriaID, :nome, :iconaID, :descrizione)");
+                    $sql = ("INSERT INTO categorie(nome, iconaID, descrizione)
+                    VALUES (:nome, :iconaID, :descrizione)");
                     $stmt = $pdo->prepare($sql);
                     $result = $stmt->execute(array(
-                        ':categoriaID' =>  $categoriaID,
                         ':nome' => $nome,
                         ':icona' => $icona,
                         ':descrizione' => $descrizione
@@ -245,16 +243,14 @@
                         $pdo->rollBack();
                     }
                 } else {
-
                     /*
                      * L'admin ha impostato l'icona di default. Deve essere seguita la sola operazione di
                      * memorizzazione della categoria e in particolare viene posto ad 1 il campo iconaCategoriaID.
                      */
-                    $sql = ("INSERT INTO categoria(categoriaID, nome, iconaID, descrizione)
-                    VALUES (:categoriaID, :nome, :iconaID, :descrione)");
+                    $sql = ("INSERT INTO categorie(nome, iconaID, descrizione)
+                    VALUES (:nome, :iconaID, :descrizione)");
                     $stmt = $pdo->prepare($sql);
                     $result = $stmt->execute(array(
-                        ':categoriaID' =>  $categoriaID,
                         ':nome' => $nome,
                         ':iconaID' => 1,
                         ':descrizione' => $descrizione
@@ -293,11 +289,11 @@
 
         /**
          * Assegnazione di un moderatore ad una categoria.
-         * @param ECategoria|null $categoria
+         * @param ECategoria $categoria
          * @param EModeratore $mod
          * @return bool
          */
-        public function update(?ECategoria $categoria, EModeratore $mod): bool
+        public function update(ECategoria $categoria, EModeratore $mod): bool
         {
             $categoriaID = $categoria->getId();
             $moderatoreID = $mod->getId();
@@ -305,17 +301,26 @@
             try {
                 $dbConnection = FConnection::getInstance();
                 $pdo = $dbConnection->connect();
+                $pdo->beginTransaction();
 
+                $fUser = FUser::getInstance();
+                $resultUpdateUserToModeratore = $fUser->updateToModeratore($pdo, $moderatoreID);
 
                 $sql = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
 
                 $stmt = $pdo->prepare($sql);
-                $result = $stmt->execute(array(
+                $resultUpdateModeratoreCategoria = $stmt->execute(array(
                     ':moderatoreID' =>  $moderatoreID,
                     ':categoriaID' => $categoriaID
                 ));
-                return $result;
 
+                if($resultUpdateUserToModeratore == true && $resultUpdateModeratoreCategoria == true) {
+                    $pdo->commit();
+                    return true;
+                } else {
+                    $pdo->rollBack();
+                    return false;
+                }
             } catch (PDOException $e) {
                 return false;
             }
@@ -334,7 +339,7 @@
         private function deleteIconaCategoria(PDO $pdo, int $iconaID): bool
         {
             try {
-                $sql = "DELETE FROM icona WHERE iconaID = :iconaID";
+                $sql = "DELETE FROM icone WHERE iconaID = :iconaID";
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
                     ':iconaID' => $iconaID
@@ -351,25 +356,25 @@
          * Inoltre il moderatore viene rimosso dalla sua carica e torna ad essere un "semplice" User.
          * Restituisce true se l'operazione va a buon fine, false altrimenti.
          * @param int $categoriaID
-         * @param EModeratore $moderatore
          * @return bool
          */
 
-        public function delete(int $categoriaID, EModeratore $moderatore): bool
+        public function delete(int $categoriaID): bool
         {
 
             try {
                 $dbConnection = FConnection::getInstance();
                 $pdo=$dbConnection->connect();
 
-                $query = ("SELECT iconaID FROM categorie WHERE categoriaID=:categoriaID");
-                $s=$pdo->prepare($query);
+                $sql = ("SELECT iconaID, moderatoreID FROM categorie WHERE categoriaID=:categoriaID");
+                $s=$pdo->prepare($sql);
                 $s->execute(array(
                     ':categoriaID' => $categoriaID
                 ));
 
                 $rows = $s->fetchAll(PDO::FETCH_ASSOC);
                 $iconaCategoriaID=(int)$rows[0]["iconaID"];
+                $moderatoreID = (int)$rows[0]["moderatoreID"];
 
              /*
              * La rimozione della categoria richiede una serie di operazioni che devono essere eseguite una di seguito
@@ -387,28 +392,26 @@
 
                 $resultDeleteIconaCategoria=true;
                 if($iconaCategoriaID !=1) {
-
                     $resultDeleteIconaCategoria=$this-> deleteIconaCategoria($pdo, $iconaCategoriaID);
                 }
 
                 $fThread=FThread::getInstance();
-
                 //updateCategoriaID() -> metodo di FThread che aggiorna tutti i catThreadID dei thread di questa categoriaID con 1
-                $resultUpdateCatThread =$fThread->updateCategoriaID($pdo, $categoriaID);
+                $resultUpdateCategoriaThread =$fThread->updateCategoriaID($pdo, $categoriaID);
+                $query1 = ("UPDATE categorie SET moderatoreID = NULL WHERE moderatoreID = :moderatoreID");
+                $stmt = $pdo->prepare($query1);
+                $resultUpdateModeratoreCategoria = $stmt->execute(array(':moderatoreID' => $moderatoreID));
 
+                $fUser = FUser::getInstance();
+                $resultUpdateModeratoreToUser = $fUser->updateToUser($pdo, $moderatoreID);
 
-                $resultUpdModeratore=self::rimuoviModeratore($categoriaID, $moderatore);
-
-
-                $sql = "DELETE FROM categorie WHERE categoriaID = $categoriaID";
-
-                $stmt =  $pdo->prepare($sql);
-
+                $query2 = "DELETE FROM categorie WHERE categoriaID = :categoriaID";
+                $stmt =  $pdo->prepare($query2);
                 $resultDeleteCategoria=$stmt->execute(array(
-                    ':$categoriaID'=>$categoriaID
+                    ':categoriaID'=>$categoriaID
                 ));
 
-                if ($resultDeleteIconaCategoria == true && $resultUpdateCatThread == true && $resultUpdModeratore == true && $resultDeleteCategoria == true) {
+                if ($resultDeleteIconaCategoria == true && $resultUpdateCategoriaThread == true && $resultUpdateModeratoreCategoria == true && $resultUpdateModeratoreToUser == true && $resultDeleteCategoria == true) {
                     $pdo->query("COMMIT");
                     $pdo->query("UNLOCK TABLES");
                     return true;
@@ -423,10 +426,15 @@
 
         }
 
+        private static function eliminaModeratore(PDO $pdo, int $moderatoreID): bool {
+
+            $sql = ("UPDATE categorie SET moderatoreID = NULL WHERE moderatoreID = :moderatoreID");
+
+        }
 
         /**
          * Rimozione di un moderatore dalla categoria e rimozione dell'utente dal ruolo di moderatore.
-         * @param ECategoria $categoria
+         * @param int $categoriaID
          * @param EModeratore $moderatore
          * @return bool
          */
@@ -437,23 +445,22 @@
 
                 $dbConnection = FConnection::getInstance();
                 $pdo=$dbConnection->connect();
+                $pdo->beginTransaction();
+
+                $fUser = FUser::getInstance();
+                $resultUpdateModeratoreToUser = $fUser->updateToUser($pdo, $moderatore->getId());
 
                 $sql = ("UPDATE categorie SET moderatoreID = NULL WHERE categoriaID = $categoriaID");
-
-                $fUser=FUser::getInstance();
-
-                $resultUpdtoUser=$fUser->updateToUser($pdo, $moderatore);
-
                 $stmt = $pdo->prepare($sql);
-                $result = $stmt->execute(array(
+                $resultUpdateModeratore = $stmt->execute(array(
                     ':categoriaID' => $categoriaID
                 ));
 
-                if ($resultUpdtoUser== true && $result == true) {
-
+                if ($resultUpdateModeratoreToUser== true && $resultUpdateModeratore == true) {
+                    $pdo->commit();
                     return true;
                 } else {
-
+                    $pdo->rollBack();
                     return false;
                 }
 
