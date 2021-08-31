@@ -21,7 +21,7 @@ class CMonitoraggio {
     {
         $pm = FPersistentManager::getInstance();
         if($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true or $pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true){
-            $result = $pm->delete(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, $messID);
+            $result = $pm->delete(FPersistentManager::ENTITY_MESSAGGIO, $messID);
         } else {
             $result = false;
         }
@@ -41,7 +41,7 @@ class CMonitoraggio {
             $result = $pm->delete(FPersistentManager::ENTITY_THREAD, $threadID); //FThread::delete($threadID);
         } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true){
             $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
-            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $threadID); //FCategoria::loadCategoriaThread($threadID);
+            $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID); //FCategoria::loadCategoriaThread($threadID);
             if(isset($mod) and isset($cat)) {
                 if($mod->getCategoriaGestita()->getNome() == $cat->getNome()){
                     $result = $pm->delete(FPersistentManager::ENTITY_THREAD, $threadID); //FThread::delete($threadID);
