@@ -92,6 +92,22 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
+                    <div class="dropdown mb-4 my-md-0">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filtra
+                        </button>
+                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+                            <a class="dropdown-item" href="#">DISIM</a>
+                            <a class="dropdown-item" href="#">DIIIE</a>
+                            <a class="dropdown-item" href="#">DICEAA</a>
+                            <a class="dropdown-item" href="#">DSFC</a>
+                            <a class="dropdown-item" href="#">MESVA</a>
+                            <a class="dropdown-item" href="#">DISCAB</a>
+                            <a class="dropdown-item" href="#">DSU</a>
+                            <a class="dropdown-item" href="#">Mista</a>
+                        </div>
+                    </div>
+
                     <!-- Topbar Search -->
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -163,6 +179,8 @@
                                     <h4 class="py-0 mb-4 text-dark" align="center">Chat</h4>
 
 
+
+
                                     <div class="card shadow mb-2">
                                         <!-- Utente -->
                                         <div class="card-header py-1 d-flex flex-row align-items-center justify-content-between">
@@ -173,6 +191,12 @@
                                         </div>
                                         <!-- Testo -->
                                         <div class="card-body py-2">Messaggio ricevuto</div>
+
+                                        <div class="container my-auto py-1">
+                                            <div class="copyright text-center my-auto">
+                                                <span>01/03/2020 17:23</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="card shadow mb-2">
@@ -185,6 +209,12 @@
                                         </div>
                                         <!-- Testo -->
                                         <div class="card-body py-2">Messaggio ricevuto</div>
+
+                                        <div class="container my-auto py-1">
+                                            <div class="copyright text-center my-auto">
+                                                <span>01/03/2020 17:43</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="card shadow mb-2">
@@ -197,6 +227,12 @@
                                         </div>
                                         <!-- Testo -->
                                         <div class="card-body py-2">Messaggio ricevuto</div>
+
+                                        <div class="container my-auto py-1">
+                                            <div class="copyright text-center my-auto">
+                                                <span>01/03/2020 18:26</span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="card shadow mb-2">
@@ -209,21 +245,34 @@
                                         </div>
                                         <!-- Testo -->
                                         <div class="card-body py-2">Messaggio inviato</div>
+
+                                        <div class="container my-auto py-1">
+                                            <div class="copyright text-center my-auto">
+                                                <span>01/03/2020 18:33</span>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-group row mb-2">
 
-                                        <div class="col-sm-6 mb-3 mb-sm-0">
+
+                                    <!-- Form invio messaggio -->
+                                    <div class="row mb-2">
+
+                                        <div class="col-sm-9 mb-3 mb-sm-0">
                                             <input type="text" class="form-control"
                                                    id="messaggio" placeholder="Messaggio">
                                         </div>
 
-                                        <div class="col-sm-6">
-                                            <a href="#" class="col-sm-6 btn btn-primary btn-user btn-block">
-                                                Invia
+                                        <div class="col-sm-3">
+                                            <a href="#" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                                <span class="text">Invia</span>
                                             </a>
                                         </div>
                                     </div>
+                                    <!-- Fine form invio messaggio -->
 
                                 </div>
                             </div>
@@ -235,19 +284,37 @@
                             <div class="card mb-4 py-3 border-bottom-info">
                                 <div class="card-body">
 
+                                    <div class="dropdown no-arrow" align="right">
+                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                            <div class="dropdown-header">Visualizza per:</div>
+                                            <a class="dropdown-item" href="#">Valutazione</a>
+                                            <a class="dropdown-item" href="#">Numero risposte</a>
+                                        </div>
+                                    </div>
+
                                     <h4 class="py-0 mb-4 text-dark" align="center">Thread Popolari</h4>
+
 
                                     <!-- Thread Popolare -->
                                     <div class="card shadow mb-2">
                                         <!-- Titolo -->
                                         <a href="#collapseThread1" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseThread1">
-                                            <h6 class="m-0 font-weight-bold text-primary">Geometria</h6>
+                                            <h5 class="m-0 font-weight-bold text-primary">Geometria<sup> 120</sup></h5>
+                                            <h6 class="m-0 font-weight-normal text-dark">Mario Rossi</h6>
                                         </a>
                                         <!-- Descrizione -->
                                         <div class="collapse hide" id="collapseThread1" style="">
                                             <div class="card-body">
                                                 Qualcuno sa dirmi come si calcola l'inversa di una matrice
                                                 6x6?
+                                            </div>
+                                            <div class="container my-auto">
+                                                <div class="copyright text-center my-auto">
+                                                    <span>DIIIE</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -256,13 +323,41 @@
                                     <div class="card shadow mb-2">
                                         <!-- Titolo -->
                                         <a href="#collapseThread2" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseThread2">
-                                            <h6 class="m-0 font-weight-bold text-primary">Analisi 2 mena!</h6>
+                                            <h5 class="m-0 font-weight-bold text-primary">Analisi 2 mena!<sup> 90</sup></h5>
+                                            <h6 class="m-0 font-weight-normal text-dark">Marta Verdi</h6>
                                         </a>
                                         <!-- Descrizione -->
                                         <div class="collapse hide" id="collapseThread2" style="">
                                             <div class="card-body">
                                                 Questo esame è letteralmente impossibile qualcuno mi saprebbe dare
                                                 dei consigli (ed anche appunti) grazie :)
+                                            </div>
+                                            <div class="container my-auto">
+                                                <div class="copyright text-center my-auto">
+                                                    <span>DISIM</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thread Popolare -->
+                                    <div class="card shadow mb-2">
+                                        <!-- Titolo -->
+                                        <a href="#collapseThread5" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseThread5">
+                                            <h5 class="m-0 font-weight-bold text-primary">Appunti Fondamenti di Informatica<sup> 56</sup></h5>
+                                            <h6 class="m-0 font-weight-normal text-dark">Carlo Ricciardelli</h6>
+
+                                        </a>
+                                        <!-- Descrizione -->
+                                        <div class="collapse hide" id="collapseThread5" style="">
+                                            <div class="card-body">
+                                                Qualcuno ha degli appunti del corso di Fondamenti di Informatica
+                                                dell'anno 2018/2019?
+                                            </div>
+                                            <div class="container my-auto">
+                                                <div class="copyright text-center my-auto">
+                                                    <span>DISIM</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -271,12 +366,18 @@
                                     <div class="card shadow mb-2">
                                         <!-- Titolo -->
                                         <a href="#collapseThread3" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseThread3">
-                                            <h6 class="m-0 font-weight-bold text-primary">Fisica 1</h6>
+                                            <h5 class="m-0 font-weight-bold text-primary">Fisica 1<sup> 50</sup></h5>
+                                            <h6 class="m-0 font-weight-normal text-dark">Carlo Ricciardelli</h6>
                                         </a>
                                         <!-- Descrizione -->
                                         <div class="collapse hide" id="collapseThread3" style="">
                                             <div class="card-body">
                                                 Come svolge gli esami il nuovo professore?
+                                            </div>
+                                            <div class="container my-auto">
+                                                <div class="copyright text-center my-auto">
+                                                    <span>DICEAA</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
