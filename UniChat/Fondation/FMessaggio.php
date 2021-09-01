@@ -4,7 +4,7 @@ declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
 
 /**
- * Classe Foundation di Messaggio. Conosce la tabella messaggi.
+ * Classe Foundation di Messaggio.
  */
 class FMessaggio
 {
@@ -37,7 +37,9 @@ class FMessaggio
 
 
     /**
-     * Recupero di un Messaggio da DB.
+     * Restituisce l'oggetto EMessaggio, memorizzato nel database, avente come id quello passato come parametro.
+     * Per ottenere un oggetto EMessaggio è necessario recuperare prima l'autore (utilizzo il metodo load di FUser).
+     * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * @param int $messaggioID
      * @return EMessaggio|null
      */
@@ -102,7 +104,7 @@ class FMessaggio
     }
 
     /**
-     * Scrittura in DB di un oggetto di tipo messaggio.
+     * Scrittura in DB di un oggetto di tipo EMessaggio.
      * @param EMessaggio $messaggio
      * @return bool
      */
@@ -153,6 +155,8 @@ class FMessaggio
     }
 
     /**
+     * Restituisce un array contenente un numero di messaggi pari a $numeroRighe a partire da un determinato messaggio ($rigaPartenza).
+     * Se il recupero fallisce il metodo restituisce null.
      * @param int $rigaPartenza
      * @param int $numeroRighe
      * @return array|null

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- *
+ * Classe di tipo Foundation utilizzata per la connessione alla base dati.
  */
 class FConnection
 {

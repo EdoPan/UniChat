@@ -5,7 +5,7 @@
 
 
 /**
- * Classe Foundation FRisposta. Conosce la tabella "risposte".
+ * Classe Foundation FRisposta.
  */
 
 class FRisposta
@@ -38,6 +38,8 @@ class FRisposta
 
      /**
       * Restituisce l'oggetto ERisposta, memorizzato nel database, avente come id quello passato come parametro.
+      * Per ottenere un oggetto ERisposta è necessario recuperare prima l'autore della risposta (utilizzo il metodo load di FUser).
+      * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
       * @param int $rispostaID
       * @return Erisposta|null
       */
@@ -156,9 +158,9 @@ class FRisposta
      }
 
     /**
-     * Recupero delle risposte di un thread.
-     * @param int $threadID ID del Thread di cui recuperare le risposte
-     * @return array Array contenente le risposte del thread
+     * Recupero delle risposte di un thread che ha per id quello passato come parametro.
+     * @param int $threadID
+     * @return array
      */
     public function loadRisposteThread(int $threadID): ?array
     {

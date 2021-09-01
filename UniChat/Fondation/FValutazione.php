@@ -4,7 +4,7 @@
     require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe Foundation di Valutazione.
  */
 class FValutazione
 {

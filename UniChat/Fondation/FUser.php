@@ -3,7 +3,7 @@
     require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe Foundation di User.
  */
 class FUser
 {

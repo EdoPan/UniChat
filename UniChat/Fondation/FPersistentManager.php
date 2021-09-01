@@ -4,7 +4,7 @@ declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe Foundation Persistent Manager. Ha il compito di gestire la persistenza di tutti gli oggetti entity.
  */
 class FPersistentManager
 {
@@ -114,7 +114,7 @@ class FPersistentManager
         }
 
     /**
-     * Restituisce l'instanza di FThread. Se già esistente restituisce quella esistente, altrimenti la crea.
+     * Restituisce l'istanza di FPersistentManager. Se già esistente restituisce quella esistente, altrimenti la crea.
      * @return FPersistentManager
      */
     public static function getInstance(): FPersistentManager
@@ -260,7 +260,7 @@ class FPersistentManager
      * @param object $entity
      * @return bool
      */
-    public function update(int $entityType, object $entity): bool                           //PROPERTY NON DOVREBBE SERVIRE
+    public function update(int $entityType, object $entity): bool
     {
         if($entityType == self::ENTITY_USER || $entityType == self::ENTITY_MODERATORE || $entityType == self::ENTITY_ADMIN) {
             $fUser = FUser::getInstance();

@@ -4,7 +4,7 @@
     require_once __DIR__ . "\..\utility.php";
 
 /**
- * Classe Foundation di Categoria. Conosce la tabella "Categorie".
+ * Classe Foundation di Categoria.
  */
 class FCategoria
 {
@@ -33,7 +33,9 @@ class FCategoria
     }
 
     /**
-     * Recupero di un oggetto di tipo ECategoria dal DB.
+     * Restituisce l'oggetto ECategoria, memorizzato nel database, avente come id quello passato come parametro.
+     * Per ottenere un oggetto ECategoria è necessario recuperare prima l'icona (utilizzo il metodo loadIcona).
+     * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * @param int $categoriaID
      * @return ECategoria|null
      */
@@ -74,7 +76,15 @@ class FCategoria
     }
 
     /**
-     * Recupero icona categoria.
+     * Restituisce l'array contenente le informazioni riguardante l'icona di una categoria, memorizzata nel database,
+     * avente come id quello passato come parametro.
+     * L'array restituito, se il recupero avviene con successo, conterrà:
+     * - id icona
+     * - nome icona
+     * - dimensione icona
+     * - tipo file icona
+     * - immagine
+     * In caso contrario il metodo restituisce null.
      * @param int $iconaID
      * @return array|null
      */
@@ -108,7 +118,9 @@ class FCategoria
     }
 
     /**
-     * Recupero di una categoria di un Thread dal proprio ID.
+     * Restituisce l'oggetto ECategoria, memorizzato nel database, a partire dal thread avente come id quello passato come parametro.
+     * Per il recupero dell'oggetto ECategoria faccio uso del metodo load.
+     * Se ciò non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * @param int $threadID
      * @return ECategoria|null
      */
@@ -151,6 +163,17 @@ class FCategoria
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
+
+
+            /*
+                 * L'assegnazione di un moderatore ad una cateogoria nella base dati richiede che vengano compiute una serie di
+                 * operazioni da eseguire una di seguito all'altra, ma che devono apportare modifiche alla base dati
+                 * solo se sono avvenute tutte con successo.
+                 * Tali operazioni sono:
+                 * - l'oggetto di tipo user assume il ruolo di moderatore (metodo updateToModeratore di FUser);
+                 * - il moderatore viene assegnato ad una categoria (quella passata come parametro)
+             */
+
             $pdo->beginTransaction();
 
             $fUser = FUser::getInstance();
@@ -176,7 +199,8 @@ class FCategoria
     }
 
     /**
-     * Scrittura in DB di un oggetto di tipo Categoria.
+     * Scrittura in DB di un oggetto di tipo ECategoria.
+     * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
      * @param ECategoria $categoria
      * @return bool
      */
