@@ -200,13 +200,6 @@ class FPersistentManager
             $fThread = FThread::getInstance();
             return $fThread->loadThreadMaxValutazionePerCategoria($id);
 
-        } else if ($entityType == self::ENTITY_RISPOSTA && $property == self::PROPERTY_DEFAULT) {           //NON SERVE AL CONTROLLO!!
-            /*
-             * Si vuole ottenere una risposta a partire dal suo identificativo.
-             */
-            $fRisposta = FRisposta::getInstance();
-            return $fRisposta->load($id);
-
         } else if ($entityType == self::ENTITY_VALUTAZIONE && $property == self::PROPERTY_DEFAULT) {
             /*
              * Si vuole ottenere una valutazione dato il suo identificativo.
@@ -221,26 +214,19 @@ class FPersistentManager
             $fValutazione = FValutazione::getInstance();
             return $fValutazione->loadValutazioneThread($id);
 
-        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_DEFAULT) {          //NON DOVREBBE SERVIRE AL CONTROLLO!!
+        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_DEFAULT) {
             /*
              * Si vuole ottenere una categoria dato il suo identificativo.
              */
             $fCategoria = FCategoria::getInstance();
             return $fCategoria->load($id);
 
-        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_BY_THREAD) {        //NON DOVREBBE SERVIRE AL CONTROLLO!!
+        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_BY_THREAD) {
             /*
              * Si vuole ottenere la categoria di un thread di cui viene fornito l'identificativo.
              */
             $fCategoria = FCategoria::getInstance();
             return $fCategoria->loadCategoriaThread($id);
-
-        } else if ($entityType == self::ENTITY_MESSAGGIO && $property == self::PROPERTY_DEFAULT) {          //NON DOVREBBE SERIVIRE AL CONTROLLO!!
-            /*
-             * Restituisce un messaggio dato il suo identificativo.
-             */
-            $fMessaggio = FMessaggio::getInstance();
-            return $fMessaggio->load($id);                                                                  //NON DOVREBBE SERIVRE AL FOUNDATION!!
 
         } else {
             return null;

@@ -8,7 +8,7 @@
 class FUser
 {
     /**
-     * Instanza della classe FUser, si utilizza per il singleton.
+     * Istanza della classe FUser, si utilizza per il singleton.
      * @var null
      */
     private static $instance = null;
@@ -21,7 +21,7 @@ class FUser
     }
 
     /**
-     * Restituisce l'instanza di FUser. Se già esistente restituisce quella esistente, altrimenti la crea.
+     * Restituisce l'istanza di FUser. Se già esistente restituisce quella esistente, altrimenti la crea.
      * @return FUser
      */
     public static function getInstance(): FUser
@@ -34,7 +34,7 @@ class FUser
     }
 
     /**
-     * Restituisce l'oggeto EUser, memorizzato nel database, avente come id quello passato come paramentro.
+     * Restituisce l'oggetto EUser, memorizzato nel database, avente come id quello passato come parametro.
      * Qualora la foto profilo dell'utente non fosse presente, vi fossero problemi con la comunicazione con il database,
      * o vi fossero errori di varia natura allora viene restituito null.
      * @param int $userID
@@ -795,10 +795,10 @@ class FUser
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
-            $pdo = new PDO ("mysql:host=localhost;dbname=testing", "root", "pippo");
 
             $stmt = $pdo->query("SELECT userID FROM users WHERE moderatore = true ORDER BY cognome LIMIT " . $rigaPartenza . ", " . $numeroRighe);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
             foreach ($rows as $row) {
                 $moderatori[] = $this->loadModeratore((int)$row["userID"]);
             }

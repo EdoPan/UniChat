@@ -10,20 +10,20 @@ class FThread
     {
 
     /**
-     * Instanza della classe FThread, si utlizza per il singleton.
+     * Istanza della classe FThread, si utlizza per il singleton.
      * @var null
      */
     private static $instance = null;
 
     /**
-     * Costruttire di default.
+     * Costruttore di default.
      */
     private function __construct()
         {
         }
 
     /**
-     * Restituisce l'instanza di FThread. Se già esistente restituisce quella esistente, altrimenti la crea.
+     * Restituisce l'istanza di FThread. Se già esistente restituisce quella esistente, altrimenti la crea.
      * @return FThread
      */
     public static function getInstance(): FThread
@@ -36,7 +36,7 @@ class FThread
         }
 
     /**
-     * Restituisce l'oggeto EThread, memorizzato nel database, avente come id quello passato come paramentro.
+     * Restituisce l'oggetto EThread, memorizzato nel database, avente come id quello passato come parametro.
      * Per ottenere un oggetto EThread è necessario recuperare diversi oggetti dalla base dati, nel caso non fosse
      * possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * Gli oggetti da recuperare sono:
@@ -445,7 +445,7 @@ class FThread
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($rows as $row) {
-                    $threadID = $row["threadID"];
+                    $threadID = (int)$row["threadID"];
                     $thread = $this->load($threadID);
                     if (isset($thread)) {
                         $threads[] = $thread;
@@ -485,7 +485,7 @@ class FThread
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($rows as $row) {
-                    $threadID = $row["threadID"];
+                    $threadID = (int)$row["threadID"];
                     $thread = $this->load($threadID);
                     if (isset($thread)) {
                         $threads[] = $thread;
@@ -529,7 +529,7 @@ class FThread
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($rows as $row) {
-                    $threadID = $row["threadID"];
+                    $threadID = (int)$row["threadID"];
                     $thread = $this->load($threadID);
                     if (isset($thread)) {
                         $threads[] = $thread;
