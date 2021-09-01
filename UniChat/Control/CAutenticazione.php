@@ -29,7 +29,7 @@ class CAutenticazione {
             $u = new EUser($userID, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio);
             $result = $pm->store(FPersistentManager::ENTITY_USER, $u);
             if($result == true) {
-                mail($email, 'Iscrizione UniChat', 'Congratulazioni' .$nome .$cognome .'la registrazione su UniChat è andata a buon fine!');
+                mail($email, 'Iscrizione UniChat', 'Congratulazioni ' .$nome .' ' .$cognome .' la registrazione su UniChat è andata a buon fine!', 'From: test2@localhost');
             }
         } else {
             $result = false;
@@ -67,7 +67,7 @@ class CAutenticazione {
             $password = $user->generaPassword();
             $result = $pm->update(FPersistentManager::ENTITY_USER, $user);
             if($result == true) {
-                mail($email, 'Recupero password', "La tua password temporanea è: ".$password);
+                mail($email, 'Recupero password', 'La tua password temporanea è: ' .'[ '.$password .' ]', 'From: test2@localhost');
             }
         } else {
             $result = false;

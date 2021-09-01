@@ -18,7 +18,7 @@ class CVisualizza {
     public function elencaCategorie(): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadAllCategorie(); //FCategoria::loadAll(); //min: 1, max: 10
+        $result = $pm->loadAllCategorie(); //FCategoria::loadAll();
         return $result;
     }
 
@@ -54,7 +54,7 @@ class CVisualizza {
     public function elencaUsers(): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null, 0, 10);
         return $result;
     }
 
@@ -65,7 +65,7 @@ class CVisualizza {
     public function elencaModeratori(): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, null, 0, 10);
         return $result;
     }
 
@@ -95,7 +95,7 @@ class CVisualizza {
     public function elencaThreads(int $categoriaID): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, 0, 10);
         return $result;
     }
 
@@ -113,7 +113,7 @@ class CVisualizza {
     public function loadChat(): ?array
     {
         $pm = FPersistentManager::getInstance();
-        $result = $pm->loadEntities(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, null, 1, 10); //min: 1, max: 10
+        $result = $pm->loadEntities(FPersistentManager::ENTITY_MESSAGGIO, FPersistentManager::PROPERTY_DEFAULT, null, 0, 10);
         return $result;
     }
 
@@ -138,6 +138,17 @@ class CVisualizza {
     {
         $pm = FPersistentManager::getInstance();
         $result = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
+        return $result;
+    }
+
+    /**
+     * Metodo responsabile della visualizzazione di una singola categoria.
+     * @param int $categoriaID
+     * @return ECategoria|null
+     */
+    public function visualizzaCategoria(int $categoriaID): ?ECategoria {
+        $pm = FPersistentManager::getInstance();
+        $result = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
         return $result;
     }
 }
