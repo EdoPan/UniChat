@@ -110,7 +110,7 @@ $cInterazione = new CInterazione();
 $cMonitoraggio = new CMonitoraggio();
 $cVisualizza = new CVisualizza();
 //$result = $cAutenticazione->registrazione("Marta", "Verdi", "marta.verdi1@email.com", "passqord5", null, "Matematica");
-//$result = $cAutenticazione->registrazione("Luigi", "Siti", "luigi.siti@email.com", "pass", null, "Fisica");
+//$result = $cAutenticazione->registrazione("Franco", "Bollo", "test1@localhost", "email", null, "Fisica");
 
 //$result = $cAmministrazione->aggiungiCategoria(3, "DISIM", null, "Qui troverai i threads del DISIM.");
 //$result = $cAmministrazione->aggiungiModeratore(3, 6, 6);
@@ -138,8 +138,15 @@ $cVisualizza = new CVisualizza();
 //$result = $cMonitoraggio->rimuoviRisposte(6, 9, 14);
 //$result = $cVisualizza->elencaCategorie();
 //$result = $cVisualizza->threadPiuDiscusso(6);
-$result = $cVisualizza->threadValutazionePiuAlta(6);
-print($result->getId());
+//$threads = $cVisualizza->elencaThreads(1);
+
+//$cAutenticazione->recuperoPassword("test1@localhost");
+
+//$users = $cVisualizza->elencaModeratori();
+$user = $cVisualizza->visualizzaCategoria(6);
+print($user->getNome());
+//mail("test1@localhost", "Prova", "Email di prova.");
+//$result = $cAutenticazione->login("test1@localhost", ".rq_BM9-4Lp.4.^49n.y^.Q_.p1.C.");
 /*
 if ($result) {
     print ("TUTTO OK!");
