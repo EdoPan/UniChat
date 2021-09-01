@@ -10,7 +10,7 @@ class FValutazione
 {
 
     /**
-     * Instanza della classe FValutazione, si utilizza per il singleton.
+     * Istanza della classe FValutazione, si utilizza per il singleton.
      * @var null
      */
     private static $instance = null;
@@ -21,7 +21,7 @@ class FValutazione
     private function __construct() {}
 
     /**
-     * Restituisce l'instanza di FValutazione. Se già esistente restituisce quella esistente, altrimenti la crea.
+     * Restituisce l'istanza di FValutazione. Se già esistente restituisce quella esistente, altrimenti la crea.
      * @return FValutazione
      */
     public static function getInstance(): FValutazione
