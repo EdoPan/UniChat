@@ -8,302 +8,185 @@
  * Classe Foundation FRisposta. Conosce la tabella "risposte".
  */
 
-    class FRisposta
+class FRisposta
+{
+     /**
+      * Istanza della classe FRisposta, si utilizza per il singleton.
+      * @var null
+      */
+     private static $instance = null;
+
+     /**
+      * Costruttore di default
+      */
+     private function __construct()
+     {
+     }
+
+     /**
+      * Restituisce l'istanza di FRisposta. Se già esistente restituisce quella esistente, altrimenti la crea.
+      * @return FRisposta
+      */
+     public static function getInstance(): FRisposta
+     {
+         if(self::$instance == null){
+             $classe =__CLASS__;
+             self::$instance = new $classe;
+         }
+         return self::$instance;
+     }
+
+     /**
+      * Restituisce l'oggetto ERisposta, memorizzato nel database, avente come id quello passato come parametro.
+      * @param int $rispostaID
+      * @return Erisposta|null
+      */
+     public function load(int $rispostaID): ?ERisposta
+     {
+         try {
+             $dbConnection = FConnection::getInstance();
+             $pdo = $dbConnection->connect();
+
+             $sql = ("SELECT * FROM risposte WHERE rispostaID = :rispostaID");
+             $stmt = $pdo->prepare($sql);
+             $stmt->execute(array(
+                 ':rispostaID' => $rispostaID
+             ));
+             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+             if (count($rows) == 1) {
+                 $record = $rows[0];
+                 $data = $record["data"];
+                 $testo = $record["testo"];
+
+                 /*
+                  * Recupero dell'utente autore della risposta.
+                  */
+                 $autoreRispID = (int)$record["autoreRispID"];
+                 $fUser = FUser::getInstance();
+                 $autoreRisposta = $fUser->load($autoreRispID);
+                 if (!isset($autoreRisposta)) {
+                     return null;
+                 }
+
+                 $risposta = new ERisposta($rispostaID, $testo, $data, $autoreRisposta);
+
+                 return $risposta;
+             } else {
+                 return null;
+             }
+         } catch (PDOException $e){
+             return null;
+         }
+     }
+
+     /**
+      * Permette di modificare l'autore delle risposte scritte da un utente, la modifica comporta che il nuovo autore
+      * risulta essere l'utente di default. Il metodo viene richiamato nel momento in cui l'utente che aveva scritto
+      * le risposte viene eliminato dalla base dati.
+      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
+      * @param PDO $pdo
+      * @param int $userID
+      * @return bool
+      */
+     public function updateUserID(PDO $pdo, int $userID): bool
+     {
+         try {
+             $sql = ("UPDATE risposte SET autoreRispID = 1 WHERE autoreRispID = :userID");
+             $stmt = $pdo->prepare($sql);
+             $result = $stmt->execute(array(
+                 ':userID' => $userID
+             ));
+             return $result;
+         } catch (PDOException $e) {
+             return false;
+         }
+     }
+
+     /**
+      * Scrittura in Db di un oggetto di tipo ERisposta.
+      * @param ERisposta $risposta
+      * @param int $threadID
+      * @return bool
+      */
+     public static function store(ERisposta $risposta, int $threadID): bool
+     {
+         $userID = $risposta->getAutoreRisposta()->getId();
+         $testo = $risposta->getTesto();
+         $dataRisposta = $risposta->getData();
+         try {
+             $dbConnection = FConnection::getInstance();
+             $pdo = $dbConnection->connect();
+
+             $sql = ("INSERT INTO risposte(testo, data, autoreRispID, threadRispID)
+                   VALUES (:testoRisposta, :dataRisposta, :autoreRispID, :threadRispID)");
+             $stmt = $pdo->prepare($sql);
+             $result = $stmt->execute(array(
+                 ':testoRisposta' => $testo,
+                 ':dataRisposta' => $dataRisposta,
+                 ':autoreRispID' => $userID,
+                 ':threadRispID' => $threadID
+             ));
+             return $result;
+         } catch (PDOException $e) {
+             return false;
+         }
+     }
+
+     /**
+      * Permette di rimuovere una risposta dal db.
+      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
+      * @param int $rispostaID
+      * @return bool
+      */
+     public static function delete(int $rispostaID): bool
+     {
+         try {
+             $dbConnection=FConnection::getInstance();
+             $pdo=$dbConnection->connect();
+
+             $sql = ("DELETE FROM risposte WHERE rispostaID = :rispostaID");
+             $stmt = $pdo->prepare($sql);
+             $result = $stmt->execute(array(
+                 ':rispostaID' => $rispostaID
+             ));
+             return $result;
+         } catch (PDOException $e) {
+             return false;
+         }
+     }
+
+    /**
+     * Recupero delle risposte di un thread.
+     * @param int $threadID ID del Thread di cui recuperare le risposte
+     * @return array Array contenente le risposte del thread
+     */
+    public function loadRisposteThread(int $threadID): ?array
     {
+        try {
+            $risposte = array();
 
-        /**
-         * Instanza della classe FRisposta, si utilizza per il singleton.
-         * @var null
-         */
-        private static $instance = null;
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
 
-        /**
-         * Construttore di default
-         */
-        private function __construct()
-        {
-        }
+            $sql = ('SELECT rispostaID FROM risposte WHERE threadRispID = :threadID');
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':threadID' => $threadID
+            ));
 
-        /**
-         * Restituisce l'instanza di FRisposta. Se già esistente restituisce quella esistente, altrimenti la crea.
-         * @return FRisposta
-         */
-        public static function getInstance(): FRisposta
-        {
-            if(self::$instance == null){
-                $classe =__CLASS__;
-                self::$instance = new $classe;
-            }
-            return self::$instance;
-        }
-
-        /**
-         * Restituisce l'oggeto ERisposta, memorizzato nel database, avente come id quello passato come paramentro.
-         * @param int $rispostaID
-         * @return Erisposta|null
-         */
-        public function load(int $rispostaID): ?ERisposta
-        {
-            try {
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
-
-                $sql = ("SELECT * FROM risposte WHERE rispostaID = :rispostaID");
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(array(
-                    ':rispostaID' => $rispostaID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                if (count($rows) == 1) {
-                    $record = $rows[0];
-                    $rispostaID = (int)$record["rispostaID"];
-
-
-                    /*
-                     * Recupero dell'utente autore della risposta.
-                     */
-
-                    $autoreRispID = $record["autoreRispID"];
-                    $fUser = FUser::getInstance();
-                    $autoreRisposta = $fUser->load($autoreRispID);
-                    if (!isset($autoreRisposta)) {
-                        return null;
-                    }
-
-                    $data = $record["data"];
-                    $testo = $record["testo"];
-
-
-                    $risposta = new ERisposta($rispostaID, $testo, $data, $autoreRisposta);
-
-                    return $risposta;
-
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $row) {
+                $rispostaID = (int)$row["rispostaID"];
+                $risposta = $this->load($rispostaID);
+                if (isset($risposta)) {
+                    $risposte[] = $risposta;
                 } else {
                     return null;
                 }
-            } catch (PDOException $e){
-                return null;
             }
-        }
-
-
-        /**
-         * Recupero delle risposte di un thread.
-         * @param int $threadID ID del Thread di cui recuperare le risposte
-         * @return array Array contenente le risposte del thread
-         */
-
-
-        public function loadRisposteThread(int $threadID): ?Array
-        {
-            try {
-                $risposte = array();
-
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
-
-                $sql = ('SELECT * FROM risposte WHERE threadRispID=' . $threadID);
-
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(array(
-                    ':threadID' => $threadID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($rows as $row) {
-                    $rispostaID = $row["rispostaID"];
-                    $data = $row["data"];
-                    $testo = $row["testo"];
-
-                    /*
-                     * Recupero dell'utente autore della risposta.
-                     */
-
-                    $autoreRispID = (int)$row["autoreRispID"];
-                    $fUser = FUser::getInstance();
-                    $autoreRisposta = $fUser->load($autoreRispID);
-                    if (!isset($autoreRisposta)) {
-                        return null;
-                    }
-
-
-                    $risposta = array(
-                        "id" => $rispostaID,
-                        "data" => $data,
-                        "testo" => $testo,
-                        "autore" => $autoreRisposta,
-                    );
-                    $risposte[] = $risposta;
-                }
-                return $risposte;
-
-            } catch (PDOException $e) {
-                return null;
-            }
-        }
-
-
-        /**
-         * Recupero di tutte le risposte di un utente.
-         * @param int $userID ID dell' utente di cui recuperare le risposte.
-         * @return array Array contenente le risposte dell'utente.
-         */
-
-
-        public function loadRisposteByUtente(int $userID): ?Array
-        {
-            try {
-                $risposte=array();
-
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
-
-                $sql=('SELECT * FROM risposte WHERE autoreRispID='.$userID);
-
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(array(
-                    ':userID' => $userID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($rows as $row) {
-                    $rispostaID = $row["rispostaID"];
-                    $data = $row["data"];
-                    $testo = $row["testo"];
-
-                    /*
-                     * Recupero dell'utente autore della risposta.
-                     */
-
-                    $fUser = FUser::getInstance();
-                    $autoreRisposta = $fUser->load($userID);
-                    if (!isset($autoreRisposta)) {
-                        return null;
-                    }
-
-
-                    $risposta = array(
-                        "id" => $rispostaID,
-                        "data" => $data,
-                        "testo" => $testo,
-                        "autore" => $autoreRisposta,
-                    );
-                    $risposte[] = $risposta;
-                }
-                return $risposte;
-
-            } catch (PDOException $e) {
-                return null;
-            }
-
-        }
-
-        /**
-         * Permette di modificare l'autore delle risposte scritte da un utente, la modifica comporta che il nuovo autore
-         * risulta essere l'utente di default. Il metodo viene richiamato nel momento in cui l'utente che aveva scritto
-         * le risposte viene eliminato dalla base dati.
-         * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-         * @param PDO $pdo
-         * @param int $userID
-         * @return bool
-         */
-        public function updateUserID(PDO $pdo, int $userID): bool
-        {
-            try {
-                $sql = ("UPDATE risposte SET autoreRispID = 1 WHERE autoreRispID = :userID");
-                $stmt = $pdo->prepare($sql);
-                $result = $stmt->execute(array(
-                    ':userID' => $userID
-                ));
-                return $result;
-            } catch (PDOException $e) {
-                return false;
-            }
-        }
-
-        /**
-         * Conta numero delle risposte di un thread.
-         * @param int $threadID
-         * @return int|null
-         */
-
-        public function countRisposteThread(int $threadID): ?int
-        {
-
-            try {
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
-
-                $sql = ("SELECT COUNT (*) FROM risposte WHERE threadRispID=".$threadID);
-
-                $stmt = $pdo->prepare($sql);
-
-                $stmt->execute(array(
-                    ':threadID' => $threadID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $numeroRisposte = $rows[0]["threadID"];
-
-                return $numeroRisposte;
-
-            } catch (PDOException $e) {
-                return null;
-            }
-
-        }
-
-        /**
-         * Scrittura in Db di un oggetto di tipo ERisposta.
-         * @param ERisposta $risposta
-         * @param int $threadID
-         * @return bool
-         */
-
-        public static function store(ERisposta $risposta, int $threadID): bool
-        {
-            $user = $risposta->getAutoreRisposta();
-            $testo = $risposta->getTesto();
-            $dataRisposta = $risposta->getData();
-            try {
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
-
-                $sql = ("INSERT INTO risposte(testo, data, autoreRispID, threadRispID)
-                        VALUES (:testoRisposta, :dataRisposta, :autoreRispID, :threadRispID)");
-                $stmt = $pdo->prepare($sql);
-                $result = $stmt->execute(array(
-                    ':testoRisposta' => $testo,
-                    ':dataRisposta' => $dataRisposta,
-                    ':autoreRispID' => $user->getId(),
-                    ':threadRispID' => $threadID
-                ));
-                return $result;
-            } catch (PDOException $e) {
-                return false;
-            }
-        }
-
-        /**
-         * Permette di rimuovere una risposta dal db.
-         * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-         * @param int $rispostaID
-         * @return bool
-         */
-
-        public static function delete(int $rispostaID): bool
-        {
-            try {
-                $dbConnection=FConnection::getInstance();
-                $pdo=$dbConnection->connect();
-
-
-                $sql = ("DELETE FROM risposte WHERE rispostaID = " . $rispostaID);
-                $stmt = $pdo->prepare($sql);
-                $result = $stmt->execute();
-
-                return $result;
-
-            } catch (PDOException $e) {
-                return false;
-            }
-
+            return $risposte;
+        } catch (PDOException $e) {
+            return null;
         }
     }
+}
