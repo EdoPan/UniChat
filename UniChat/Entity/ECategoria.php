@@ -50,7 +50,10 @@ class ECategoria {
         } else {
             $this->id = 0;
         }
-        $this->nome = $nome;
+
+        $nomeMaiuscolo = strtoupper($nome);
+        $this->nome = $nomeMaiuscolo;
+
         if(isset($icona)){
             $this->icona = $icona;
         } else {
@@ -110,7 +113,8 @@ class ECategoria {
      */
     public function setNome(string $nome): void
     {
-        $this->nome = $nome;
+        $nomeMaiuscolo = strtoupper($nome);
+        $this->nome = $nomeMaiuscolo;
     }
 
     /**

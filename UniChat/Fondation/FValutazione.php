@@ -124,10 +124,14 @@ class FValutazione
             ));
 
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $record = $rows[0];
-            $valutazioneID = (int)$record["valutazioneID"];
-            $valutazione = $this->load($valutazioneID);
-            return $valutazione;
+            if (count($rows) == 1) {
+                $record = $rows[0];
+                $valutazioneID = (int)$record["valutazioneID"];
+                $valutazione = $this->load($valutazioneID);
+                return $valutazione;
+            } else {
+                return null;
+            }
         } catch (PDOException $e) {
             return null;
         }

@@ -110,7 +110,7 @@ class FRisposta
       * @param int $threadID
       * @return bool
       */
-     public static function store(ERisposta $risposta, int $threadID): bool
+     public function store(ERisposta $risposta, int $threadID): bool
      {
          $userID = $risposta->getAutoreRisposta()->getId();
          $testo = $risposta->getTesto();
@@ -140,22 +140,48 @@ class FRisposta
       * @param int $rispostaID
       * @return bool
       */
-     public static function delete(int $rispostaID): bool
+     public function delete(int $rispostaID): bool
      {
          try {
              $dbConnection=FConnection::getInstance();
              $pdo=$dbConnection->connect();
 
-             $sql = ("DELETE FROM risposte WHERE rispostaID = :rispostaID");
-             $stmt = $pdo->prepare($sql);
-             $result = $stmt->execute(array(
-                 ':rispostaID' => $rispostaID
-             ));
-             return $result;
+             if ($this->exists($rispostaID)) {
+                 $sql = ("DELETE FROM risposte WHERE rispostaID = :rispostaID");
+                 $stmt = $pdo->prepare($sql);
+                 $result = $stmt->execute(array(
+                     ':rispostaID' => $rispostaID
+                 ));
+                 return $result;
+             } else {
+                 return false;
+             }
          } catch (PDOException $e) {
              return false;
          }
      }
+
+    private function exists(int $rispostaID): bool
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ("SELECT rispostaID FROM risposte WHERE rispostaID = :rispostaID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':rispostaID' => $rispostaID
+            ));
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 
     /**
      * Recupero delle risposte di un thread che ha per id quello passato come parametro.

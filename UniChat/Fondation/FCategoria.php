@@ -312,8 +312,12 @@ class FCategoria
             ));
 
             $rows = $s->fetchAll(PDO::FETCH_ASSOC);
-            $iconaCategoriaID=(int)$rows[0]["iconaID"];
-            $moderatoreID = (int)$rows[0]["moderatoreID"];
+            if (count($rows) == 1) {
+                $iconaCategoriaID = (int)$rows[0]["iconaID"];
+                $moderatoreID = (int)$rows[0]["moderatoreID"];
+            } else {
+                return false;
+            }
 
             /*
              * La rimozione della categoria richiede una serie di operazioni che devono essere eseguite una di seguito

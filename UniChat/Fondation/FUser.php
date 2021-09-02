@@ -581,7 +581,12 @@ class FUser
                 ':userID' => $userID
             ));
             $rows = $s->fetchAll(PDO::FETCH_ASSOC);
-            $fotoProfiloID = (int)$rows[0]["fotoProfiloID"];
+            if (count($rows) == 1) {
+                $fotoProfiloID = (int)$rows[0]["fotoProfiloID"];
+            } else {
+                return false;
+            }
+
             /*
              * La rimozione dell'utente richiede una serie di operazioni che devono essere eseguite una di seguito
              * all'altra e con mutua esclusione sulle tabelle della base dati che ne sono coinvolte. Le operazioni
