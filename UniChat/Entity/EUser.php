@@ -6,8 +6,7 @@
  *
  */
 class EUser
-    {
-
+{
     /**
      * Identificativo dell'utente.
      * @var int
@@ -81,8 +80,15 @@ class EUser
         } else {
             $this->id = 0;
         }
-        $this->nome = $nome;
-        $this->cognome = $cognome;
+
+        $nomeMinuscolo = strtolower($nome);
+        $nomePrimeMaiuscole = ucwords($nomeMinuscolo);
+        $this->nome = $nomePrimeMaiuscole;
+
+        $cognomeMinuscolo = strtolower($cognome);
+        $cognomePrimeMaiuscole = ucwords($cognomeMinuscolo);
+        $this->cognome = $cognomePrimeMaiuscole;
+
         $this->email = $email;
         if(substr($password, 0, 4) === "$2y$"){
             $this->password = $password;
@@ -94,8 +100,11 @@ class EUser
         } else {
             $this->fotoProfilo["id"] = 1;
         }
+
         if(isset($corsoStudio)){
-            $this->corsoStudio = $corsoStudio;
+            $corsoStudioMinuscolo = strtolower($corsoStudio);
+            $corsoStudioPrimaMaiuscola = ucfirst($corsoStudioMinuscolo);
+            $this->corsoStudio = $corsoStudioPrimaMaiuscola;
         } else {
             $this->corsoStudio = "Sconosciuto";
         }
@@ -179,7 +188,9 @@ class EUser
      */
     public function setNome(string $nome): void
     {
-        $this->nome = $nome;
+        $nomeMinuscolo = strtolower($nome);
+        $nomePrimeMaiuscole = ucwords($nomeMinuscolo);
+        $this->nome = $nomePrimeMaiuscole;
     }
 
     /**
@@ -228,7 +239,9 @@ class EUser
      */
     public function setCorsoStudio(string $corsoStudio): void
     {
-        $this->corsoStudio = $corsoStudio;
+        $corsoStudioMinuscolo = strtolower($corsoStudio);
+        $corsoStudioPrimaMaiuscola = ucfirst($corsoStudioMinuscolo);
+        $this->corsoStudio = $corsoStudioPrimaMaiuscola;
     }
 
     /**
@@ -272,25 +285,20 @@ class EUser
         $lunghezza = 30;
         $newPassword = "";
         for($i=0; $i<$lunghezza; $i++){
-            $scelta = rand(1, 5);
+            $scelta = rand(1, 3);
             switch($scelta){
                 case 1:
-                    $newPassword = $newPassword . chr(rand(45, 46));
-                    break;
-                case 2:
                     $newPassword = $newPassword . chr(rand(48, 57));
                     break;
-                case 3:
+                case 2:
                     $newPassword = $newPassword .chr(rand(65, 90));
                     break;
-                case 4:
+                case 3:
                     $newPassword = $newPassword . chr(rand(97, 122));
                     break;
-                case 5:
-                    $newPassword = $newPassword . chr(rand(94, 95));
             }
         }
         $this->setPassword($newPassword);
         return $newPassword;
     }
-    }
+}
