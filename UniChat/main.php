@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
     require_once "utility.php";
 
@@ -143,14 +144,18 @@ $cVisualizza = new CVisualizza();
 //$cAutenticazione->recuperoPassword("test1@localhost");
 
 //$users = $cVisualizza->elencaModeratori();
-$user = $cVisualizza->visualizzaCategoria(6);
-print($user->getNome());
+//$user = $cVisualizza->visualizzaCategoria(3);
+//print($user->getNome());
+
+
+
 //mail("test1@localhost", "Prova", "Email di prova.");
 //$result = $cAutenticazione->login("test1@localhost", ".rq_BM9-4Lp.4.^49n.y^.Q_.p1.C.");
-/*
+
+$result = $cVisualizza->visualizzaThread(21);
 if ($result) {
-    print ("TUTTO OK!");
+    print ($result);
 } else {
     print("OPSS!");
 }
-*/
+
