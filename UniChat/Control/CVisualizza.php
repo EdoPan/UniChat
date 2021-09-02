@@ -151,4 +151,15 @@ class CVisualizza {
         $result = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
         return $result;
     }
+
+    /**
+     * Metodo responsabile della visualizzazione di un singolo thread
+     * @param int $threadID
+     * @return EThread|null
+     */
+    public function visualizzaThread(int $threadID): ?EThread {
+        $pm = FPersistentManager::getInstance();
+        $result = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
+        return $result;
+    }
 }
