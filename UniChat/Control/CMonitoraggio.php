@@ -62,15 +62,15 @@ class CMonitoraggio {
      * Metodo responsabile della rimozione di una risposta di un thread.
      * @param int $userID
      * @param int $rispostaID
-     * @param int $threadID
+     * @param int|null $threadID
      * @return bool
      */
-    public function rimuoviRisposte(int $userID, int $rispostaID, int $threadID): bool
+    public function rimuoviRisposte(int $userID, int $rispostaID, ?int $threadID): bool
     {
         $pm = FPersistentManager::getInstance();
-        if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true){
+        if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $userID) == true && !isset($threadID)){
             $result = $pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID); //FRisposta::delete($rispostaID);
-        } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true){
+        } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $userID) == true && isset($threadID)){
             $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $userID); //FUser::loadModeratore($userID);
             $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID); //FCategoria::loadCategoriaThread($threadID);
             if(isset($mod) and isset($cat)) {

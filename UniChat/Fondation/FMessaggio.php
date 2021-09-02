@@ -108,7 +108,7 @@ class FMessaggio
      * @param EMessaggio $messaggio
      * @return bool
      */
-    public static function store(EMessaggio $messaggio): bool
+    public function store(EMessaggio $messaggio): bool
     {
         $autoreMessID = $messaggio->getAutoreMessaggio()->getId();
         $testo = $messaggio->getTesto();
@@ -137,19 +137,45 @@ class FMessaggio
      * @param int $messID
      * @return bool
      */
-    public static function delete(int $messID): bool
+    public function delete(int $messID): bool
     {
         try {
             $dbConnection=FConnection::getInstance();
             $pdo=$dbConnection->connect();
 
-            $sql = ("DELETE FROM messaggi WHERE messID = :messID");
+            if ($this->exists($messID)) {
+                $sql = ("DELETE FROM messaggi WHERE messID = :messID");
+                $stmt = $pdo->prepare($sql);
+                $result = $stmt->execute(array(
+                    ':messID' => $messID
+                ));
+                return $result;
+            } else {
+                return false;
+            }
+        } catch(PDOException $e)  {
+            return false;
+        }
+    }
+
+    private function exists(int $messID): bool
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ("SELECT messID FROM messaggi WHERE messID = :messID");
             $stmt = $pdo->prepare($sql);
-            $result = $stmt->execute(array(
+            $stmt->execute(array(
                 ':messID' => $messID
             ));
-            return $result;
-        } catch(PDOException $e)  {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
             return false;
         }
     }

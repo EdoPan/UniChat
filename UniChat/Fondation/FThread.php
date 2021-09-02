@@ -188,9 +188,13 @@ class FThread
                     ':categoriaID' => $categoriaID
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $threadID = (int)$rows[0]["threadID"];
-                $thread = $this->load($threadID);
-                return $thread;
+                if (count($rows) == 1) {
+                    $threadID = (int)$rows[0]["threadID"];
+                    $thread = $this->load($threadID);
+                    return $thread;
+                } else {
+                    return null;
+                }
             } catch (PDOException $e) {
                 return null;
             }
@@ -216,9 +220,13 @@ class FThread
                     ':categoriaID' => $categoriaID
                 ));
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $threadID = (int)$rows[0]["threadID"];
-                $thread = $this->load($threadID);
-                return $thread;
+                if (count($rows) == 1) {
+                    $threadID = (int)$rows[0]["threadID"];
+                    $thread = $this->load($threadID);
+                    return $thread;
+                } else {
+                    return null;
+                }
             } catch (PDOException $e) {
                 return null;
             }
@@ -388,9 +396,12 @@ class FThread
                 $stmt->execute(array(
                     ':threadID' => $threadID
                 ));
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $valutazioneID = (int)$row[0]["valutazioneThreadID"];
-
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $valutazioneID = (int)$rows[0]["valutazioneThreadID"];
+                } else {
+                    return false;
+                }
                 /*
                  * L'eliminazione del thread dalla base dati comporta una serie di operazioni, queste vengono eseguite
                  * una di seguito all'altra e le modifiche sulla base dati devono essere effettuate solo se tutte vanno
