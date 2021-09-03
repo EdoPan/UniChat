@@ -90,6 +90,23 @@
           <i class="fa fa-bars"></i>
         </button>
 
+        <div class="dropdown mr-auto ml-md-3 my-2 my-md-0 mw-100">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filtra
+          </button>
+          <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+            <a class="dropdown-item" href="#">DISIM</a>
+            <a class="dropdown-item" href="#">DIIIE</a>
+            <a class="dropdown-item" href="#">DICEAA</a>
+            <a class="dropdown-item" href="#">DSFC</a>
+            <a class="dropdown-item" href="#">MESVA</a>
+            <a class="dropdown-item" href="#">DISCAB</a>
+            <a class="dropdown-item" href="#">DSU</a>
+            <a class="dropdown-item" href="#">Mista</a>
+          </div>
+        </div>
+
+
         <!-- Topbar Search -->
         <form
                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -156,205 +173,144 @@
       <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Pannello di Controllo</h1>
+        <h1 class="h3 mb-0 text-gray-800">Pannello di Controllo</h1>
+        <p class="p-0 mb-4 text-gray-800">Area riservata al solo utente admin, ogni operazione eseguita sarà irreversibile!</p>
+
+
+        <!--Tabelle Admin -->
+
+        <div class="card shadow mb-4">
+          <!-- Card Header - Accordion -->
+          <a href="#utenti" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="utenti">
+            <h6 class="m-0 font-weight-bold text-primary">Utenti</h6>
+          </a>
+          <!-- Utenti -->
+          <div class="collapse" id="utenti" style="">
+            <div class="card-body">
 
 
 
-        <!--Opzioni Admin -->
-
-
-        <h4 class="h4 mb-4 text-gray-800 text-lg-center">Ciao Admin, scegli cosa fare.</h4>
-
-
-        <div class="accordion" id="accordionExample">
-          <div class="card">
-            <div class="card-header" id="headingOne">
-              <h2 class="mb-0">
-                <i class="fas fa-arrow-down"></i>
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Gestione Categorie
-                </button>
-              </h2>
-            </div>
-
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-
-              <div class="card-body">
-                <div class="card mb-4">
-                  <div class="card-header">Categorie Threads</div>
+              <!-- Utente -->
+              <div>
+                <div class="card border-left-success shadow mb-2">
                   <div class="card-body">
 
-                    <!--Tabella Categorie-->
-
-                    <div class="table table-striped table-hover">
-
-                      <div class="dataTable-top">
-                        <div class="card card-header-actions" style="border: none">
-                          <div clas="card-header">
-                            <div style="float:left"  class="dataTable-dropdown"><label><select class="dataTable-selector"><option value="5">5</option><option value="10" selected="">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option></select> entries per page</label>
-                            </div>
-
-                            <div style="float:right" class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
-                          </div>
-
-                        </div>
+                    <label class="mr-4 m-0">Nome: Laura</label>
+                    <label class="mr-4 m-0">Cognome: Verdi</label>
+                    <label class="mr-4 m-0">Email: laura.verdi@student.univaq.it</label>
+                    <label class="mr-4 m-0">Corso di studio: Medicina</label>
+                    <label class="mr-4 m-0">Categoria moderata: MESVA</label>
 
 
-                      </div><div class="dataTable-container"><table id="datatablesSimple" class="dataTable-table">
+                    <input class="m-0" type="checkbox" id="moderatore" name="moderatore" value="Mod">
+                    <label for="moderatore">Moderatore</label>
 
+                    <div class="m-3" style="position: absolute; top: 0; right: 0;">
+                      <a href="#" class="btn btn-danger btn-icon-split">
+                      <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                      </span>
+                      </a>
+                    </div>
 
-                      <thead>
-                      <tr><th data-sortable="" style="width: 10%;"><a href="#" class="dataTable-sorter">ID</a></th><th data-sortable="" style="width: 40.0%;"><a href="#" class="dataTable-sorter">Nome</a></th><th data-sortable="" style="width: 30.0%;"><a href="#" class="dataTable-sorter">Moderatore</a></th><th data-sortable="" style="width: 20.0%;"><a href="#" class="dataTable-sorter">N° Threads</a></th></tr>
-                      </thead>
+                  </div>
+                </div>
+              </div>
 
-                      <tbody><tr><td>1</td><td>DSU</td><td>marior99</td><td>100</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>2</td><td>DISIM</td><td>pippo99</td><td>2</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>3</td><td>DIIIE</td><td>topolino99</td><td>3</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>4</td><td>DICEAA</td><td>pluto99</td><td>200</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>5</td><td>DISCAB</td><td>paperino99</td><td>40</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>6</td><td>DSFC</td><td>ciao99</td><td>5</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>7</td><td>MESVA</td><td>user99</td><td>0</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>8</td><td>MISTA</td><td>user9</td><td>1</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+              <!-- Utente -->
+              <div>
+                <div class="card border-left-primary shadow mb-2">
+                  <div class="card-body">
 
-                      </td></tr></tbody>
-                    </table></div><div class="dataTable-bottom"><div class="dataTable-info">Showing 1 to 10 of 57 entries</div>
-                      <nav aria-label="Pagine tabella">
-                        <ul class="pagination justify-content-center">
+                    <label class="mr-4 m-0">Nome: Carlo</label>
+                    <label class="mr-4 m-0">Cognome: Rossi</label>
+                    <label class="mr-4 m-0">Email: carlo.rossi@student.univaq.it</label>
+                    <label class="mr-4 m-0">Corso di studio: Ingegneria Edile</label>
+                    <label class="mr-4 m-0">Categoria moderata: -</label>
 
-                          <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
-                          </li>
-                          <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                          </li>
-                        </ul>
-                      </nav></div></div>
+                    <input class="m-0" type="checkbox" id="moderatore1" name="moderatore" value="Mod1">
+                    <label for="moderatore1">Moderatore</label>
 
+                    <div class="m-3" style="position: absolute; top: 0; right: 0;">
+                      <a href="#" class="btn btn-danger btn-icon-split">
+                      <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                      </span>
+                      </a>
+                    </div>
 
 
                   </div>
                 </div>
               </div>
+
+
+
             </div>
           </div>
-          <div class="card">
-            <div class="card-header" id="headingTwo">
-              <h2 class="mb-0">
-                <i class="fa fa-arrow-down"></i>
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  Gestione Utenti
-                </button>
-              </h2>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-
-
-              <div class="card-body">
-                <div class="card mb-4">
-                  <div class="card-header">Utenti Iscritti</div>
-                  <div class="card-body">
-
-                    <!--Tabella Utenti-->
-
-
-                    <div class="table table-striped table-hover">
-
-                      <div class="card card-header-actions" style="border: none">
-                        <div clas="card-header">
-                            <div style="float:left"  class="dataTable-dropdown"><label><select class="dataTable-selector"><option value="5">5</option><option value="10" selected="">10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option></select> entries per page</label>
-                              </div>
-
-                            <div style="float:right" class="dataTable-search"><input class="dataTable-input" placeholder="Search..." type="text"></div>
-                        </div>
-
-                      </div>
-
-
-                      <div class="dataTable-container"><table id="datatablesSimple" class="dataTable-table">
-
-
-
-                      <thead>
-                      <tr><th data-sortable="" style="width: 5%;"><a href="#" class="dataTable-sorter">ID</a></th><th data-sortable="" style="width: 20%;"><a href="#" class="dataTable-sorter">Nome</a></th><th data-sortable="" style="width: 20%;"><a href="#" class="dataTable-sorter">Cognome</a></th><th data-sortable="" style="width: 15%;"><a href="#" class="dataTable-sorter">Username</a></th><th data-sortable="" style="width: 10%;"><a href="#" class="dataTable-sorter">Tipo utente</a></th><th data-sortable="" style="width: 10%;"><a href="#" class="dataTable-sorter">Azioni</a></th></tr>
-                      </thead>
-
-                      <tbody><tr><td>1</td><td>Mario</td><td>Rossi</td><td>marior99</td><td>user</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Nomina Moderatore</a>
-                          <a class="dropdown-item" href="#">Rimuovi Moderatore</a>
-                        </div>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>2</td><td>Pippo</td><td>Rossi</td><td>pippo99</td><td>user</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Nomina Moderatore</a>
-                          <a class="dropdown-item" href="#">Rimuovi Moderatore</a>
-                        </div>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>3</td><td>Topolino</td><td>Rossi</td><td>topo99</td><td>user</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Nomina Moderatore</a>
-                          <a class="dropdown-item" href="#">Rimuovi Moderatore</a>
-                        </div>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>4</td><td>Pluto</td><td>Rossi</td><td>pluto99</td><td>user</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Nomina Moderatore</a>
-                          <a class="dropdown-item" href="#">Rimuovi Moderatore</a>
-                        </div>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-                      <tr><td>5</td><td>Paperino</td><td>Rossi</td><td>paperino99</td><td>user</td><td>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg></button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Nomina Moderatore</a>
-                          <a class="dropdown-item" href="#">Rimuovi Moderatore</a>
-                        </div>
-                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
-
-                      </td></tr></tbody>
-                    </table></div>
-
-
-                      <div class="dataTable-bottom"><div class="dataTable-info">Showing 1 to 10 of 57 entries</div>
-                        <nav aria-label="Pagine tabella">
-                          <ul class="pagination justify-content-center">
-
-                        <li class="page-item disabled">
-                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Precedente</a>
-                        </li>
-                        <li class="page-item active" aria-current="page">
-                          <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">Next</a>
-                        </li>
-                      </ul>
-                    </nav></div></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
+
+
+        <div class="card shadow mb-4">
+          <!-- Card Header - Accordion -->
+          <a href="#categorie" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="categorie">
+            <h6 class="m-0 font-weight-bold text-primary">Categorie</h6>
+          </a>
+          <!-- Categorie -->
+          <div class="collapse" id="categorie" style="">
+            <div class="card-body">
+
+              <!-- Categoria -->
+              <div>
+                <div class="card border-left-secondary shadow mb-2">
+                  <div class="card-body">
+
+                    <label class="mr-4 m-0">Categoria: DISIM</label>
+                    <label class="mr-4 m-0">Numero thread: 23</label>
+                    <label class="mr-4 m-0">Moderatore: -</label>
+
+                    <div class="m-3" style="position: absolute; top: 0; right: 0;">
+                      <a href="#" class="btn btn-danger btn-icon-split">
+                      <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                      </span>
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Categoria -->
+              <div>
+                <div class="card border-left-secondary shadow mb-2">
+                  <div class="card-body">
+
+                    <label class="mr-4 m-0">Categoria: MESVA</label>
+                    <label class="mr-4 m-0">Numero thread: 37</label>
+                    <label class="mr-4 m-0">Moderatore: Laura Verdi</label>
+
+                    <div class="m-3" style="position: absolute; top: 0; right: 0;">
+                      <a href="#" class="btn btn-danger btn-icon-split">
+                      <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                      </span>
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
 
 
       </div>

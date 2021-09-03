@@ -90,7 +90,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <div class="dropdown mb-4 my-md-0">
+                    <div class="dropdown mr-auto ml-md-3 my-2 my-md-0 mw-100">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Filtra
                         </button>
@@ -195,41 +195,33 @@
                                 <div class="card-header">Dettagli account</div>
                                 <div class="card-body">
                                     <form>
-                                        <!-- Form Row-->
-                                        <div class="row">
-                                            <!-- Form Group (first name)-->
-                                            <div class="col-lg">
-                                                <label class="small mb-1" for="inputLastName">Nome</label>
-                                                <input class="form-control" id="inputFirstName" type="text" placeholder="Inserisci il tuo nome" value="Nome">
-                                            </div>
-                                            <!-- Form Group (last name)-->
-                                            <div class="col-lg">
-                                                <label class="small mb-1" for="inputLastName">Cognome</label>
-                                                <input class="form-control" id="inputLastName" type="text" placeholder="Inserisci il tuo cognome" value="Cognome">
-                                            </div>
-                                        </div>
-                                        <!-- Form Row        -->
-                                        <div class="row gx-3 mb-3">
+
+                                        <h5 class="text-primary mb-1">Nome:</h5>
+                                        <h6 class="text-dark mb-4">Mario</h6>
+
+                                        <h5 class="text-primary mb-1">Cognome:</h5>
+                                        <h6 class="text-dark mb-4">Rossi</h6>
+
+                                        <h5 class="text-primary mb-1">Email:</h5>
+                                        <h6 class="text-dark mb-4">mario.rossi@student.univaq.it</h6>
+
+                                        <!-- Form Row -->
+                                        <div class="row gx-3 mb-4">
                                             <!-- Form Group (organization name)-->
                                             <div class="col-lg">
-                                                <label class="small mb-1" for="inputOrgName">Corso di Studio</label>
-                                                <input class="form-control" id="inputOrgName" type="text" placeholder="Inserisci il nome del corso di studi che frequenti" value="Corso di studio">
+                                                <h5 class="text-primary" for="inputOrgName">Corso di Studio:</h5>
+                                                <input class="form-control" id="inputOrgName" type="text" placeholder="Inserisci il nome del corso di studi che frequenti" value="Ingegneria Informatica">
                                             </div>
                                         </div>
-                                        <!-- Form Group (email address)-->
-                                        <div class="mb-3">
-                                            <label class="mb-1">Email:</label>
-                                            <span class="small">pipo.spacca@student.univaq.it</span>
-                                        </div>
-                                        <!-- Form Row-->
-                                        <div class="row gx-3 mb-3">
-                                            <!-- Form Group (Email)-->
-                                            <div class="col-lg">
-                                                <label class="mb-1">Password:</label>
-                                                <span class="small">@wLqL7amMW$=DfV5&YDk</span>
-                                            </div>
 
+                                        <div class="row gx-3 mb-4">
+                                            <!-- Form Group (organization name)-->
+                                            <div class="col-lg">
+                                                <h5 class="text-primary" for="password">Password:</h5>
+                                                <input class="form-control" id="password" type="text" placeholder="Inserire una password" value="S7FcQxp5nP@C?!Qw&92A">
+                                            </div>
                                         </div>
+
                                         <!-- Save changes button-->
                                         <button class="btn btn-primary col-lg" type="button">Salva modifiche</button>
                                     </form>
