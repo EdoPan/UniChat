@@ -184,28 +184,29 @@
           <a href="#utenti" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="utenti">
             <h6 class="m-0 font-weight-bold text-primary">Utenti</h6>
           </a>
+
           <!-- Utenti -->
           <div class="collapse" id="utenti" style="">
             <div class="card-body">
-
-
 
               <!-- Utente -->
               <div>
                 <div class="card border-left-success shadow mb-2">
                   <div class="card-body">
 
-                    <label class="mr-4 m-0">Nome: Laura</label>
-                    <label class="mr-4 m-0">Cognome: Verdi</label>
-                    <label class="mr-4 m-0">Email: laura.verdi@student.univaq.it</label>
-                    <label class="mr-4 m-0">Corso di studio: Medicina</label>
-                    <label class="mr-4 m-0">Categoria moderata: MESVA</label>
+                    <div class="row">
+                      <label class="mr-4 m-0">Nome: Laura</label>
+                      <label class="mr-4 m-0">Cognome: Verdi</label>
+                      <label class="mr-4 m-0">Email: laura.verdi@student.univaq.it</label>
+                      <label class="mr-4 m-0">Corso di studio: Medicina</label>
+                      <input type="text" class="form-control form-control-user col-lg-2" id="categoriaModerata"
+                             placeholder="Categoria moderata">
+                    </div>
 
 
-                    <input class="m-0" type="checkbox" id="moderatore" name="moderatore" value="Mod">
-                    <label for="moderatore">Moderatore</label>
 
                     <div class="m-3" style="position: absolute; top: 0; right: 0;">
+
                       <a href="#" class="btn btn-danger btn-icon-split">
                       <span class="icon text-white-50">
                           <i class="fas fa-trash"></i>
@@ -222,14 +223,14 @@
                 <div class="card border-left-primary shadow mb-2">
                   <div class="card-body">
 
-                    <label class="mr-4 m-0">Nome: Carlo</label>
-                    <label class="mr-4 m-0">Cognome: Rossi</label>
-                    <label class="mr-4 m-0">Email: carlo.rossi@student.univaq.it</label>
-                    <label class="mr-4 m-0">Corso di studio: Ingegneria Edile</label>
-                    <label class="mr-4 m-0">Categoria moderata: -</label>
-
-                    <input class="m-0" type="checkbox" id="moderatore1" name="moderatore" value="Mod1">
-                    <label for="moderatore1">Moderatore</label>
+                    <div class="row">
+                      <label class="mr-4 m-0">Nome: Carlo</label>
+                      <label class="mr-4 m-0">Cognome: Rossi</label>
+                      <label class="mr-4 m-0">Email: carlo.rossi@student.univaq.it</label>
+                      <label class="mr-4 m-0">Corso di studio: Ingegneria Informatica</label>
+                      <input type="text" class="form-control form-control-user col-lg-2" id="categoriaModerata1"
+                             placeholder="Categoria moderata">
+                    </div>
 
                     <div class="m-3" style="position: absolute; top: 0; right: 0;">
                       <a href="#" class="btn btn-danger btn-icon-split">
@@ -259,6 +260,16 @@
           <!-- Categorie -->
           <div class="collapse" id="categorie" style="">
             <div class="card-body">
+
+              <input type="text" class="form-control form-control-user" id="nomeCategoria" placeholder="Nome nuova categoria">
+
+
+              <a href="#" class="btn btn-secondary btn-icon-split mt-2 mb-4">
+                <span class="icon text-white-50">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+                <span class="text">Aggiungi categoria</span>
+              </a>
 
               <!-- Categoria -->
               <div>
