@@ -9,6 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <!-- Titolo tab del browser -->
     <title>UniChat - Crea un thread</title>
 
     <!-- Custom fonts for this template-->
@@ -24,259 +25,262 @@
 
 <body id="page-top">
 
-<!-- Page Wrapper -->
-<div id="wrapper">
+    <!-- Inizio del Page Wrapper -->
+    <div id="wrapper">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">UniChat <sup>1.0</sup></div>
-        </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Categorie</span>
+            <!-- Logo sito e Sidebar -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">UniChat <sup>1.0</sup></div>
             </a>
-            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Dipartimenti:</h6>
-                    <a class="collapse-item" href="disim.html">DISIM</a>
-                    <a class="collapse-item" href="diiie.html">DIIIE</a>
-                    <a class="collapse-item" href="diceaa.html">DICEAA</a>
-                    <a class="collapse-item" href="dsfc.html">DSFC</a>
-                    <a class="collapse-item" href="mesva.html">MESVA</a>
-                    <a class="collapse-item" href="discab.html">DISCAB</a>
-                    <a class="collapse-item" href="dsu.html">DSU</a>
-                    <div class="collapse-divider"></div>
-                    <h6 class="collapse-header">Altro:</h6>
-                    <a class="collapse-item" href="mista.html">Mista</a>
+
+            <!-- Divisore -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Menu laterale categorie -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                   aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Categorie</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Dipartimenti:</h6>
+                        <a class="collapse-item" href="disim.html">DISIM</a>
+                        <a class="collapse-item" href="diiie.html">DIIIE</a>
+                        <a class="collapse-item" href="diceaa.html">DICEAA</a>
+                        <a class="collapse-item" href="dsfc.html">DSFC</a>
+                        <a class="collapse-item" href="mesva.html">MESVA</a>
+                        <a class="collapse-item" href="discab.html">DISCAB</a>
+                        <a class="collapse-item" href="dsu.html">DSU</a>
+                        <div class="collapse-divider"></div>
+                        <h6 class="collapse-header">Altro:</h6>
+                        <a class="collapse-item" href="mista.html">Mista</a>
+                    </div>
                 </div>
+            </li>
+
+            <!-- Divisore -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Bottone per restringere la Sidebar -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-        </li>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+        </ul>
+        <!-- Fine della Sidebar -->
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+        <!-- Inizio del Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-    </ul>
-    <!-- End of Sidebar -->
+            <!-- Inizio del Main Content -->
+            <div id="content">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                    <i class="fa fa-bars"></i>
-                </button>
-
-                <div class="dropdown mr-auto ml-md-3 my-2 my-md-0 mw-100">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Filtra
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
                     </button>
-                    <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-                        <a class="dropdown-item" href="#">DISIM</a>
-                        <a class="dropdown-item" href="#">DIIIE</a>
-                        <a class="dropdown-item" href="#">DICEAA</a>
-                        <a class="dropdown-item" href="#">DSFC</a>
-                        <a class="dropdown-item" href="#">MESVA</a>
-                        <a class="dropdown-item" href="#">DISCAB</a>
-                        <a class="dropdown-item" href="#">DSU</a>
-                        <a class="dropdown-item" href="#">Mista</a>
-                    </div>
-                </div>
 
-                <!-- Topbar Search -->
-                <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Ricerca"
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
+                    <!-- Bottone per il filtraggio della ricerca -->
+                    <div class="dropdown mr-auto ml-md-3 my-2 my-md-0 mw-100">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filtra
+                        </button>
+                        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+                            <a class="dropdown-item" href="#">DISIM</a>
+                            <a class="dropdown-item" href="#">DIIIE</a>
+                            <a class="dropdown-item" href="#">DICEAA</a>
+                            <a class="dropdown-item" href="#">DSFC</a>
+                            <a class="dropdown-item" href="#">MESVA</a>
+                            <a class="dropdown-item" href="#">DISCAB</a>
+                            <a class="dropdown-item" href="#">DSU</a>
+                            <a class="dropdown-item" href="#">Mista</a>
                         </div>
                     </div>
-                </form>
 
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                    </li>
-
-
-                    <div class="topbar-divider d-none d-sm-block"></div>
-
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle"
-                                 src="../img/undraw_profile.svg">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="profilo.html">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profilo
-                            </a>
-
-                            <a class="dropdown-item" href="pannello-di-controllo.html">
-                                <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Pannello di Controllo
-                            </a>
-
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </nav>
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800">Crea un thread</h1>
-
-
-
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <input type="text" class="form-control form-control-user" id="titolo" placeholder="Titolo">
-
-                    </div>
-                    <div class="card-body">
-
-                        <textarea class="ml-2 mr-2" id="testoThread" name="testo" style="width: 100%"></textarea>
-
-                        <div class="dropdown m-3" align="center">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="categoria" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Scegli una categoria
-                            </button>
-                            <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">DISIM</a>
-                                <a class="dropdown-item" href="#">DIIIE</a>
-                                <a class="dropdown-item" href="#">DICEAA</a>
-                                <a class="dropdown-item" href="#">DSFC</a>
-                                <a class="dropdown-item" href="#">MESVA</a>
-                                <a class="dropdown-item" href="#">DISCAB</a>
-                                <a class="dropdown-item" href="#">DSU</a>
-                                <a class="dropdown-item" href="#">Mista</a>
+                    <!-- Form di ricerca -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Ricerca"
+                                   aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
                             </div>
                         </div>
+                    </form>
 
-                        <a href="#" class="btn btn-google btn-user btn-block mt-3">
-                            Aggiungi allegati
-                        </a>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
 
-                        <hr>
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                        </li>
 
-                        <a href="#" class="btn btn-primary btn-user btn-block">
-                            Pubblica
-                        </a>
 
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Informazioni profilo loggato e relativa tendina -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                     src="../img/undraw_profile.svg">
+                            </a>
+
+                            <!-- Tendina -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="profilo.html">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profilo
+                                </a>
+
+                                <a class="dropdown-item" href="pannello-di-controllo.html">
+                                    <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Pannello di Controllo
+                                </a>
+
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Fine della Topbar -->
+
+                <!-- Inizio del Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Intestazione della pagina -->
+                    <h1 class="h3 mb-4 text-gray-800">Crea un thread</h1>
+
+
+
+                    <!-- Box creazione thread -->
+                    <div class="card shadow mb-4">
+
+                        <!-- Form inserimento titolo -->
+                        <div class="card-header py-3">
+                            <input type="text" class="form-control form-control-user" id="titolo" placeholder="Titolo">
+                        </div>
+
+                        <div class="card-body">
+
+                            <!-- Form inserimento testo thread -->
+                            <textarea class="ml-2 mr-2" id="testoThread" name="testo" style="width: 100%"></textarea>
+
+                            <div class="dropdown m-3" align="center">
+
+                                <!-- Bottone selezione categoria -->
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="categoria" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Scegli una categoria
+                                </button>
+
+                                <!-- Tendina -->
+                                <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">DISIM</a>
+                                    <a class="dropdown-item" href="#">DIIIE</a>
+                                    <a class="dropdown-item" href="#">DICEAA</a>
+                                    <a class="dropdown-item" href="#">DSFC</a>
+                                    <a class="dropdown-item" href="#">MESVA</a>
+                                    <a class="dropdown-item" href="#">DISCAB</a>
+                                    <a class="dropdown-item" href="#">DSU</a>
+                                    <a class="dropdown-item" href="#">Mista</a>
+                                </div>
+                            </div>
+
+                            <!-- Bottone allegati -->
+                            <a href="#" class="btn btn-google btn-user btn-block mt-3">
+                                Aggiungi allegati
+                            </a>
+
+                            <!-- Divisore -->
+                            <hr>
+
+                            <!-- Bottone pubblicazione thread -->
+                            <a href="#" class="btn btn-primary btn-user btn-block">
+                                Pubblica
+                            </a>
+
+                        </div>
                     </div>
+                    <!-- Fine box creazione Thread -->
 
                 </div>
-
-
-
-
-
-
-
+                <!-- Fine del Page Content -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- Fine del Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; UniChat 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- Fine del Footer -->
 
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; UniChat 2021</span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
+        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- Fine del Page Wrapper -->
 
-</div>
-<!-- End of Page Wrapper -->
+    <!-- Bottone Scroll to Top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sei sicuro di voler andare?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Seleziona "Logout" qui sotto se sei pronto a terminare la sessione attuale.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sei sicuro di voler andare?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Seleziona "Logout" qui sotto se sei pronto a terminare la sessione attuale.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap core JavaScript-->
-<script src="../vendor/jquery/jquery.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
-<script src="../js/sb-admin-2.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="../js/sb-admin-2.min.js"></script>
 
 </body>
 

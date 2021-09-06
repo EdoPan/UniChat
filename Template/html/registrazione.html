@@ -24,56 +24,83 @@
 
 <body class="bg-gradient-primary">
 
+    <!-- Contenitore principale -->
     <div class="container">
-
         <div class="card o-hidden border-0 shadow-lg my-5">
             <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
                 <div class="row">
                     <div class="col-lg-7">
                         <div class="p-5">
+
+                            <!-- Titolo -->
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Crea un Account!</h1>
                             </div>
+
+                            <!-- Form registrazione -->
                             <form class="user">
+
                                 <div class="form-group row">
+
+                                    <!-- Inserimento nome -->
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="nome"
                                             placeholder="Nome">
                                     </div>
+
+                                    <!-- Inserimento cognome -->
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="cognome"
                                             placeholder="Cognome">
                                     </div>
                                 </div>
+
+                                <!-- Inserimento email -->
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="email"
-                                        placeholder="Email">
+                                    <input type="email" class="form-control form-control-user" id="email" placeholder="Email">
                                 </div>
+
                                 <div class="form-group row">
+
+                                    <!-- Inserimento password -->
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
                                             id="password" placeholder="Password">
                                     </div>
+
+                                    <!-- Conferma password -->
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
                                             id="ripetiPassword" placeholder="Ripeti la Password">
                                     </div>
                                 </div>
+
+                                <!-- Inserimento Corso di Studio -->
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-user" id="corso"
                                            placeholder="Corso di Studio">
                                 </div>
+
+                                <!-- Pulsante caricamento foto profilo -->
                                 <a href="#" class="btn btn-google btn-user btn-block">
                                     Carica foto profilo</a>
+
+                                <!-- Pulsante registrazione account -->
                                 <a href="login.html" class="btn btn-primary btn-user btn-block">
                                     Regista Account
                                 </a>
                             </form>
+                            <!-- Fine form registrazione -->
+
+                            <!-- Divisore -->
                             <hr>
+
+                            <!-- Link pagina recupero password -->
                             <div class="text-center">
                                 <a class="small" href="recupero-password.html">Password dimenticata?</a>
                             </div>
+
+                            <!-- Link pagina registrazione -->
                             <div class="text-center">
                                 <a class="small" href="login.html">Sei già un utente? Effettua il Login!</a>
                             </div>
@@ -82,8 +109,9 @@
                 </div>
             </div>
         </div>
-
     </div>
+    <!-- Fine contenitore principale -->
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
