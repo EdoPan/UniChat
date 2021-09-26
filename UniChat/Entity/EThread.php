@@ -78,15 +78,15 @@ class EThread
      * vengono impostate la data e l'ora.
      * Se l'autore non ha aggiunto allegati allora viene passato null e impostato un array vuoto.
      * Se il thread non ha ancora delle risposte allora viene passato null e impostato un array vuoto.
-     * @param int|null $id
-     * @param string $titolo
-     * @param string $testo
-     * @param string|null $data
-     * @param array|null $allegati
-     * @param EUser $autoreThread
-     * @param ECategoria $categoriaThread
-     * @param EValutazione $valutazione
-     * @param array|null $risposte
+     * @param int|null $id Identificativo del thread da creare, può non essere impostato
+     * @param string $titolo Titolo del thread da creare
+     * @param string $testo Testo del thread da creare
+     * @param string|null $data Data  di creazione del thread da creare, può non essere impostato
+     * @param array|null $allegati Allegati del thread da creare, possono non essere presenti
+     * @param EUser $autoreThread Autore del thread da creare
+     * @param ECategoria $categoriaThread Categoria di appartenenza del thread da creare
+     * @param EValutazione $valutazione Valutazione associata al thread da creare
+     * @param array|null $risposte Risposte associate al thread da creare, possono non essere presenti
      */
     public function __construct(?int $id, string $titolo, string $testo, ?string $data, ?array $allegati, EUser $autoreThread,
                                 ECategoria $categoriaThread, EValutazione $valutazione, ?array $risposte)
@@ -120,7 +120,7 @@ class EThread
 
     /**
      * Restituisce l'identificativo del thread.
-     * @return int
+     * @return int Identificativo del thread.
      */
     public function getId(): int
     {
@@ -129,7 +129,7 @@ class EThread
 
     /**
      * Restituisce il titolo del thread.
-     * @return string
+     * @return string Titolo del thread.
      */
     public function getTitolo(): string
     {
@@ -138,7 +138,7 @@ class EThread
 
     /**
      * Restituisce il testo del thread.
-     * @return string
+     * @return string Testo del thread.
      */
     public function getTesto(): string
     {
@@ -147,7 +147,7 @@ class EThread
 
     /**
      * Restituisce la data del thread.
-     * @return string
+     * @return string Data di creazione del thread.
      */
     public function getData(): string
     {
@@ -155,8 +155,8 @@ class EThread
     }
 
     /**
-     * Restituisce un array contenente array associativi che rapprensentano i file allegati.
-     * @return array
+     * Restituisce un array contenente array associativi che rappresentano i file allegati.
+     * @return array Allegati del thread.
      */
     public function getAllegati(): array
     {
@@ -165,7 +165,7 @@ class EThread
 
     /**
      * Restituisce l'autore del thread.
-     * @return EUser
+     * @return EUser Autore del thread.
      */
     public function getAutoreThread(): EUser
     {
@@ -174,7 +174,7 @@ class EThread
 
     /**
      * Restituisce la categoria di appartenenza del thread.
-     * @return ECategoria
+     * @return ECategoria Categoria del thread.
      */
     public function getCategoriaThread(): ECategoria
     {
@@ -183,7 +183,7 @@ class EThread
 
     /**
      * Restituisce la valutazione del thread.
-     * @return EValutazione
+     * @return EValutazione Valutazione del thread.
      */
     public function getValutazione(): EValutazione
     {
@@ -192,7 +192,7 @@ class EThread
 
     /**
      * Restituisce un array contenente le risposte al thread.
-     * @return array
+     * @return array Risposte del thread.
      */
     public function getRisposte(): array
     {
@@ -201,7 +201,7 @@ class EThread
 
     /**
      * Imposta l'identificativo del thread.
-     * @param int $id
+     * @param int $id Identificativo thread da assegnare.
      */
     public function setId(int $id): void
     {
@@ -210,7 +210,7 @@ class EThread
 
     /**
      * Imposta il titolo del thread.
-     * @param string $titolo
+     * @param string $titolo Titolo thread da assegnare.
      */
     public function setTitolo(string $titolo): void
     {
@@ -219,7 +219,7 @@ class EThread
 
     /**
      * Imposta il testo del thread.
-     * @param string $testo
+     * @param string $testo Testo thread da assegnare.
      */
     public function setTesto(string $testo): void
     {
@@ -236,7 +236,7 @@ class EThread
 
     /**
      * Imposta gli allegati del thread.
-     * @param array $allegati
+     * @param array $allegati Allegati thread da assegnare.
      */
     public function setAllegati(array $allegati): void
     {
@@ -245,7 +245,7 @@ class EThread
 
     /**
      * Imposta l'autore del thread.
-     * @param EUser $autoreThread
+     * @param EUser $autoreThread Autore thread da assegnare.
      */
     public function setAutoreThread(EUser $autoreThread): void
     {
@@ -254,7 +254,7 @@ class EThread
 
     /**
      * Imposta la categoria di appartenenza del thread.
-     * @param ECategoria $categoriaThread
+     * @param ECategoria $categoriaThread Categoria thread da assegnare.
      */
     public function setCategoriaThread(ECategoria $categoriaThread): void
     {
@@ -263,7 +263,7 @@ class EThread
 
     /**
      * Imposta la valutazione del thread.
-     * @param EValutazione $valutazione
+     * @param EValutazione $valutazione Valutazione thread da assegnare.
      */
     public function setValutazione(EValutazione $valutazione): void
     {
@@ -272,7 +272,7 @@ class EThread
 
     /**
      * Imposta le risposte del thread.
-     * @param array $risposte
+     * @param array $risposte Risposte thread da assegnare.
      */
     public function setRisposte(array $risposte): void
     {
@@ -282,7 +282,7 @@ class EThread
 
     /**
      * Restituisce il numero di risposte presenti nel thread.
-     * @return int
+     * @return int Numero di risposte presenti nel thread.
      */
     public function contaRisposte(): int
     {
