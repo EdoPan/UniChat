@@ -11,7 +11,7 @@ class FMessaggio
 
     /**
      * Istanza della classe FMessaggio, si utilizza per il singleton.
-     * @var null
+     * @var null|FMessaggio
      */
     private static $instance = null;
 
@@ -144,11 +144,22 @@ class FMessaggio
             $pdo=$dbConnection->connect();
 
             if ($this->exists($messID)) {
+                /*
+                 * Per evitare inconsistenza sui dati, causato dall'accesso concorrente, si procede ad eseguire
+                 * l'operazione in mutua esclusione.
+                 */
+                $pdo->query("SET autocommit = 0");
+                $pdo->query("LOCK TABLES messaggi WRITE");
+
                 $sql = ("DELETE FROM messaggi WHERE messID = :messID");
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
                     ':messID' => $messID
                 ));
+
+                $pdo->query("COMMIT");
+                $pdo->query("UNLOCK TABLES");
+
                 return $result;
             } else {
                 return false;
@@ -196,6 +207,37 @@ class FMessaggio
             $pdo = $dbConnection->connect();
 
             $stmt = $pdo->query("SELECT messID FROM messaggi ORDER BY messID LIMIT " . $rigaPartenza . ", " . $numeroRighe);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($rows as $row) {
+                $messID = (int)$row['messID'];
+                $messaggio = self::load($messID);
+                if (isset($messaggio)) {
+                    $messaggi[] = $messaggio;
+                } else {
+                    return null;
+                }
+            }
+            return $messaggi;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Permette di ottenere l'elenco dei messaggi che sono stati pubblicati nelle ultime 24 ore.
+     * In caso di errori viene restituito null.
+     * @return array|null Elenco dei messaggi pubblicati nelle ultime 24 ore.
+     */
+    public function loadMessaggiUltime24ore(): ?array
+    {
+        $messaggi = array();
+
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT messID FROM messaggi WHERE data > DATE_SUB(CURDATE(), INTERVAL 1 DAY)");
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($rows as $row) {
