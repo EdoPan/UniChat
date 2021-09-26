@@ -34,15 +34,51 @@ class EValutazione
     private array $utentiNegativi;
 
     /**
+     * Costante con cui si indica il fatto che ci sia stato un problema con l'aggiornamento della valutazione.
+     */
+    const ERRORE_VOTO = 0;
+
+    /**
+     * Costante con cui si indica il fatto che sia stato espresso un voto positivo.
+     */
+    const VOTO_POSITIVO = 1;
+
+    /**
+     * Costante con cui si indica il fatto che il voto positivo, precendentemente espresso, è stato annullato.
+     */
+    const VOTO_POSITIVO_ANNULlATO = 2;
+
+    /**
+     * Costante con cui si indica il fatto che il voto negativo, precedentemente espresso, è stato cambiato in positivo.
+     */
+    const VOTO_POSITIVO_CAMBIATO = 3;
+
+    /**
+     * Costante con cui si indica il fatto che sia stato espresso un voto negativo.
+     */
+    const VOTO_NEGATIVO = 4;
+
+    /**
+     * Costante con cui si indica il fatto che il voto negativo, precedentemente espresso, è stato annullato.
+     */
+    const VOTO_NEGATIVO_ANNULLATO = 5;
+
+    /**
+     * Costante con cui si indica il fatto che il voto positivo, precedentemente espresso, è stato cambiato in negativo.
+     */
+    const VOTO_NEGATIVO_CAMBIATO = 6;
+
+
+    /**
      * Se la valutazione è stata appena aggiunta al thread allora non possiede un id, viene passato come null e settato
      * a 0.
      * Quando la valutazione viene appena aggiunta ha valore 0, il totale viene passato come null.
      * Quando la valutazione viene appena aggiunta non ha ancora utenti che hanno espresso il proprio giudizio, viene
      * passato null e settati i due array come vuoti.
-     * @param int|null $id
-     * @param int|null $totale
-     * @param array|null $utentiPositivi
-     * @param array|null $utentiNegativi
+     * @param int|null $id Identificativo della valutazione da creare, può non essere impostato
+     * @param int|null $totale Totale della valutazione da creare, può non essere impostato
+     * @param array|null $utentiPositivi Elenco utenti che hanno valutato positivamente, può non essere impostato
+     * @param array|null $utentiNegativi Elenco utenti che hanno valutato negativamente, può non essere impostato
      */
     public function __construct(?int $id, ?int $totale, ?array $utentiPositivi, ?array $utentiNegativi)
     {
@@ -70,7 +106,7 @@ class EValutazione
 
     /**
      * Restituisce l'identificativo della valutazione del thread.
-     * @return int
+     * @return int Identificativo della valutazione.
      */
     public function getId(): int
     {
@@ -79,7 +115,7 @@ class EValutazione
 
     /**
      * Restituisce il valore della valutazione.
-     * @return int
+     * @return int Totale della valutazione.
      */
     public function getTotale(): int
     {
@@ -88,7 +124,7 @@ class EValutazione
 
     /**
      * Restituisce l'array contenente gli utenti che hanno espresso un giudzio positivo.
-     * @return array
+     * @return array Elenco degli utenti che hanno espresso un voto positivo, può essere vuoto.
      */
     public function getUtentiPositivi(): array
     {
@@ -97,7 +133,7 @@ class EValutazione
 
     /**
      * Restituisce l'array contenente gli utenti che hanno espresso un giudizio negativo.
-     * @return array
+     * @return array elenco degli utenti che hanno espresso un voto negativo, può essere vuoto.
      */
     public function getUtentiNegativi(): array
     {
@@ -106,7 +142,7 @@ class EValutazione
 
     /**
      * Imposta l'identificativo della valutazione.
-     * @param int $id
+     * @param int $id Identificativo della valutazione da assegnare.
      */
     public function setId(int $id): void
     {
@@ -115,7 +151,7 @@ class EValutazione
 
     /**
      * Imposta il totale della valutazione.
-     * @param int $totale
+     * @param int $totale Totale della valutazione da assegnare.
      */
     public function setTotale(int $totale): void
     {
@@ -124,7 +160,7 @@ class EValutazione
 
     /**
      * Imposta l'array contenente gli utenti che hanno espresso un giudizio positivo.
-     * @param array $utentiPositivi
+     * @param array $utentiPositivi Elenco degli utenti che hanno espresso un giudizio positivo da assegnare.
      */
     public function setUtentiPositivi(array $utentiPositivi): void
     {
@@ -133,7 +169,7 @@ class EValutazione
 
     /**
      * Imposta l'array contenente gli utenti che hanno espresso un giudizio negativo.
-     * @param array $utentiNegativi
+     * @param array $utentiNegativi Elenco degli utenti che hanno espresso un giudizio negativo da assegnare.
      */
     public function setUtentiNegativi(array $utentiNegativi): void
     {
@@ -142,17 +178,65 @@ class EValutazione
 
 
     /**
-     * @param EUser $user
-     * @param int $valore
+     * Permette di aggiornare il totale della valutazione e l'elenco degli utenti che hanno espresso un giudizio.
+     * Sono previste le seguenti situazioni:
+     * - l'utente esprime un giudizio positivo;
+     * - l'utente esprime nuovamente un giudizio positivo e così facendo annulla il giudizio precedentemente espresso;
+     * - l'utente aveva espresso un giudizio negativo ma ha cambiato idea ed eprime un nuovo giudizio, quasta volta
+     * positivo;
+     * - l'utente esprime un giudizio negativo;
+     * - l'utente esprime nuovamente un giudizio negativo e così facendo annulla il giudizio precedentemente espresso;
+     * - l'utente aveva espresso un giudizio positivo ma ha cambiato idea ed eprime un nuovo giudizio, quasta volta
+     * negativo.
+     * Viene restituito un valore rappresentante la situazione che si è verificata.
+     * @param EUser $user Utente che esprime il giudizio.
+     * @param int $valore Valore che indica se il giudizio è positivo o negativo.
+     * @return int Valore che indica la tipologia di situazione che si è verificata.
      */
-    public function valuta(EUser $user, int $valore): void
+    public function valuta(EUser $user, int $valore): int
     {
-        if($valore == 1){
-            $this->totale = $this->totale + 1;
-            $this->utentiPositivi[] = $user;
-        } else if ($valore == -1){
-            $this->totale = $this->totale - 1;
-            $this->utentiNegativi[] = $user;
+        $indicePositivi = array_search($user, $this->getUtentiPositivi());
+        $indiceNegativi = array_search($user, $this->utentiNegativi);
+        if($valore >= 0){
+            if ($indicePositivi === false && $indiceNegativi === false) {
+                $this->totale = $this->totale + 1;
+                $this->utentiPositivi[] = $user;
+                return self::VOTO_POSITIVO;
+            } else if ($indicePositivi !== false && $indiceNegativi === false) {
+                $this->totale = $this->totale - 1;
+                unset($this->utentiPositivi[$indicePositivi]);
+                $this->utentiPositivi = array_values($this->utentiPositivi);
+                return self::VOTO_POSITIVO_ANNULlATO;
+            } else if ($indicePositivi === false && $indiceNegativi !== false) {
+                $this->totale = $this->totale + 2;
+                unset($this->utentiNegativi[$indiceNegativi]);
+                $this->utentiNegativi = array_values($this->utentiNegativi);
+                $this->utentiPositivi[] = $user;
+                return self::VOTO_POSITIVO_CAMBIATO;
+            } else {
+                return self::ERRORE_VOTO;
+            }
+        } else if ($valore < 0){
+            if ($indicePositivi === false && $indiceNegativi === false) {
+                $this->totale = $this->totale - 1;
+                $this->utentiNegativi[] = $user;
+                return self::VOTO_NEGATIVO;
+            } else if ($indicePositivi === false && $indiceNegativi !== false) {
+                $this->totale = $this->totale + 1;
+                unset($this->utentiNegativi[$indiceNegativi]);
+                $this->utentiNegativi = array_values($this->utentiNegativi);
+                return self::VOTO_NEGATIVO_ANNULLATO;
+            } else if ($indicePositivi !== false && $indiceNegativi === false) {
+                $this->totale = $this->totale - 2;
+                unset($this->utentiPositivi[$indicePositivi]);
+                $this->utentiPositivi = array_values($this->utentiPositivi);
+                $this->utentiNegativi[] = $user;
+                return self::VOTO_NEGATIVO_CAMBIATO;
+            } else {
+                return self::ERRORE_VOTO;
+            }
+        } else {
+            return self::ERRORE_VOTO;
         }
     }
     }
