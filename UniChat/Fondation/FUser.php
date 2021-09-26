@@ -9,7 +9,7 @@ class FUser
 {
     /**
      * Istanza della classe FUser, si utilizza per il singleton.
-     * @var null
+     * @var null|FUser
      */
     private static $instance = null;
 
@@ -37,8 +37,9 @@ class FUser
      * Restituisce l'oggetto EUser, memorizzato nel database, avente come id quello passato come parametro.
      * Qualora la foto profilo dell'utente non fosse presente, vi fossero problemi con la comunicazione con il database,
      * o vi fossero errori di varia natura allora viene restituito null.
-     * @param int $userID
-     * @return EUser|null
+     * @param int $userID Identificativo dell'utente da recuperare dalla base dati
+     * @return EUser|null Utente recuperato dalla base dati
+     * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi di validazione dei dati
      */
     public function load(int $userID): ?EUser
     {
@@ -85,8 +86,8 @@ class FUser
      * array associativo avente i campi id, nome, dimensione, tipo e immagine, in quest'ultimo risiede il file in
      * formato stringa.
      * In caso di errori viene restituito null.
-     * @param int $fotoID
-     * @return array|null
+     * @param int $fotoID Identificativo della foto profilo da recuperare dalla base dati
+     * @return array|null Foto profilo
      */
     private function loadFotoProfilo(int $fotoID): ?array
     {
@@ -124,8 +125,9 @@ class FUser
      * Qualora la foto profilo del moderatore non fosse presente, vi fossero problemi con il recupero della categoria
      * gestita dal moderatore, vi fossero problemi con la comunicazione con il database o vi fossero errori di varia
      * natura allora viene restituito null.
-     * @param int $moderatoreID
-     * @return EModeratore|null
+     * @param int $moderatoreID Identificativo del moderatore da recuperare dalla base dati
+     * @return EModeratore|null Moderatore recuperato dalla base dati
+     * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi con la validazione dei dati
      */
     public function loadModeratore(int $moderatoreID): ?EModeratore
     {
@@ -133,7 +135,7 @@ class FUser
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            $sql = ("SELECT * FROM users, categorie WHERE moderatore = true AND userID = moderatoreID AND userID = :userID");
+            $sql = ("SELECT users.*, categorie.categoriaID FROM users, categorie WHERE moderatore = true AND userID = moderatoreID AND userID = :userID");
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(
                 ':userID' => $moderatoreID
@@ -182,8 +184,8 @@ class FUser
      * Restituisce l'oggetto EAdmin, memorizzato nel database, dato l'id che lo identifica.
      * Qualora la foto profilo dell'admin non fosse presente, vi fossero problemi con la comunicazione con il database
      * o vi fossero errori di varia natura allora viene restituito null.
-     * @param int $adminID
-     * @return EAdmin|null
+     * @param int $adminID Identificativo dell'admin da recuperare dalla base dati
+     * @return EAdmin|null Admin recuperato dalla base dati
      */
     public function loadAdmin(int $adminID): ?EAdmin
     {
@@ -228,8 +230,9 @@ class FUser
     /**
      * Restituisce un Euser, un EModeratore o un EAdmin, dato l'email fornita in fase di registrazione.
      * Qualora non vi fosse un utente con quella email o errori di varia natura, viene restituito null.
-     * @param string $email
-     * @return EUser|null
+     * @param string $email Email dell'utente da recuperare dalla base dati
+     * @return EUser|null Utente recuperato dalla base dati
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi con la validazione dei dati.
      */
     public function loadByEmail(string $email): ?EUser
     {
@@ -269,8 +272,9 @@ class FUser
     /**
      * Permette di ottenere il moderatore che gestisce una categoria a partire dall'identificativo di quest'ultima.
      * In caso di errori viene restituito null.
-     * @param int $categoriaID
-     * @return EModeratore|null
+     * @param int $categoriaID Identificativo della categoria di cui si vuole ottenere il moderatore
+     * @return EModeratore|null Moderatore recuperato dalla base dati
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi con la validazione dei dati
      */
     public function loadModeratoreCategoria(int $categoriaID): ?EModeratore
     {
@@ -297,12 +301,13 @@ class FUser
         }
     }
 
+    
     /**
      * Aggiorna nel database alcuni valori degli attributi dell'utente, si tratta degli unici modificabili dall'utente
      * stesso.
      * Se l'operazione va a buon fine allora viene restituito true, in caso contrario false.
-     * @param EUser $user
-     * @return bool
+     * @param EUser $user Utente di cui si devono aggiornare alcuni valori nella base dati
+     * @return bool Esito dell'operazione
      */
     public function update(EUser $user): bool
     {
@@ -358,8 +363,14 @@ class FUser
                      * Tali operazioni sono:
                      * - eliminazione della foto profilo precedente;
                      * - operazione di update.
+                     * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+                     * operazioni sopra descritte vengono eseguite in mutua esclusione.
                      */
-                    $pdo->beginTransaction();
+
+                    //$pdo->beginTransaction();
+                    $pdo->query("SET autocommit = 0");
+                    $pdo->query("LOCK TABLES fotoprofilo WRITE, users WRITE");
+
                     $resultDelete = $this->deleteFotoProfilo($pdo, $fotoProfiloID);
                     $sql = ("UPDATE users SET password = :password, fotoProfiloID = :fotoProfiloID, corsoStudio = :corsoStudio WHERE userID = :userID");
                     $stmt = $pdo->prepare($sql);
@@ -370,10 +381,14 @@ class FUser
                         ':userID' => $userID
                     ));
                     if($resultDelete == true && $resultUpdate == true){
-                        $pdo->commit();
+                        //$pdo->commit();
+                        $pdo->query("COMMIT");
+                        $pdo->query("UNLOCK TABLES");
                         $result = true;
                     } else {
-                        $pdo->rollBack();
+                        //$pdo->rollBack();
+                        $pdo->query("ROLLBACK");
+                        $pdo->query("UNLOCK TABLES");
                         $result = false;
                     }
                 } else {
@@ -384,8 +399,14 @@ class FUser
                      * - eliminazione della foto profilo precedente;
                      * - memorizzazione della nuova foto profilo;
                      * - operazione di update.
+                     * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+                     * operazioni sopra descritte vengono eseguite in mutua esclusione.
                      */
-                    $pdo->beginTransaction();
+
+                    //$pdo->beginTransaction();
+                    $pdo->query("SET autocommit = 0");
+                    $pdo->query("LOCK TABLES fotoprofilo WRITE, users WRITE");
+
                     $resultDelete = $this->deleteFotoProfilo($pdo, $fotoProfiloID);
                     $newFotoProfiloID = $this->storeFotoProfilo($pdo, $fotoProfilo);
                     if (!$newFotoProfiloID) {
@@ -401,10 +422,14 @@ class FUser
                         ':userID' => $userID
                     ));
                     if ($resultDelete == true && $resultUpdate == true) {
-                        $pdo->commit();
+                        //$pdo->commit();
+                        $pdo->query("COMMIT");
+                        $pdo->query("UNLOCK TABLES");
                         $result = true;
                     } else {
-                        $pdo->rollBack();
+                        //$pdo->rollBack();
+                        $pdo->query("ROLLBACK");
+                        $pdo->query("UNLOCK TABLES");
                         $result = false;
                     }
                 }
@@ -418,9 +443,9 @@ class FUser
     /**
      * Permette di assegnare ad un utente il ruolo di moderatore di una categoria.
      * Viene restituito true se l'operazione va buon fine, false altrimenti.
-     * @param PDO $pdo
-     * @param int $moderatoreID
-     * @return bool
+     * @param PDO $pdo Connessione al database
+     * @param int $moderatoreID Identificativo dell'utente da rendere moderatore
+     * @return bool Esito dell'operazione
      */
     public function updateToModeratore(PDO $pdo, int $moderatoreID): bool  //usato da FCategoria->update
     {
@@ -439,9 +464,9 @@ class FUser
     /**
      * Permette di rimuovere un utente dal ruolo di moderatore di una categoria.
      * Viene restituito true se l'operazione va a buon fine, false altrimenti.
-     * @param PDO $pdo
-     * @param int $moderatoreID
-     * @return bool
+     * @param PDO $pdo Connessione al database
+     * @param int $moderatoreID identificativo del moderatore da rendere utente semplice
+     * @return bool Esito dell'operazione
      */
     public function updateToUser(PDO $pdo, int $moderatoreID): bool  //usato da FCategoria->rimuoviModeratore
     {
@@ -460,8 +485,8 @@ class FUser
     /**
      * Permette di memorizzare nella base dati l'oggetto EUser.
      * Viene restituito true se l'operazione va a buon fine, false altrimenti.
-     * @param EUser $user
-     * @return bool
+     * @param EUser $user Utente da memorizzare nella base dati
+     * @return bool Esito dell'operazione
      */
     public function store(EUser $user): bool
     {
@@ -542,9 +567,9 @@ class FUser
      * Permette di memorizzare nella base dati una nuova foto profilo.
      * Se l'operazione va a buon fine viene restituito l'id assegnato alla foto profilo nella base dati, altrimenti
      * viene restituito null.
-     * @param PDO $pdo
-     * @param array $fotoProfilo
-     * @return int|null
+     * @param PDO $pdo Connessione al database
+     * @param array $fotoProfilo Foto profilo da memorizzare nella base dati
+     * @return int|null Identificativo assegnato dalla base dati alla foto profilo
      */
     private function storeFotoProfilo(PDO $pdo, array $fotoProfilo): ?int{
         $nome = $fotoProfilo["nome"];
@@ -567,8 +592,8 @@ class FUser
      * thread, il valore non viene decrementato ma l'utente viene rimosso dall'elenco degli utenti che ha espresso il
      * giudizio. Se l'utente era un moderatore allora questo viene rimosso da tale ruolo.
      * Restituisce true se l'operazione va buon fine, false altrimenti.
-     * @param int $userID
-     * @return bool
+     * @param int $userID Identificativo dell'utente da rimuovere dalla base dati
+     * @return bool Esito dell'operazione
      */
     public function delete(int $userID): bool{
         try {
@@ -597,6 +622,8 @@ class FUser
              * - aggiornamento dei messaggi scritti dall'utente con l'identificativo dell'utente di default;
              * - aggiornamento delle risposte scritte dall'utente con l'identificativo dell'utente di default;
              * - rimozione dell'utente.
+             * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+             * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES threads WRITE, messaggi WRITE, risposte WRITE, users WRITE");
@@ -639,9 +666,9 @@ class FUser
     /**
      * Permette di rimuovere la foto profilo di un utente dalla base dati.
      * Restituisce true se l'operazione va buon fine, false altrimenti.
-     * @param PDO $pdo
-     * @param int $fotoID
-     * @return bool
+     * @param PDO $pdo Connessione al database
+     * @param int $fotoID Identificativo della foto profilo da rimuovere
+     * @return bool Esito dell'operazione
      */
     private function deleteFotoProfilo(PDO $pdo, int $fotoID): bool
     {
@@ -660,8 +687,8 @@ class FUser
     /**
      * Verifica che un utente sia presente nella base dati fornendo la sua email.
      * Restituisce true se l'utente è presente, false se l'utente non è presente o null se vi sono stati errori.
-     * @param string $email
-     * @return bool|null
+     * @param string $email Email dell'utente di cui si deve verificare l'esistenza nella base dati
+     * @return bool|null Esito della richiesta
      */
     public function existsByEmail(string $email): ?bool
     {
@@ -688,8 +715,8 @@ class FUser
     /**
      * Verifica che l'utente sia un moderatore.
      * Restituisce true se l'utente è un moderatore, false se non lo è o null se vi sono stati errori.
-     * @param int $userID
-     * @return bool|null
+     * @param int $userID Identificativo dell'utente di cui si deve verificare il ruolo di moderatore
+     * @return bool|null Esito della richiesta
      */
     public function isModeratore(int $userID): ?bool
     {
@@ -716,8 +743,8 @@ class FUser
     /**
      * Verifica che l'utente sia un admin.
      * Restituisce true se l'utente è un admin, false se non lo è o null se vi sono stati errori.
-     * @param int $userID
-     * @return bool|null
+     * @param int $userID Identificativo dell'utente di cui si deve verificare il ruolo di admin
+     * @return bool|null Esito della richiesta
      */
     public function isAdmin(int $userID): ?bool
     {
@@ -746,9 +773,10 @@ class FUser
      * base dati partire (riga di partenza esclusa) e il numero di righe da visualizzare.
      * Viene restituito un array di utenti (in senso generale), eventualmente vuoto, se l'operazione va a buon fine,
      * null altrimenti.
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
+     * @param int $numeroRighe Valore che indica quanti record recuperare
+     * @return array|null Elenco contenente gli utenti recuperati
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati
      */
     public function loadAll(int $rigaPartenza, int $numeroRighe): ?array
     {
@@ -789,9 +817,10 @@ class FUser
      * Permette di ottenere un certo numero di EModeratori specificando da quale riga dell tabella della base dati
      * partire (riga di partenza esclusa) e il numero di righe da visualizzare.
      * Viene restituito un array di moderatori, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
+     * @param int $numeroRighe Valore che indica quanti record recuperare
+     * @return array|null Elenco contenente i moderatori recuperati
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati
      */
     public function loadAllModeratori(int $rigaPartenza, int $numeroRighe): ?array
     {
@@ -808,6 +837,30 @@ class FUser
                 $moderatori[] = $this->loadModeratore((int)$row["userID"]);
             }
             return $moderatori;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Conta il numero di utenti registrati nella base dati.
+     * Se l'operazione non va a buon fine allora viene restituito null.
+     * @return int|null Numero di utenti registrati nella base dati
+     */
+    public function conta(): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT count(*) as numeroUtenti FROM users");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if(count($rows) == 1){
+                return (int)$rows[0]['numeroUtenti'];
+            } else {
+                return null;
+            }
         } catch (PDOException $e) {
             return null;
         }

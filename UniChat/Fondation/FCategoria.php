@@ -10,7 +10,7 @@ class FCategoria
 {
     /**
      * Istanza della classe FCategoria, si utilizza per il singleton.
-     * @var null
+     * @var null|FCategoria
      */
     private static $instance = null;
 
@@ -38,6 +38,7 @@ class FCategoria
      * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * @param int $categoriaID
      * @return ECategoria|null
+     * @throws ValidationException
      */
     public function load(int $categoriaID): ?ECategoria
     {
@@ -123,6 +124,7 @@ class FCategoria
      * Se ciò non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
      * @param int $threadID
      * @return ECategoria|null
+     * @throws ValidationException
      */
     public function loadCategoriaThread(int $threadID): ?ECategoria
     {
@@ -151,6 +153,9 @@ class FCategoria
 
     /**
      * Assegnazione di un moderatore ad una categoria.
+     * L'operazione segue diversi passi che consistono nel verificare che il moderatore da assegnare non sia già stato
+     * assegnato ad un'altra categoria, in tal caso viene prima rimosso da quest'ultima, e nel verificare che la
+     * categoria da moderare non sia già moderata, in tal caso il moderatore ad essa assegnato viene prima rimosso.
      * @param ECategoria $categoria
      * @param EModeratore $mod
      * @return bool
@@ -164,33 +169,67 @@ class FCategoria
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-
             /*
-                 * L'assegnazione di un moderatore ad una cateogoria nella base dati richiede che vengano compiute una serie di
-                 * operazioni da eseguire una di seguito all'altra, ma che devono apportare modifiche alla base dati
-                 * solo se sono avvenute tutte con successo.
-                 * Tali operazioni sono:
-                 * - l'oggetto di tipo user assume il ruolo di moderatore (metodo updateToModeratore di FUser);
-                 * - il moderatore viene assegnato ad una categoria (quella passata come parametro)
+             * L'assegnazione di un moderatore ad una cateogoria nella base dati richiede che vengano compiute una serie di
+             * operazioni da eseguire una di seguito all'altra, ma che devono apportare modifiche alla base dati
+             * solo se sono avvenute tutte con successo.
+             * Tali operazioni sono:
+             * - verifica che la categoria designata non sia già moderata, in tal caso viene reso user il suo moderatore
+             * (metodo updateToUser di FUser);
+             * - l'oggetto di tipo user assume il ruolo di moderatore (metodo updateToModeratore di FUser);
+             * - rimuover il moderatore passato dalla categoria a cui era precedentemente assegnato;
+             * - il moderatore viene assegnato ad una categoria (quella passata come parametro).
+             * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+             * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
 
-            $pdo->beginTransaction();
+            //$pdo->beginTransaction();
+            $pdo->query("SET autocommit = 0");
+            $pdo->query("LOCK TABLES categorie WRITE, users WRITE");
 
             $fUser = FUser::getInstance();
+
+            $resultUpdateToUser = true;
+
+            $query1 = ("SELECT moderatoreID FROM categorie WHERE categoriaID = :categoriaID");
+            $stmt1 = $pdo->prepare($query1);
+            $stmt1->execute(array(
+                ':categoriaID' => $categoriaID
+            ));
+            $rows1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows1) == 1) {
+                $modID = (int)$rows1[0]['moderatoreID'];
+                if ($modID != 0) {
+                    $resultUpdateToUser = $fUser->updateToUser($pdo, $modID);
+                }
+            } else {
+                $resultUpdateToUser = false;
+            }
+
             $resultUpdateUserToModeratore = $fUser->updateToModeratore($pdo, $moderatoreID);
 
-            $sql = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
-            $stmt = $pdo->prepare($sql);
-            $resultUpdateModeratoreCategoria = $stmt->execute(array(
+            $query2 = ("UPDATE categorie SET moderatoreID = NULL WHERE moderatoreID = :moderatoreID");
+            $stmt2 = $pdo->prepare($query2);
+            $resultResetModeratoreCategoria = $stmt2->execute(array(
+                ':moderatoreID' => $moderatoreID
+            ));
+
+            $query3 = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
+            $stmt3 = $pdo->prepare($query3);
+            $resultUpdateModeratoreCategoria = $stmt3->execute(array(
                 ':moderatoreID' =>  $moderatoreID,
                 ':categoriaID' => $categoriaID
             ));
 
-            if($resultUpdateUserToModeratore == true && $resultUpdateModeratoreCategoria == true) {
-                $pdo->commit();
+            if($resultUpdateToUser == true && $resultUpdateUserToModeratore == true && $resultResetModeratoreCategoria == true && $resultUpdateModeratoreCategoria == true) {
+                //$pdo->commit();
+                $pdo->query("COMMIT");
+                $pdo->query("UNLOCK TABLES");
                 return true;
             } else {
-                $pdo->rollBack();
+                //$pdo->rollBack();
+                $pdo->query("ROLLBACK");
+                $pdo->query("UNLOCK TABLES");
                 return false;
             }
         } catch (PDOException $e) {
@@ -328,6 +367,8 @@ class FCategoria
              * - aggiornamento dei thread appartenenti a tale categoria con l'identificativo della categoria di default;
              * - rimozione dell'utente da ruolo di moderatore;
              * - rimozione della categoria.
+             * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+             * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES categorie WRITE, threads WRITE, users WRITE");
@@ -395,7 +436,10 @@ class FCategoria
         try {
             $dbConnection = FConnection::getInstance();
             $pdo=$dbConnection->connect();
-            $pdo->beginTransaction();
+
+            //$pdo->beginTransaction();
+            $pdo->query("SET autocommit = 0");
+            $pdo->query("LOCK TABLES categorie WRITE, users WRITE");
 
             $fUser = FUser::getInstance();
             $resultUpdateModeratoreToUser = $fUser->updateToUser($pdo, $moderatore->getId());
@@ -407,10 +451,14 @@ class FCategoria
             ));
 
             if ($resultUpdateModeratoreToUser== true && $resultUpdateModeratore == true) {
-                $pdo->commit();
+                //$pdo->commit();
+                $pdo->query("COMMIT");
+                $pdo->query("UNLOCK TABLES");
                 return true;
             } else {
-                $pdo->rollBack();
+                //$pdo->rollBack();
+                $pdo->query("ROLLBACK");
+                $pdo->query("UNLOCK TABLES");
                 return false;
             }
         } catch (PDOException $e) {
@@ -420,15 +468,18 @@ class FCategoria
 
     /**
      * Caricamento di tutte le categorie dal DB all'interno di un array.
+     * @param int $rigaPartenza
+     * @param int $numeroRighe
      * @return array
+     * @throws ValidationException
      */
-    public function loadAll(): ?array
+    public function loadAll(int $rigaPartenza, int $numeroRighe): ?array
     {
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            $stmt = $pdo->query("SELECT categoriaID FROM categorie");
+            $stmt = $pdo->query("SELECT categoriaID FROM categorie ORDER BY nome LIMIT " . $rigaPartenza . ", " . $numeroRighe);
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $categorie = array();
             foreach ($rows as $record){
@@ -441,6 +492,30 @@ class FCategoria
                 }
             }
             return $categorie;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Restituisce il numero di categorie attualmente presenti nella bse dati.
+     * In caso di errori viene restituito null.
+     * @return int|null Numero di categorie nella base dati.
+     */
+    public function conta(): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT count(*) as numeroCategorie FROM categorie");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if(count($rows) == 1){
+                return (int)$rows[0]['numeroCategorie'];
+            } else {
+                return null;
+            }
         } catch (PDOException $e) {
             return null;
         }
