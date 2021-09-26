@@ -12,7 +12,7 @@ class FRisposta
 {
      /**
       * Istanza della classe FRisposta, si utilizza per il singleton.
-      * @var null
+      * @var null|FRisposta
       */
      private static $instance = null;
 
@@ -147,11 +147,22 @@ class FRisposta
              $pdo=$dbConnection->connect();
 
              if ($this->exists($rispostaID)) {
+                 /*
+                 * Per evitare inconsistenza sui dati, causato dall'accesso concorrente, si procede ad eseguire
+                 * l'operazione in mutua esclusione.
+                 */
+                 $pdo->query("SET autocommit = 0");
+                 $pdo->query("LOCK TABLES risposte WRITE");
+
                  $sql = ("DELETE FROM risposte WHERE rispostaID = :rispostaID");
                  $stmt = $pdo->prepare($sql);
                  $result = $stmt->execute(array(
                      ':rispostaID' => $rispostaID
                  ));
+
+                 $pdo->query("COMMIT");
+                 $pdo->query("UNLOCK TABLES");
+
                  return $result;
              } else {
                  return false;

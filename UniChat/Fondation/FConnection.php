@@ -32,7 +32,7 @@ class FConnection
 
     /**
      * Instanza della classe FConnection, si utilizza per il singleton
-     * @var null
+     * @var null|FConnection
      */
     private static $instance = null;
 
@@ -44,7 +44,7 @@ class FConnection
 
     /**
      * Restituisce l'instanza di FConnection. Se già esistente restituisce quella esistente, altrimenti la crea.
-     * @return FConnection
+     * @return FConnection Istanza di FConnection.
      */
     public static function getInstance(): FConnection
     {
@@ -57,7 +57,7 @@ class FConnection
 
     /**
      * Restituisce la connessione con il DBMS dopo aver impostato la gestione degli errori mediante eccezioni.
-     * @return PDO
+     * @return PDO Istanza di PDO.
      */
     public function connect(): PDO
     {
