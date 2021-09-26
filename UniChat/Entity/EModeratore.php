@@ -3,7 +3,7 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
-    class EModeratore extends EUser
+    class EModeratore extends EUser implements JsonSerializable
     {
         // Attributi
 
@@ -56,4 +56,20 @@
                 return false;
             }
         }
+
+        /**
+         * Restituisce lo stato di un oggetto EModeratore in formato JSON.
+         * @return array Stato dell'oggetto in formato JSON.
+         */
+        public function jsonSerialize(): array
+        {
+            $result = parent::jsonSerialize();
+            $result["ruolo"] = "Moderatore";
+            if (isset($this->categoriaGestita)) {
+                $result["categoriaModerata"] = $this->getCategoriaGestita()->getNome();
+            }
+            return $result;
+        }
+
+
     }

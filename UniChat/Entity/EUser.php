@@ -1,11 +1,12 @@
 <?php
 
     declare(strict_types = 1);
+    require_once __DIR__ . "\..\utility.php";
 
 /**
  *
  */
-class EUser
+class EUser implements JsonSerializable
 {
     /**
      * Identificativo dell'utente.
@@ -65,13 +66,18 @@ class EUser
      * In caso contrario viene posto l'identificativo a 0 e gli altri campi vengono settati.
      * Se l'utente in fase di registrazione non specifica il corso di studio allora viene passato come null e impostato
      * a Sconosciuto.
-     * @param int|null $id
-     * @param string $nome
-     * @param string $cognome
-     * @param string $email
-     * @param string $password
-     * @param array|null $fotoProfilo
-     * @param string|null $corsoStudio
+     * Prima di procedere con la creazione dell'oggetto si esegue una validazione sui dati, in particolare si verifica
+     * che il nome ed il cognome dell'utente contengano solo lettere, che l'email sia istituzionale e che la password
+     * sia di almeno 8 caratteri e che tra questi non ve ne siano alcuni particolari. Se la validazione non va a buon
+     * fine allora viene lanciata una eccezione.
+     * @param int|null $id Identificativo dell'utente da creare, può non essere impostato
+     * @param string $nome Nome dell'utente da creare
+     * @param string $cognome Cognome dell'utente da creare
+     * @param string $email Email dell'utente da creare
+     * @param string $password Password dell'utente da creare, può essere in chiaro o cifrata
+     * @param array|null $fotoProfilo Foto profilo dell'utente da creare, può non essere impostata
+     * @param string|null $corsoStudio Corso di studio dell'utente da creare, può non essere impostato
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati
      */
     public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, ?array $fotoProfilo, ?string $corsoStudio)
     {
@@ -79,6 +85,18 @@ class EUser
             $this->id = $id;
         } else {
             $this->id = 0;
+        }
+
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaStringa($nome);
+            $validazione->validaStringa($cognome);
+            $validazione->validaEmail($email);
+            if(substr($password, 0, 4) !== "$2y$") {
+                $validazione->validaPassword($password);
+            }
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
         }
 
         $nomeMinuscolo = strtolower($nome);
@@ -112,7 +130,7 @@ class EUser
 
     /**
      * Restituisce l'identificativo dell'utente.
-     * @return int
+     * @return int Identificativo dell'utente.
      */
     public function getId(): int
     {
@@ -121,7 +139,7 @@ class EUser
 
     /**
      * Restituisce il nome dell'utente.
-     * @return string
+     * @return string Nome dell'utente.
      */
     public function getNome(): string
     {
@@ -130,7 +148,7 @@ class EUser
 
     /**
      * Restituisce il cognome dell'utente.
-     * @return string
+     * @return string Cognome dell'utente.
      */
     public function getCognome(): string
     {
@@ -139,7 +157,7 @@ class EUser
 
     /**
      * Restituisce l'email dell'utente.
-     * @return string
+     * @return string Email dell'utente.
      */
     public function getEmail(): string
     {
@@ -148,7 +166,7 @@ class EUser
 
     /**
      * Restituisce la password dell'utente.
-     * @return string
+     * @return string Password dell'utente (cifrata).
      */
     public function getPassword(): string
     {
@@ -157,7 +175,7 @@ class EUser
 
     /**
      * Restituisce la foto profilo dell'utente, all'interno di un array.
-     * @return array
+     * @return array Foto profilo dell'utente.
      */
     public function getFotoProfilo(): array
     {
@@ -166,7 +184,7 @@ class EUser
 
     /**
      * Restituisce il corso di studio dell'utente.
-     * @return string
+     * @return string Corso di studio dell'utente.
      */
     public function getCorsoStudio(): string
     {
@@ -175,7 +193,7 @@ class EUser
 
     /**
      * Imposta l'identificativo dell'utente.
-     * @param int $id
+     * @param int $id Identificativo utente da assegnare
      */
     public function setId(int $id): void
     {
@@ -183,43 +201,78 @@ class EUser
     }
 
     /**
-     * Imposta il nome dell'utente.
-     * @param string $nome
+     * Imposta il nome dell'utente, dopo averlo validato.
+     * @param string $nome Nome utente da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione.
      */
     public function setNome(string $nome): void
     {
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaStringa($nome);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
+
         $nomeMinuscolo = strtolower($nome);
         $nomePrimeMaiuscole = ucwords($nomeMinuscolo);
         $this->nome = $nomePrimeMaiuscole;
     }
 
     /**
-     * Imposta il cognome dell'utente.
-     * @param string $cognome
+     * Imposta il cognome dell'utente, dopo averlo validato.
+     * @param string $cognome Cognome utente da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione.
      */
     public function setCognome(string $cognome): void
     {
-        $this->cognome = $cognome;
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaStringa($cognome);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
+
+        $cognomeMinuscolo = strtolower($cognome);
+        $cognomePrimaMaiuscola = ucwords($cognomeMinuscolo);
+        $this->cognome = $cognomePrimaMaiuscola;
     }
 
     /**
-     * Imposta l'email dell'utente.
-     * @param string $email
+     * Imposta l'email dell'utente, dopo averla validata.
+     * @param string $email Email utente da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione.
      */
     public function setEmail(string $email): void
     {
+        try{
+            $validazione = Validazione::getInstance();
+            $validazione->validaEmail($email);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
+
         $this->email = $email;
     }
 
     /**
      * Imposta la password dell'utente.
-     * @param string $password
+     * Se la password è in chiaro allora viene prima validata e cifrata.
+     * @param string $password Password utente da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione.
      */
     public function setPassword(string $password): void
     {
         if(substr($password, 0, 4) === "$2y$"){
             $this->password = $password;
         } else {
+            try {
+                $validazione = Validazione::getInstance();
+                $validazione->validaPassword($password);
+            } catch (ValidationException $e) {
+                throw new ValidationException($e->getMessage(), $e->getCode());
+            }
+
             $this->password = password_hash($password, PASSWORD_BCRYPT);
         }
     }
@@ -300,5 +353,22 @@ class EUser
         }
         $this->setPassword($newPassword);
         return $newPassword;
+    }
+
+    /**
+     * Restituisce lo stato di un oggetto EUser in formato JSON.
+     * @return array Stato dell'oggetto in formato JSON.
+     */
+    public function jsonSerialize(): array
+    {
+        $result = array(
+            "id" => $this->id,
+            "nome" => $this->nome,
+            "cognome" => $this->cognome,
+            "email" => $this->email,
+            "corsoStudio" => $this->corsoStudio,
+            "ruolo" => "User"
+        );
+        return $result;
     }
 }

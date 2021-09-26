@@ -6,7 +6,7 @@
 /**
  * EAdmin è il nostro super user, l'utente in grado di poter gestire qualunque cosa sulla piattaforma UniChat.
  */
-class EAdmin extends EModeratore {
+class EAdmin extends EModeratore implements JsonSerializable {
 
     /**
      * @param int|null $id
@@ -51,5 +51,17 @@ class EAdmin extends EModeratore {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Restituisce lo stato di un oggetto EAdmin in formato JSON.
+     * @return array Stato dell'oggetto in formato JSON.
+     */
+    public function jsonSerialize(): array
+    {
+        $result = parent::jsonSerialize();
+        $result["ruolo"] = "Admin";
+        $result["categoriaModerata"] = "Tutte";
+        return $result;
     }
 }

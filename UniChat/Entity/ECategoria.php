@@ -6,7 +6,7 @@
 /**
  * ECategoria permette di instanziare oggetti responsabili del mantenimento dei valori delle categoria dei thread.
  */
-class ECategoria {
+class ECategoria implements JsonSerializable {
 
     /**
      * Identificativo dell'oggetto ECategoria.
@@ -42,6 +42,7 @@ class ECategoria {
      * @param string $nome
      * @param array|null $icona
      * @param string $descrizione
+     * @throws ValidationException
      */
     public function __construct(?int $id, string $nome, ?array $icona, string $descrizione)
     {
@@ -49,6 +50,13 @@ class ECategoria {
             $this->id = $id;
         } else {
             $this->id = 0;
+        }
+
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaStringa($nome);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
         }
 
         $nomeMaiuscolo = strtoupper($nome);
@@ -110,9 +118,17 @@ class ECategoria {
     /**
      * Metodo per impostare il nome della categoria.
      * @param string $nome
+     * @throws ValidationException
      */
     public function setNome(string $nome): void
     {
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaStringa($nome);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
+
         $nomeMaiuscolo = strtoupper($nome);
         $this->nome = $nomeMaiuscolo;
     }
@@ -133,5 +149,19 @@ class ECategoria {
     public function setDescrizione(string $descrizione): void
     {
         $this->descrizione = $descrizione;
+    }
+
+    /**
+     * Restituisce lo stato di un oggetto ECategoria in formato JSON.
+     * @return array Stato dell'oggetto in formato JSON.
+     */
+    public function jsonSerialize(): array
+    {
+        $result = array(
+            "id" => $this->id,
+            "nome" => $this->nome,
+            "descrizione" => $this->descrizione
+        );
+        return $result;
     }
 }
