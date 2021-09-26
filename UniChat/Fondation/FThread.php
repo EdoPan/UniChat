@@ -11,7 +11,7 @@ class FThread
 
     /**
      * Istanza della classe FThread, si utlizza per il singleton.
-     * @var null
+     * @var null|FThread
      */
     private static $instance = null;
 
@@ -44,8 +44,10 @@ class FThread
      * - ECategoria;
      * - EValutazione;
      * - ERisposta.
-     * @param int $threadID
-     * @return EThread|null
+     * @param int $threadID Identificativo del thread da recuperare dalla base dati
+     * @return EThread|null Thread richiesto
+     * @throws ValidationException Eccezione lanciata nel caso vi fossero problemi con la validazione dei dati nel
+     * della creazione dell'oggetto EThread recuperato dalla base dati
      */
     public function load(int $threadID): ?EThread
         {
@@ -129,8 +131,8 @@ class FThread
      * file in formato stringa.
      * Viene restituito un array, eventualmente vuoto, contenente gli array associativi degli allegati, in caso di
      * errori viene restituito null.
-     * @param int $threadID
-     * @return array|null
+     * @param int $threadID Identificativo del thread di cui si devono recuperare gli allegati dalla base dati
+     * @return array|null Elenco contenente gli allegati del thread (se presenti)
      */
     private function loadAllegatiByThreadID(int $threadID): ?array
         {
@@ -167,79 +169,85 @@ class FThread
             }
         }
 
-    /**
-     * Permette di restituire il thread con il maggior numero di risposte, appartenente ad una particolare categoria
-     * fornita in ingresso.
-     * Se l'operazione va a buon fine viene restituito un EThread, in caso contrario viene restituito null.
-     * @param int $categoriaID
-     * @return EThread|null
-     */
-    public function loadThreadPiuDiscussoPerCategoria(int $categoriaID): ?EThread
-        {
-            try {
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
 
-                $sql = ("SELECT threadID, COUNT(*) AS numRisposte FROM threads, risposte 
-                            WHERE threadRispID = threadID AND catThreadID = :categoriaID 
-                            GROUP BY threadID ORDER BY numRisposte DESC, threadID DESC LIMIT 1");
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(array(
-                    ':categoriaID' => $categoriaID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                if (count($rows) == 1) {
-                    $threadID = (int)$rows[0]["threadID"];
-                    $thread = $this->load($threadID);
-                    return $thread;
+    /**
+     * Permette di restituire l'elenco di threads con il maggior numero di risposte.
+     * Il numero di threads viene stabilito dal parametro richiesto in ingresso.
+     * Se l'operazione non va a buon fine allora viene restituito null.
+     * @param int $numeroThreads Valore che indica il numero di threads da recuperare dalla base dati
+     * @return array|null Elenco contenente i thread recuperati
+     * @throws ValidationException Eccezione lanciata nel caso vi fossero problemi con la validazione dei dati nel
+     * della creazione dell'oggetto EThread recuperato dalla base dati
+     */
+    public function loadThreadsPiuRisposte(int $numeroThreads): ?array
+    {
+        $threads = array();
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT threadID, COUNT(*) AS numRisposte FROM threads, risposte 
+                            WHERE threadRispID = threadID GROUP BY threadID ORDER BY numRisposte DESC, threadID DESC LIMIT " . $numeroThreads);
+
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $row) {
+                $threadID = (int)$row["threadID"];
+                $thread = $this->load($threadID);
+                if (isset($thread)) {
+                    $threads[] = $thread;
                 } else {
                     return null;
                 }
-            } catch (PDOException $e) {
-                return null;
             }
+            return $threads;
+        } catch (PDOException $e) {
+            return null;
         }
+    }
+
 
     /**
-     * Permette di restituire il thread con la valutazione più alta, appartenente ad una particolare categoria
-     * fornita in ingresso.
-     * Se l'operazione va a buon fine viene restituito un EThread, in caso contrario viene restituito null.
-     * @param int $categoriaID
-     * @return Ethread|null
+     * Permette di restituire l'elenco di threads con la valutazione più alta.
+     * Il numero di threads viene stabilito dal parametro richiesto in ingresso.
+     * Se l'operazione non va a buon fine allora viene restituito null.
+     * @param int $numeroThreads Valore che indica il numero di threads da recuperare dalla base dati
+     * @return array|null Elenco contenente i thread recuperati
+     * @throws ValidationException Eccezione lanciata nel caso vi fossero problemi con la validazione dei dati nel
+     * della creazione dell'oggetto EThread recuperato dalla base dati
      */
-    public function loadThreadMaxValutazionePerCategoria(int $categoriaID): ?Ethread
-        {
-            try {
-                $dbConnection = FConnection::getInstance();
-                $pdo = $dbConnection->connect();
+    public function loadThreadsValutazioneMaggiore(int $numeroThreads): ?array
+    {
+        $threads = array();
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
 
-                $sql = ("SELECT threadID FROM threads, valutazioni WHERE valutazioneThreadID = valutazioneID 
-                         AND catThreadID = :categoriaID ORDER BY totale DESC, data DESC LIMIT 1");
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute(array(
-                    ':categoriaID' => $categoriaID
-                ));
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                if (count($rows) == 1) {
-                    $threadID = (int)$rows[0]["threadID"];
-                    $thread = $this->load($threadID);
-                    return $thread;
+            $stmt = $pdo->query("SELECT threadID FROM threads, valutazioni WHERE valutazioneThreadID = valutazioneID 
+                         ORDER BY totale DESC, data DESC LIMIT " . $numeroThreads);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $row) {
+                $threadID = (int)$row["threadID"];
+                $thread = $this->load($threadID);
+                if (isset($thread)) {
+                    $threads[] = $thread;
                 } else {
                     return null;
                 }
-            } catch (PDOException $e) {
-                return null;
             }
+            return $threads;
+        } catch (PDOException $e) {
+            return null;
         }
+    }
 
     /**
      * Permette di modificare l'autore dei threads scritti da un utente, la modifica comporta che il nuovo autore
      * risulta essere l'utente di default. Il metodo viene richiamato nel momento in cui l'utente che aveva scritto i
      * threads viene eliminato dalla base dati.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param PDO $pdo
-     * @param int $userID
-     * @return bool
+     * @param PDO $pdo Connessione con il database
+     * @param int $userID Identificativo che rappresenta l'autore dei thread da aggiornare
+     * @return bool Esito dell'operazione
      */
     public function updateUserID(PDO $pdo, int $userID): bool
         {
@@ -260,9 +268,9 @@ class FThread
      * risulta essere la categoria di default. Il metodo viene richiamato nel momento in cui la categoria a cui i
      * threads appartenevano, viene rimossa dalla base dati.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param PDO $pdo
-     * @param int $categoriaID
-     * @return bool
+     * @param PDO $pdo Connessione con il database
+     * @param int $categoriaID Identificativo che rappresenta la categoria di appartenenza dei threads da aggiornare
+     * @return bool Esito dell'operazione
      */
     public function updateCategoriaID(PDO $pdo, int $categoriaID): bool
         {
@@ -281,8 +289,8 @@ class FThread
     /**
      * Permette di memorizzare nella base dati un oggetto EThread.
      * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
-     * @param EThread $thread
-     * @return bool
+     * @param EThread $thread Thread da memorizzare nella base dati
+     * @return bool Esito dell'operazione
      */
     public function store(EThread $thread): bool
         {
@@ -354,9 +362,9 @@ class FThread
     /**
      * Permette di memorizzare un allegato associato ad un thread.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-     * @param PDO $pdo
-     * @param array $allegato
-     * @param int $threadID
+     * @param PDO $pdo Connessione al database
+     * @param array $allegato Allegato da memorizzzare nella base dati
+     * @param int $threadID Identificativo del thread a cui è associato l'allegato da memorizzare
      * @return bool
      */
     private function storeAllegato(PDO $pdo, array $allegato, int $threadID): bool
@@ -375,12 +383,13 @@ class FThread
             }
         }
 
+
     /**
      * Permette di rimuovere un thread dalla base dati. Quando un thread viene eliminato allora viene rimossa anche la
      * valutazione, tutti gli allegati e tutte le risposte ad esso associati.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-     * @param int $threadID
-     * @return bool
+     * @param int $threadID Identificativo del thread da rimuovere dalla base dati
+     * @return bool Esito dell'operazione
      */
     public function delete(int $threadID): bool
         {
@@ -409,8 +418,12 @@ class FThread
                  * Tali operazioni sono:
                  * - eliminazione della valutazione associata al thread;
                  * - eliminazione del thread.
+                 * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+                 * operazioni sopra descritte vengono eseguite in mutua esclusione.
                  */
-                $pdo->beginTransaction();
+                //$pdo->beginTransaction();
+                $pdo->query("SET autocommit = 0");
+                $pdo->query("LOCK TABLES threads WRITE, valutazioni WRITE");
 
                 $fValutazione = FValutazione::getInstance();
                 $resultDeleteValutazione = $fValutazione->delete($pdo, $valutazioneID);
@@ -420,10 +433,14 @@ class FThread
                 $resultDeleteThread = $stmt->execute();
 
                 if ($resultDeleteValutazione == true && $resultDeleteThread == true) {
-                    $pdo->commit();
+                    //$pdo->commit();
+                    $pdo->query("COMMIT");
+                    $pdo->query("UNLOCK TABLES");
                     return true;
                 } else {
-                    $pdo->rollBack();
+                    //$pdo->rollBack();
+                    $pdo->query("COMMIT");
+                    $pdo->query("UNLOCK TABLES");
                     return false;
                 }
             } catch (PDOException $e) {
@@ -435,10 +452,11 @@ class FThread
      * Permette di ottenere un certo numero di EThread di una determinata categoria di appartenenza, specificando da
      * quale riga dell tabella della base dati partire (riga di partenza esclusa) e il numero di righe da visualizzare.
      * Viene restituito un array di threads, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
-     * @param int $categoriaID
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
+     * @param int $categoriaID Identificativo della categoria a cui devono appartenere i threads da recuperare dalla base dati
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
+     * @param int $numeroRighe Valore che indica quanti record recuperare
+     * @return array|null Elenco contenente i threads recuperati
+     * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi con la validazione dei dati
      */
     public function loadThreadsCategoria(int $categoriaID, int $rigaPartenza, int $numeroRighe): ?array
         {
@@ -475,10 +493,11 @@ class FThread
      * vengono passate in ingresso. I thread vengono restituiti ordinati a partire da quello che ha il titolo con il
      * maggior numero di parole uguali e nello stesso ordine di quelle fornite in ingresso.
      * Viene restituito un array di threads, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
-     * @param string $titolo
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
+     * @param string $titolo Titolo che deve avere il thread da cercare nella base dati
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
+     * @param int $numeroRighe Valore che indica quanti record recuperare
+     * @return array|null Elenco contenente i threads cercati
+     * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi con la validazione dei dati
      */
     public function ricercaPerTitolo(string $titolo, int $rigaPartenza, int $numeroRighe): ?array
         {
@@ -516,11 +535,12 @@ class FThread
      * da quello che ha il titolo con il maggior numero di parole uguali e nello stesso ordine di quelle fornite in
      * ingresso.
      * Viene restituito un array di threads, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
-     * @param string $titolo
-     * @param array $categorieID
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
+     * @param string $titolo Titolo che deve avere il thread da cercare nella base dati
+     * @param array $categorieID Elenco degli identificativi delle categorie a cui i thread recuperati devono appartenere
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
+     * @param int $numeroRighe Valore che indica quanti record recuperare
+     * @return array|null Elenco contenente i threads cercati
+     * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi con la validazione dei dati
      */
     public function ricercaPerTitoloECategorie(string $titolo, array $categorieID, int $rigaPartenza, int $numeroRighe): ?array
         {
@@ -549,6 +569,35 @@ class FThread
                     }
                 }
                 return $threads;
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
+
+    /**
+     * Conta il numero di threads appartenenti ad una categoria, della quale viene fornito in ingresso il suo
+     * identificativo.
+     * Se l'operazione non va a buon fine allora viene restituito null.
+     * @param int $categoriaID Identificativo della categoria a cui devono appartenere i thread da contare
+     * @return int|null Numero di threads appartenenti alla categoria fornita in ingresso
+     */
+    public function contaThreadsCategoria(int $categoriaID): ?int
+        {
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+
+                $sql = ("SELECT count(*) AS numeroThreads FROM threads WHERE catThreadID = :categoriaID");
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(array(
+                    'categoriaID' => $categoriaID
+                ));
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    return (int)$rows[0]['numeroThreads'];
+                } else {
+                    return null;
+                }
             } catch (PDOException $e) {
                 return null;
             }
