@@ -371,7 +371,7 @@ class FCategoria
              * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
             $pdo->query("SET autocommit = 0");
-            $pdo->query("LOCK TABLES categorie WRITE, threads WRITE, users WRITE");
+            $pdo->query("LOCK TABLES categorie WRITE, threads WRITE, users WRITE, icone WRITE");
 
             $resultDeleteIconaCategoria=true;
             if($iconaCategoriaID !=1) {
@@ -467,7 +467,7 @@ class FCategoria
     }
 
     /**
-     * Caricamento di tutte le categorie dal DB all'interno di un array.
+     * Caricamento di un certo numero di categorie dal DB all'interno di un array.
      * @param int $rigaPartenza
      * @param int $numeroRighe
      * @return array
@@ -484,6 +484,38 @@ class FCategoria
             $categorie = array();
             foreach ($rows as $record){
                 $categoriaID = (int)$record["categoriaID"];
+                $categoria = $this->load($categoriaID);
+                if (isset($categoria)) {
+                    $categorie[] = $categoria;
+                } else {
+                    return null;
+                }
+            }
+            return $categorie;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Caricamento di tutte le categorie dal DB all'interno di un array.
+     * @param int $rigaPartenza
+     * @param int $numeroRighe
+     * @return array
+     * @throws ValidationException
+     */
+    public function loadAllSenzaPaginazione(): ?array
+    {
+        $categorie = array();
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT categoriaID FROM categorie ORDER BY categoriaID");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $row) {
+                $categoriaID =(int)$row["categoriaID"];
                 $categoria = $this->load($categoriaID);
                 if (isset($categoria)) {
                     $categorie[] = $categoria;
