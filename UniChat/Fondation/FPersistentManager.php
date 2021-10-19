@@ -377,6 +377,8 @@ class FPersistentManager
      * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
      * @param int $numeroRighe Valore che indica quanti record recuperare
      * @return array|null Elenco contenente il risultato dell'operazione
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
+     * creazione di alcune delle istanze entity.
      */
     public function loadEntities(int $entityType, int $property, ?int $id, int $rigaPartenza, int $numeroRighe): ?array
     {
@@ -398,6 +400,19 @@ class FPersistentManager
         } else {
             return null;
         }
+    }
+
+    /**
+     * Permette di ottenere un array contenente tutte le categorie presenti nella base dati.
+     * In caso di errore viene restituito null.
+     * @return array|null Categorie presenti nella base dati
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
+     * creazione delle istanze ECategoria.
+     */
+    public function loadAllCategorie(): ?array
+    {
+        $fCategoria = FCategoria::getInstance();
+        return $fCategoria->loadAllSenzaPaginazione();
     }
 
     /**
