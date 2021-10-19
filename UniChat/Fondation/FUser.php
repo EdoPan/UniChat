@@ -626,7 +626,7 @@ class FUser
              * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
             $pdo->query("SET autocommit = 0");
-            $pdo->query("LOCK TABLES threads WRITE, messaggi WRITE, risposte WRITE, users WRITE");
+            $pdo->query("LOCK TABLES threads WRITE, messaggi WRITE, risposte WRITE, users WRITE, fotoprofilo WRITE");
 
             $resultDeleteFotoProfilo = true;
             if ($fotoProfiloID != 1) {
