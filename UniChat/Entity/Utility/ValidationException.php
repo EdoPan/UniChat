@@ -13,6 +13,10 @@ class ValidationException extends Exception
 
     const ERROR_PASSWORD_LENGTH_MESSAGE = "La password deve essere di almeno 8 caratteri";
 
+    const ERROR_IMAGE_MIME_TYPE_MESSAGE = "L'immagine caricata è di un formato non lecito";
+
+    const ERROR_IMAGE_SIZE_MESSAGE = "L'immagine è troppo grande";
+
     const ERROR_STRING_CODE = 1;
 
     const ERROR_EMAIL_CODE = 2;
@@ -22,4 +26,8 @@ class ValidationException extends Exception
     const ERROR_PASSWORD_CODE = 4;
 
     const ERROR_PASSWORD_LENGTH_CODE = 5;
+
+    const ERROR_IMAGE_MIME_TYPE_CODE = 6;
+
+    const ERROR_IMAGE_SIZE_CODE = 7;
 }
