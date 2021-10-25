@@ -195,7 +195,7 @@ class EValutazione
      */
     public function valuta(EUser $user, int $valore): int
     {
-        $indicePositivi = array_search($user, $this->getUtentiPositivi());
+        $indicePositivi = array_search($user, $this->utentiPositivi);
         $indiceNegativi = array_search($user, $this->utentiNegativi);
         if($valore >= 0){
             if ($indicePositivi === false && $indiceNegativi === false) {
