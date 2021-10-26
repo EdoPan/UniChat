@@ -18,7 +18,7 @@ class Validazione
 
     private function __construct() {}
 
-    public static function getInstance() {
+    public static function getInstance(): Validazione {
         if (self::$instance == null) {
             $classe = __CLASS__;
             self::$instance = new $classe;
@@ -67,7 +67,7 @@ class Validazione
     /**
      * @throws ValidationException
      */
-    public function validaImmagine(string $mimeType, int $size) {
+    public function validaImmagine(string $mimeType, int $size): void {
         if (!in_array($mimeType, $this->IMAGE_MIME_TYPE)) {
             throw new ValidationException(ValidationException::ERROR_IMAGE_MIME_TYPE_MESSAGE, ValidationException::ERROR_IMAGE_MIME_TYPE_CODE);
         }
