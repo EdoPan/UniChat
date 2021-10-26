@@ -27,6 +27,7 @@ class ECategoria implements JsonSerializable {
     private array $icona = array(
             "id"=> 0,
             "nome" => "",
+            "dimensione" => "",
             "tipo" => "",
             "immagine" => ""
     );
@@ -63,6 +64,12 @@ class ECategoria implements JsonSerializable {
         $this->nome = $nomeMaiuscolo;
 
         if(isset($icona)){
+            try {
+                $validazione = Validazione::getInstance();
+                $validazione->validaImmagine($icona['tipo'], (int)$icona['dimensione']);
+            } catch (ValidationException $e) {
+                throw new ValidationException($e->getMessage(), $e->getCode());
+            }
             $this->icona = $icona;
         } else {
             $this->icona["id"] = 1; //arrray che regge l'immagine predefinito.jpg
@@ -139,6 +146,12 @@ class ECategoria implements JsonSerializable {
      */
     public function setIcona(array $icona): void
     {
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaImmagine($icona['tipo'], (int)$icona['dimensione']);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
         $this->icona = $icona;
     }
 

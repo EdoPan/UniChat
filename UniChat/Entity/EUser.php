@@ -114,6 +114,12 @@ class EUser implements JsonSerializable
             $this->password = password_hash($password, PASSWORD_BCRYPT);
         }
         if(isset($fotoProfilo)) {
+            try {
+                $validazione = Validazione::getInstance();
+                $validazione->validaImmagine($fotoProfilo['tipo'], (int)$fotoProfilo['dimensione']);
+            } catch (ValidationException $e) {
+                throw new ValidationException($e->getMessage(), $e->getCode());
+            }
             $this->fotoProfilo = $fotoProfilo;
         } else {
             $this->fotoProfilo["id"] = 1;
@@ -283,6 +289,12 @@ class EUser implements JsonSerializable
      */
     public function setFotoProfilo(array $fotoProfilo): void
     {
+        try {
+            $validazione = Validazione::getInstance();
+            $validazione->validaImmagine($fotoProfilo['tipo'], (int)$fotoProfilo['dimensione']);
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $e->getCode());
+        }
         $this->fotoProfilo = $fotoProfilo;
     }
 
