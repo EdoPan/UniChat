@@ -7,7 +7,7 @@
 /**
  * La classe EMessaggio ci permette di instanziare messaggi di chat.
  */
-class EMessaggio {
+class EMessaggio implements JsonSerializable {
 
     /**
      * Imposta il formato del metodo data.
@@ -129,5 +129,18 @@ class EMessaggio {
     public function setAutoreMessaggio(EUser $autoreMessaggio): void
     {
         $this->autoreMessaggio = $autoreMessaggio;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $result = array(
+            'idMessaggio' => $this->id,
+            'testo' => $this->testo,
+            'data' => $this->data,
+            'idAutore' => $this->autoreMessaggio->getId(),
+            'nomeAutore' => $this->autoreMessaggio->getNome(),
+            'cognomeAutore' => $this->autoreMessaggio->getCognome()
+        );
+        return $result;
     }
 }
