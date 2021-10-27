@@ -13,17 +13,17 @@
     <title>UniChat - Home</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
-<body id="page-top">
+<body id="page-top" onload="loadChat()">
 
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">
@@ -278,7 +278,7 @@
                             <div class="card-body">
 
                                 <!-- Contenitore scrollable -->
-                                <div style = "width: auto; height: 500px; line-height: 3em; overflow-y:scroll; padding: 5px;">
+                                <div style = "width: auto; height: 500px; line-height: 3em; overflow:auto; padding: 5px;">
 
 
 
@@ -315,23 +315,24 @@
                                 </div>
                                 <!-- Fine contenitore scrollable -->
 
+                                <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
                                 {if $loggato eq true}
                                 <!-- Form invio messaggio -->
                                 <div class="row mb-2">
 
                                     <!-- Inserimento testo -->
                                     <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control" id="messaggio" placeholder="Messaggio">
+                                        <input type="text" class="form-control" id="usrmsg" placeholder="Messaggio">
                                     </div>
 
                                     <!-- Pulsante invio -->
                                     <div class="col-sm-3">
-                                        <a href="/UniChat/chat/creaMessaggio" class="btn btn-success btn-icon-split">
+                                        <button type="submit" class="btn btn-success btn-icon-split" id="submitmsg">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-arrow-right"></i>
                                             </span>
                                             <span class="text">Invia</span>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                                 <!-- Fine form invio messaggio -->
@@ -608,21 +609,151 @@
 
 
 <!-- Bootstrap core JavaScript-->
-<script src="../vendor/jquery/jquery.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/UniChat/Template/vendor/jquery/jquery.min.js"></script>
+<script src="/UniChat/Template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/UniChat/Template/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../js/sb-admin-2.min.js"></script>
+<script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../vendor/chart.js/Chart.min.js"></script>
+<script src="/UniChat/Template/vendor/chart.js/Chart.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="../js/demo/chart-area-demo.js"></script>
-<script src="../js/demo/chart-pie-demo.js"></script>
+<script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
+<script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
+
+<!-- Libreria jquery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    // jQuery Document
+    $(document).ready(function () {
+        /*
+         * Al click sul bottone Invia viene eseguita la seguente funzione.
+         * Viene recuperato il contenuto del campo input e mandato con una POST all'url riportato, notare che l'url è autodescrittivo e ad esso è associato l'esecuzione di un metodo
+         * di una classe di controllo (CGestioneChat->creaMessaggio().
+         * Sempre al click del bottone viene anche richiesto l'aggiornamento della chat mediante la funzione loadLastMessages() presente in questo script JavaScript.
+         */
+        $("#submitmsg").click(function () {
+            var clientmsg = document.getElementById('usrmsg').value;
+            $.post("/UniChat/chat/creaMessaggio", { text: clientmsg });
+            document.getElementById('usrmsg').value = "";
+            loadLastMessages();
+            return false;
+        });
+
+        /*
+         * La funzione permette di aggiornare la chat riportando gli ultimi messaggi pubblicati e gestisce l'auto-scrolling.
+         * Per il funzionamento del tutto si utlizza ajax per eseguire una richiesta al server e poi elaborarne la risposta.
+         * Ajax contatta il server con l'url autodescrittiva, la quale richiama CGestioneChat->aggiornaChat(), ed utilizzando il metodo POST. Al server viene fornito l'id
+         * dell'ultimo messaggio presente nella chat e il server fornisce un array in JSON contenente i messaggi presenti nel database aventi identificativo successivo a quello fornito.
+         * La risposta del server viene ripresa e formattata per poi essere mostrata a schermo, inoltre viene aggiornato il campo input contenente l'id dell'ulitmo messaggio.
+         */
+        function loadLastMessages() {
+            var oldscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height before the request
+
+            var idMessage = document.getElementById('ultimoMessaggio').value;
+            $.ajax({
+                url: "/UniChat/chat/aggiornaChat",       //  richiesta al server
+                cache: false,
+                type: "POST",                                       //  metodo utilizzato per la richiesta
+                data: "idMessage=" + idMessage,                     //  parametro passato al server in formato chiave-valore
+                dataType: "json",                                   //  formato della risposta fornita dal server
+                success: function (result) {                        //  se la richiesta ajax va a buon fine allora...
+                    if (result.length > 0) {                 //  se l'id del primo elemento restituito dal server è maggiore di quello salvato nella div allora aggiorna la chat,
+                        //  altrimenti non fa nulla.
+                        var lastId = 0;
+                        result.forEach(function (item) {
+                            document.getElementById("chatbox").innerHTML += '<!-- Messaggio -->' +
+                                '<div class="card shadow mb-2">' +
+                                '<!-- Utente -->' +
+                                '<div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">' +
+                                '<h6 class="m-0 font-weight-bold text-secondary"><a href="/UniChat/utenti/showProfile/'+item.idAutore+'">'+item.nomeAutore+' '+item.cognomeAutore+'</a></h6>' +
+                                '{if $moderatoreAdmin==true} <a href="/UniChat/chat/rimuoviMessaggio/'+item.idMessaggio+'" class="btn btn-danger btn-circle btn-sm" onclick="presentaAlert()"><i class="fas fa-trash"></i></a>{/if}' +
+                                '</div>' +
+                                '<!-- Testo -->' +
+                                '<div class="card-body py-2">'+item.testo+'</div>' +
+                                '<!-- Data invio messaggio -->' +
+                                '<div class="container my-auto py-1">' +
+                                '<div class="copyright text-center my-auto">' +
+                                '<span>'+item.data+'</span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '<!-- Fine messaggio -->';
+                            lastId = item.idMessaggio;
+                        });
+                        document.getElementById('ultimoMessaggio').value = lastId                  //  aggiornamento campo input contenente l'id dell'ulitmo messaggio.
+
+                        //Auto-scroll
+
+                        var newscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height after the request
+                        if(newscrollHeight > oldscrollHeight){
+                            $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
+                        }
+
+                    }
+                },
+                error: function (result) {                          //  se la richiesta ajax non va a buon fine allora...
+                    alert("NON FUNZIONA");
+                }
+            });
+        }
+
+        /*
+         * La funzione per l'aggiornamento della pagina viene richiamato ogni 2.5 secondi.
+         */
+        setInterval (loadLastMessages, 2500);
+    });
+
+    /*
+     * Funzione per effettuare il primo caricamento della chat.
+     * La funzione viene richiamata al caricamento della pagina o ad ogni suo refresh. Il funzionamento è molto analogo a quello di LoadLastMessages().
+     */
+    function loadChat() {
+        $.ajax({
+            url: "/UniChat/chat/visualizzaChat",
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            success: function (result) {
+                var show = '';
+                var lastId = 0;
+                document.getElementById("chatbox").innerHTML = show;
+                result.forEach(function (item){
+                    show = show +
+                        '<!-- Messaggio -->' +
+                        '<div class="card shadow mb-2">' +
+                        '<!-- Utente -->' +
+                        '<div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">' +
+                        '<h6 class="m-0 font-weight-bold text-secondary"><a href="/UniChat/utenti/showProfile/'+item.idAutore+'">'+item.nomeAutore+' '+item.cognomeAutore+'</a></h6>' +
+                        '{if $moderatoreAdmin==true} <a href="/UniChat/chat/rimuoviMessaggio/'+item.idMessaggio+'" class="btn btn-danger btn-circle btn-sm" onclick="presentaAlert()"><i class="fas fa-trash"></i></a>{/if}' +
+                        '</div>' +
+                        '<!-- Testo -->' +
+                        '<div class="card-body py-2">'+item.testo+'</div>' +
+                        '<!-- Data invio messaggio -->' +
+                        '<div class="container my-auto py-1">' +
+                        '<div class="copyright text-center my-auto">' +
+                        '<span>'+item.data+'</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<!-- Fine messaggio -->';
+                    lastId = item.idMessaggio;
+                });
+                document.getElementById("chatbox").innerHTML = show;
+                $("#ultimoMessaggio").val(lastId);
+            },
+            error: function (result) {
+                document.getElementById("chatbox").innerHTML += "<p>NON FUNZIONA!</p>";
+            }
+        });
+    }
+
+</script>
 
 <script type="text/javascript">
 
