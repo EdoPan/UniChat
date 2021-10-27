@@ -254,4 +254,41 @@ class FMessaggio
             return null;
         }
     }
+
+    /**
+     * Permette di ottenere l'elenco dei nuovi messaggi, ovvero quelli pubblicati successivamente al messaggio di cui
+     * viene fornito l'identificativo.
+     * In caso di errori viene restituito null.
+     * @param int $ultimoMessaggioId Identificativo del messaggio da cui iniziare a recuperare i nuovi messaggi.
+     * @return array|null Elenco dei messaggi pubblicati dopo un determinato messaggio.
+     */
+    public function loadNuoviMessaggi(int $ultimoMessaggioId): ?array
+    {
+        $messaggi = array();
+
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ('SELECT messID FROM messaggi WHERE messID > :id ORDER BY messID DESC');
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ":id" => $ultimoMessaggioId
+            ));
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($rows as $row) {
+                $messID = (int)$row['messID'];
+                $messaggio = self::load($messID);
+                if (isset($messaggio)) {
+                    $messaggi[] = $messaggio;
+                } else {
+                    return null;
+                }
+            }
+            return $messaggi;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
 }

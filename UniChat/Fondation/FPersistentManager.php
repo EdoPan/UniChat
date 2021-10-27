@@ -446,10 +446,23 @@ class FPersistentManager
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @return array|null Elenco contenente i messaggi pubblicati nelle ultime 24 ore
      */
-    public function loadUltimiMessaggi(): ?array
+    public function loadMessaggiUltime24ore(): ?array
     {
         $fMessaggio = FMessaggio::getInstance();
         return $fMessaggio->loadMessaggiUltime24ore();
+    }
+
+    /**
+     * Permette di ottenere l'elenco dei nuovi messaggi, ovvero quelli pubblicati successivamente al messaggio di cui
+     * viene fornito l'identificativo.
+     * In caso di errori viene restituito null.
+     * @param int $ultimoMessaggioId Identificativo del messaggio da cui iniziare a recuperare i nuovi messaggi.
+     * @return array|null Elenco dei messaggi pubblicati dopo un determinato messaggio.
+     */
+    public function loadNuoviMessaggi(int $ultimoMessaggioId): ?array
+    {
+        $fMessaggio = FMessaggio::getInstance();
+        return $fMessaggio->loadNuoviMessaggi($ultimoMessaggioId);
     }
 
     /**
