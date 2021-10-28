@@ -84,7 +84,7 @@ class FUser
     /**
      * Permette di ottenere la foto profilo dell'utente dato l'id che la identifica. La foto profilo è restituita in un
      * array associativo avente i campi id, nome, dimensione, tipo e immagine, in quest'ultimo risiede il file in
-     * formato stringa.
+     * formato stringa e codificato in base 64.
      * In caso di errori viene restituito null.
      * @param int $fotoID Identificativo della foto profilo da recuperare dalla base dati
      * @return array|null Foto profilo
