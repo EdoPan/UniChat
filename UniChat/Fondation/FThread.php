@@ -154,14 +154,14 @@ class FThread
                     $dimensione = $row["dimensione"];
                     $tipo = $row["tipo"];
                     $file = $row["file"];
-                    $fotoProfilo = array(
+                    $allegato = array(
                         "id" => $allegatoID,
                         "nome" => $nome,
                         "dimensione" => $dimensione,
                         "tipo" => $tipo,
                         "file" => $file
                     );
-                    $allegati[] = $fotoProfilo;
+                    $allegati[] = $allegato;
                 }
                 return $allegati;
             } catch (PDOException $e) {
@@ -169,6 +169,45 @@ class FThread
             }
         }
 
+
+    /**
+     * Permette di ottenere un allegato di un thread dato l'identificativo dell'allegato stesso.
+     * Gli allegati sono array associativi aventi i campi id, nome, dimensione, tipo e file, in quest'ultimo risiede il
+     * file in formato stringa e codificato in base 64.
+     * Viene restituito un array associativo dell'allegato, mentre in caso di errori viene restituito null.
+     * @param int $allegatoID Identificativo dell'allegato da recuperare.
+     * @return array|null Array associativo dell'allegato.
+     */
+    public function loadAllegato(int $allegatoID): ?array
+        {
+            $allegato= array();
+
+            try {
+                $dbConnection = FConnection::getInstance();
+                $pdo = $dbConnection->connect();
+
+                $sql = ('SELECT * FROM allegati WHERE allegatoID = :id');
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(array(
+                    ':id' => $allegatoID
+                ));
+
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $record = $rows[0];
+                    $allegato['id'] = $allegatoID;
+                    $allegato['nome'] = $record['nome'];
+                    $allegato['dimensione'] = $record['dimensione'];
+                    $allegato['tipo'] = $record['tipo'];
+                    $allegato['file'] = $record['file'];
+                    return $allegato;
+                } else {
+                    return null;
+                }
+            } catch (PDOException $e) {
+                return null;
+            }
+        }
 
     /**
      * Permette di restituire l'elenco di threads con il maggior numero di risposte.

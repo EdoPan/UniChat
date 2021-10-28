@@ -220,7 +220,7 @@ class FPersistentManager
     }
 
     /**
-     * Restituisce un Euser, un EModeratore o un EAdmin, dato l'email fornita in fase di registrazione.
+     * Restituisce un Euser, un EModeratore o un EAdmin, data l'email fornita in fase di registrazione.
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @param string $email Email dell'utente da recuperare
      * @return EUser|null Istanza recuperata
@@ -229,6 +229,19 @@ class FPersistentManager
     {
         $fUser = FUser::getInstance();
         return $fUser->loadByEmail($email);
+    }
+
+    /**
+     * Restituisce un allegato, ovvero un array associativo che lo rappresenta, dato l'identificativo dell'allegato
+     * stesso.
+     * Se l'operazione non va a buon fine allora viene restituito null.
+     * @param int $allegatoID Identificativo dell'allegato da recuperare.
+     * @return array|null Array associativo rappresentante l'allegato.
+     */
+    public function loadAllegato(int $allegatoID): ?array
+    {
+        $fThread = FThread::getInstance();
+        return $fThread->loadAllegato($allegatoID);
     }
 
     /**
