@@ -12,7 +12,11 @@ class Validazione
 
     private array $IMAGE_MIME_TYPE = array("image/jpeg", "image/png", "image/gif");
 
-    private int $IMAGE_MAX_SIZE = 100000;
+    private int $IMAGE_MAX_SIZE = 1048576;      //1 MB espresso in Byte
+
+    private array $ATTACHMENT_MIME_TYPE = array("image/jpeg", "image/png", "application/pdf");
+
+    private int $ATTACHMENT_MAX_SIZE = 2097152;     //2 MB espresso in Byte
 
     private static $instance = null;
 
@@ -73,6 +77,18 @@ class Validazione
         }
         if ($size > $this->IMAGE_MAX_SIZE) {
             throw new ValidationException(ValidationException::ERROR_IMAGE_SIZE_MESSAGE, ValidationException::ERROR_IMAGE_SIZE_CODE);
+        }
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function validaAllegato(string $mimeType, int $size): void {
+        if (!in_array($mimeType, $this->ATTACHMENT_MIME_TYPE)) {
+            throw new ValidationException(ValidationException::ERROR_ATTACHMENT_MIME_TYPE_MESSAGE, ValidationException::ERROR_ATTACHMENT_MIME_TYPE_CODE);
+        }
+        if ($size > $this->ATTACHMENT_MAX_SIZE) {
+            throw new ValidationException(ValidationException::ERROR_ATTACHMENT_SIZE_MESSAGE, ValidationException::ERROR_ATTACHMENT_SIZE_CODE);
         }
     }
 }

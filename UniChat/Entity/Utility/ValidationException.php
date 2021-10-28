@@ -17,6 +17,10 @@ class ValidationException extends Exception
 
     const ERROR_IMAGE_SIZE_MESSAGE = "L'immagine è troppo grande";
 
+    const ERROR_ATTACHMENT_MIME_TYPE_MESSAGE = "L'allegato caricato è di un formato non lecito";
+
+    const ERROR_ATTACHMENT_SIZE_MESSAGE = "L'allegato è troppo grande";
+
     const ERROR_STRING_CODE = 1;
 
     const ERROR_EMAIL_CODE = 2;
@@ -30,4 +34,8 @@ class ValidationException extends Exception
     const ERROR_IMAGE_MIME_TYPE_CODE = 6;
 
     const ERROR_IMAGE_SIZE_CODE = 7;
+
+    const ERROR_ATTACHMENT_MIME_TYPE_CODE = 8;
+
+    const ERROR_ATTACHMENT_SIZE_CODE = 9;
 }
