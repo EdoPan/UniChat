@@ -7,13 +7,13 @@ class VCategoria
 
 {
 
-	private $smarty;
+	private Smarty $smarty;
 	const NUMERO_THREAD_PER_PAGINA = 6;
 
 
     public function __construct() {
 
-        $this->smarty=StartSmarty::configuration();
+        $this->smarty = VSmarty::start();
 
     }
 

@@ -5,12 +5,12 @@ require_once "VSmarty.php";
 
 class VPage {
 	
-	private $smarty;
+	private Smarty $smarty;
 
 
     public function __construct() {
 
-        $this->smarty=StartSmarty::configuration();
+        $this->smarty = VSmarty::start();
 
     }
 
