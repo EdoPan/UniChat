@@ -57,7 +57,7 @@ class VPage {
      */ 
     public function setMenuLeft(array $eCategorie): void{
 
-        $this->smarty->assign('categorie', $ecategorie);
+        $this->smarty->assign('categorie', $eCategorie);
 
     
 
@@ -71,7 +71,7 @@ class VPage {
 
     public function setBottoneFiltra(array $eCategorie): void {
 
-        $this->smarty->assign('categorie', $ecategorie);
+        $this->smarty->assign('categorie', $eCategorie);
 
 
     }
