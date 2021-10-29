@@ -6,17 +6,17 @@ class USession
         session_start();
     }
 
-    public function getValue(string $key) {
+    public function getValue(string $key): ?string {
 
         if (isset($_SESSION[$key])) {
-            return $result = unserialize(($_SESSION[$key]));
+            return $result = $_SESSION[$key];
         } else {
             return null;
         }
 
     }
 
-    public function setValue(string $key, $value) {
+    public function setValue(string $key, string $value): void {
 
         if (gettype($value) == 'object') {
             $value = serialize($value);
@@ -25,7 +25,7 @@ class USession
 
     }
 
-    public function removeValue(string $key) {
+    public function removeValue(string $key): void {
 
         if (isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
@@ -33,10 +33,10 @@ class USession
 
     }
 
-    public function deleteSession() {
+    public function deleteSession(): void {
 
-        session_unset();
         setcookie('PHPSESSID', '');
+        session_unset();
         session_destroy();
 
     }
