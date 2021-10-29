@@ -13,13 +13,13 @@
     <title>UniChat - {$nomeUtente} {$cognomeUtente}</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -31,8 +31,8 @@
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Logo sito e Sidebar-->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+        <!-- Logo sito e Sidebar -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/showHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -42,29 +42,27 @@
         <!-- Divisore -->
         <hr class="sidebar-divider my-0">
 
+
         <!-- Menu laterale categorie -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
+        <li class="nav-item active">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+               aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Dipartimenti:</h6>
-                    <a class="collapse-item" href="disim.html">DISIM</a>
-                    <a class="collapse-item" href="diiie.html">DIIIE</a>
-                    <a class="collapse-item" href="diceaa.html">DICEAA</a>
-                    <a class="collapse-item" href="dsfc.html">DSFC</a>
-                    <a class="collapse-item" href="mesva.html">MESVA</a>
-                    <a class="collapse-item" href="discab.html">DISCAB</a>
-                    <a class="collapse-item" href="dsu.html">DSU</a>
-                    <div class="collapse-divider"></div>
-                    <h6 class="collapse-header">Altro:</h6>
-                    <a class="collapse-item" href="mista.html">Mista</a>
+
+                    {foreach $categorie as $categoria}
+
+                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+
+                    {/foreach}
                 </div>
             </div>
         </li>
+
 
         <!-- Divisore -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -75,7 +73,7 @@
         </div>
 
     </ul>
-    <!-- Fine del Sidebar -->
+    <!-- Fine della Sidebar -->
 
     <!-- Inizio del Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -91,11 +89,13 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
+
+
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form
-                            class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <form method="post" action="/UniChat/threads/ricerca"
+                          class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
                             <div class="dropdown">
@@ -103,22 +103,26 @@
                                     Filtra
                                 </button>
                                 <div class="dropdown-menu animated&#45;&#45;fade-in" aria-labelledby="dropdownMenuButton" style="">
+
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
-                                    <label class="filtro-categorie dropdown-item" id="2-categoria" onclick="seleziona(this)">DISIM</label>
-                                    <label class="filtro-categorie dropdown-item" id="3-categoria" onclick="seleziona(this)">DIIIE</label>
-                                    <label class="filtro-categorie dropdown-item" id="4-categoria" onclick="seleziona(this)">DICEAA</label>
-                                    <label class="filtro-categorie dropdown-item" id="5-categoria" onclick="seleziona(this)">DSFC</label>
-                                    <label class="filtro-categorie dropdown-item" id="6-categoria" onclick="seleziona(this)">MESVA</label>
-                                    <label class="filtro-categorie dropdown-item" id="7-categoria" onclick="seleziona(this)">DISCAB</label>
-                                    <label class="filtro-categorie dropdown-item" id="8-categoria" onclick="seleziona(this)">DSU</label>
-                                    <label class="filtro-categorie dropdown-item" id="1-categoria" onclick="seleziona(this)">Mista</label>
+
+                                    {foreach $categorie as $categoria}
+
+                                        <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
+
+                                    {/foreach}
+
+
                                 </div>
                             </div>
 
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
+                            <input type="text" name="categoriaID" id="categoria-id" hidden>
+
+                            <input type="search" name="testoricerca" id="testo-ricerca"
+                                   class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
@@ -131,6 +135,30 @@
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
 
+
+                    <div class="dropdown">
+
+                        <div class="nav-item dropdown no-arrow d-sm-none mt-3">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="ricerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filtra
+                            </button>
+                            <div class="dropdown-menu animated&#45;&#45 fade-in" aria-labelledby="ricerca" style="">
+
+                                <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
+
+                                {foreach $categorie as $categoria}
+
+                                    <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
+
+                                {/foreach}
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
@@ -140,88 +168,105 @@
                         </a>
                         <!-- Dropdown - Cerca -->
 
+
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form class="form-inline mr-auto w-100 navbar-search">
+                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="filtroRicerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
-                                            Filtra
-                                        </button>
-                                        <div class="dropdown-menu animated;fade-in" aria-labelledby="filtroRicerca" style="">
-                                            <label class="filtro-categorie dropdown-item" id="0-cat" onclick="seleziona(this)">TUTTE</label>
-                                            <label class="filtro-categorie dropdown-item" id="2-cat" onclick="seleziona(this)">DISIM</label>
-                                            <label class="filtro-categorie dropdown-item" id="3-cat" onclick="seleziona(this)">DIIIE</label>
-                                            <label class="filtro-categorie dropdown-item" id="4-cat" onclick="seleziona(this)">DICEAA</label>
-                                            <label class="filtro-categorie dropdown-item" id="5-cat" onclick="seleziona(this)">DSFC</label>
-                                            <label class="filtro-categorie dropdown-item" id="6-cat" onclick="seleziona(this)">MESVA</label>
-                                            <label class="filtro-categorie dropdown-item" id="7-cat" onclick="seleziona(this)">DISCAB</label>
-                                            <label class="filtro-categorie dropdown-item" id="8-cat" onclick="seleziona(this)">DSU</label>
-                                            <label class="filtro-categorie dropdown-item" id="1-cat" onclick="seleziona(this)">Mista</label>
-                                        </div>
-                                    </div>
+                                    <input type="text" name="categoriaID" id="categoria-id2" hidden>
 
-
-
-                                    <input type="text" class="form-control bg-light border-0 small"
+                                    <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button">
+                                        <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
                                 </div>
                             </form>
                         </div>
+
+
                     </li>
 
-                    <!-- Divisore -->
-                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
 
-                    <!-- Informazioni profilo loggato e relativa tendina -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                            <img class="img-profile rounded-circle"
-                                 src="../img/undraw_profile.svg">
-                        </a>
 
-                        <!-- Tendina -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="mio_profilo.html">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profilo
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Informazioni profilo loggato e relativa tendina -->
+                        <li class="nav-item dropdown no-arrow">
+
+                            {if $loggato}
+
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <img class="img-profile rounded-circle"
+                                     src="data:image/jpeg;base64,{$icona}">
                             </a>
 
-                            <a class="dropdown-item" href="pannello-di-controllo.html">
-                                <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Pannello di Controllo
+
+                            <!-- Tendina -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+
+
+                                <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profilo
+                                </a>
+
+                                {if $controlpanel}
+
+                                    <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
+                                        <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Pannello di Controllo
+                                    </a>
+
+                                {/if}
+
+
+
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+
+                            {else}
+
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
+                                {html_image file="../Immagini/icona_autore.png"}
                             </a>
 
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
+                            <!-- Tendina -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
 
+
+                                <a class="dropdown-item" href="/UniChat/Utenti/login">
+                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Login
+                                </a>
+
+                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
+                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+
+                            {/if}
+
+                        </li>
+                    </ul>
                 </ul>
-
             </nav>
             <!-- Fine della Topbar -->
-
-
-
-
-
-
-
-
-
 
 
             <!-- Inizio del Page Content -->
@@ -286,18 +331,6 @@
             <!-- Fine del Page Content -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
         <!-- Fine del Main Content -->
 
@@ -315,7 +348,7 @@
     <!-- Fine del Content Wrapper -->
 
 </div>
-<!-- Fine del Page Wrapper -->
+<!-- Fine Page Wrapper -->
 
 <!-- Bottone Scroll to Top -->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -336,21 +369,22 @@
             <div class="modal-body">Seleziona "Logout" qui sotto se sei pronto a terminare la sessione attuale.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <a class="btn btn-primary" href="/UniChat/Utenti/logout">Logout</a>
             </div>
         </div>
     </div>
 </div>
 
+
 <!-- Bootstrap core JavaScript-->
-<script src="../vendor/jquery/jquery.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/UniChat/Template/vendor/jquery/jquery.min.js"></script>
+<script src="/UniChat/Template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/UniChat/Template/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../js/sb-admin-2.min.js"></script>
+<script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 </body>
 

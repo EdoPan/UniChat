@@ -23,7 +23,7 @@
 
 </head>
 
-<body id="page-top" onload="loadChat()">
+<body id="page-top" onload="loadChat(); presentaAlert()">
 
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">
@@ -32,7 +32,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/visualizzaHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/showHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -56,7 +56,7 @@
 
                     {foreach $categorie as $categoria}
 
-                        <a class="collapse-item" href="\UniChat\Categorie\visualizzaCategoria\{$categoria->getID()}\1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
 
                     {/foreach}
                 </div>
@@ -94,7 +94,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="\UniChat\Threads\ricerca"
+                    <form method="post" action="/UniChat/threads/ricerca"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -171,7 +171,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="\UniChat\Threads\ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -215,14 +215,14 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="UniChat\Utenti\editShowPersonalProfile">
+                                <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
                                 </a>
 
                                 {if $controlpanel}
 
-                                    <a class="dropdown-item" href="UniChat\Admin\visualizzaPannelloDiControllo">
+                                    <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
                                     </a>
@@ -250,12 +250,12 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="UniChat\Utenti\login">
+                                <a class="dropdown-item" href="/UniChat/Utenti/login">
                                     <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="UniChat\Utenti\logout">
+                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
                                     <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -269,11 +269,6 @@
                 </ul>
             </nav>
             <!-- Fine della Topbar -->
-
-
-
-
-
 
 
             <!-- Inizio del Page Content -->
@@ -524,7 +519,7 @@
                                                                 <h6 class="font-italic">di <b>{$thread->getAutoreThread()->getNome()} {$thread->getAutoreThread()->getCognome()}</b></h6>
                                                                 <p class="card-text">{$thread->getTesto()}</p>
 
-                                                                <a class="btn btn-primary">Leggi tutto</a>
+                                                                <a class="btn btn-primary" href="/UniChat/threads/showThread/{$thread->getCategoriaThread()->getID()}/{$thread->getID()}">Leggi tutto</a>
                                                             </div>
                                                         </div>
 
@@ -557,29 +552,6 @@
 
             </div>
             <!-- Fine del Page Content -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         </div>
         <!-- Fine del Main Content -->
@@ -619,7 +591,7 @@
             <div class="modal-body">Seleziona "Logout" qui sotto se sei pronto a terminare la sessione attuale.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="\UniChat\Utenti\logout">Logout</a>
+                <a class="btn btn-primary" href="/UniChat/Utenti/logout">Logout</a>
             </div>
         </div>
     </div>
@@ -631,7 +603,9 @@
 <!-- Script per la visualizzazione messaggio conferma/errore -->
 <script>
     function presentaAlert() {
-        alert({$messaggio});
+        {if {$messaggio} neq ""}
+            alert({$messaggio});
+        {/if}
     }
 </script>
 
