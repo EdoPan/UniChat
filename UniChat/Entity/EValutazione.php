@@ -239,4 +239,15 @@ class EValutazione
             return self::ERRORE_VOTO;
         }
     }
+
+    public function espressoGiudizio($user): ?int
+    {
+        if (array_search($user, $this->utentiPositivi) !== false) {
+            return self::VOTO_POSITIVO;
+        } else if (array_search($user, $this->utentiNegativi) !== false) {
+            return self::VOTO_NEGATIVO;
+        } else {
+            return null;
+        }
+    }
     }
