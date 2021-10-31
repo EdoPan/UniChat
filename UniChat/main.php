@@ -151,11 +151,16 @@ $cVisualizza = new CVisualizza();
 
 //mail("test1@localhost", "Prova", "Email di prova.");
 //$result = $cAutenticazione->login("test1@localhost", ".rq_BM9-4Lp.4.^49n.y^.Q_.p1.C.");
+/*
+$pm = FPersistentManager::getInstance();
+$categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, 10);
+$user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, 3);
+$pm->updateModeratoreCategoria($categoria, $user);
+*/
 
-$result = $cVisualizza->visualizzaThread(21);
-if ($result) {
-    print ($result);
-} else {
-    print("OPSS!");
-}
-
+$c = FCategoria::getInstance();
+$u = FUser::getInstance();
+$fV = FValutazione::getInstance();
+$m = $u->loadAdmin(63);
+$v = $fV->load(2);
+print($v->espressoGiudizio($m));
