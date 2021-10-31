@@ -65,15 +65,15 @@ class VForm
 
         $result = array();
         if ($tipologiaForm == self::FORM_REGISTRAZIONE) {
-            if (isset($_POST['nome']) && isset($_POST['cognome']) && isset($_POST['email']) && $_POST['password']) {
+            if ($_POST['nome'] != "" && $_POST['cognome'] != "" && $_POST['email'] != "" && $_POST['password'] != "") {
                 $result['nome'] = filter_var($_POST['nome'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['cognome'] = filter_var($_POST['cognome'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['email'] = filter_var($_POST['email'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['password'] = filter_var($_POST['password'], FILTER_SANITIZE_SPECIAL_CHARS);
-                if (isset($_POST['corsoStudio'])) {
+                if ($_POST['corsoStudio'] != "") {
                     $result['corsoStudio'] = filter_var($_POST['corsoStudio'], FILTER_SANITIZE_SPECIAL_CHARS);
                 }
-                if (isset($_FILES['fotoProfilo'])) {
+                if ($_FILES['fotoProfilo']['name'] != "") {
                     $result['nomeFotoProfilo'] = $_FILES['fotoProfilo']['name'];
                     $result['dimensioneFotoProfilo'] = $_FILES['fotoProfilo']['size'];
                     $result['tipoFotoProfilo'] = $_FILES['fotoProfilo']['type'];
@@ -82,7 +82,7 @@ class VForm
             }
         }
         if ($tipologiaForm == self::FORM_LOGIN) {
-            if (isset($_POST['email']) && isset($_POST['password'])) {
+            if ($_POST['email'] != "" && $_POST['password'] != "") {
                 $result['email'] = filter_var($_POST['email'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['password'] = filter_var($_POST['password'], FILTER_SANITIZE_SPECIAL_CHARS);
             } else{
@@ -90,26 +90,26 @@ class VForm
             }
         }
         if ($tipologiaForm == self::FORM_RECUPERO_PASSWORD) {
-          if (isset($_POST['email'])) {
+          if ($_POST['email'] != "") {
              $result['email'] = filter_var($_POST['email'], FILTER_SANITIZE_SPECIAL_CHARS);
           }  else {
               $result = null;
           }
         } else if ($tipologiaForm == self::FORM_RICERCA) {
-            if (isset($_POST['testoricerca'])) {
+            if ($_POST['testoricerca'] != "") {
                 $result['testoRicerca'] = filter_var($_POST['testoricerca'], FILTER_SANITIZE_SPECIAL_CHARS);
-                if (isset($_POST['categoriaID'])) {
+                if ($_POST['categoriaID'] != "") {
                     $result['categoriaID'] = filter_var($_POST['categoriaID'], FILTER_SANITIZE_SPECIAL_CHARS);
                 }
             } else {
                 $result = null;
             }
         } else if ($tipologiaForm == self::FORM_CREAZIONE_THREAD) {
-            if (isset($_POST['titolo']) && isset($_POST['testo']) && isset($_POST['categoriathread'])) {
+            if ($_POST['titolo'] != "" && $_POST['testo'] != "" && $_POST['categoriathread'] != "") {
                 $result['titolo'] = filter_var($_POST['titolo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['testo'] = filter_var($_POST['testo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['categoriaID'] = filter_var($_POST['categoriathread'], FILTER_SANITIZE_SPECIAL_CHARS);
-                if(isset($_FILES['allegati'])) {
+                if($_FILES['allegati']['name'] != "") {
                     $numeroAllegati = count($_FILES['allegati']['name']);
                     for ($i = 0; $i < $numeroAllegati; $i++) {
                         $indice = 'allegato' . $i;
@@ -122,11 +122,11 @@ class VForm
             } else {
                 $result = null;
             }
-        }else if ($tipologiaForm == self::FORM_CREAZIONE_CATEGORIA) {
-            if (isset($_POST['nome']) && isset($_POST['descrizione'])) {
+        } else if ($tipologiaForm == self::FORM_CREAZIONE_CATEGORIA) {
+            if ($_POST['nome'] != "" && $_POST['descrizione'] != "") {
                 $result['nome'] = filter_var($_POST['nome'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['descrizione'] = filter_var($_POST['descrizione'], FILTER_SANITIZE_SPECIAL_CHARS);
-                if (isset($_FILES['icona'])) {
+                if ($_FILES['icona']['name'] != "") {
                     $result['nomeIcona']  = $_FILES['icona']['name'];
                     $result['dimensioneIcona']  = $_FILES['icona']['size'];
                     $result['tipoIcona']  = $_FILES['icona']['type'];
@@ -136,29 +136,31 @@ class VForm
                 $result = null;
             }
         } else if ($tipologiaForm == self::FORM_INVIO_MESSAGGIO) {
-            if (isset($_POST['testo'])) {
+            if ($_POST['testo'] != "") {
                 $result['testo'] = filter_var($_POST['testo'], FILTER_SANITIZE_SPECIAL_CHARS);
+            } else if ($_POST['idMessage'] != "") {
+                $result['messaggioID'] = filter_var($_POST['idMessage'], FILTER_SANITIZE_SPECIAL_CHARS);
             } else {
                 $result = null;
             }
         } else if ($tipologiaForm == self::FORM_INVIO_RISPOSTA) {
-            if (isset($_POST['testo']) && isset($_POST['threadID'])) {
+            if ($_POST['testo'] != "" && $_POST['threadID'] != "") {
                 $result['testo'] = filter_var($_POST['testo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['threadID'] = filter_var($_POST['threadID'], FILTER_SANITIZE_SPECIAL_CHARS);
             } else {
                 $result = null;
             }
         } else if ($tipologiaForm == self::FORM_PROFILO_PERSONALE) {
-            if (isset($_POST['nuovaFotoProfilo'])) {
+            if ($_POST['nuovaFotoProfilo']['name'] != "") {
                 $result['nomeNuovaFotoProfilo'] = $_POST['nuovaFotoProfilo']['name'];
                 $result['dimensioneNuovaFotoProfilo']  = $_FILES['NuovaFotoProfilo']['size'];
                 $result['tipoNuovaFotoProfilo']  = $_FILES['NuovaFotoProfilo']['type'];
                 $result['immagineNuovaFotoProfilo']  = base64_encode(file_get_contents($_FILES['NuovaFotoProfilo']['tmp_name']));
             }
-            if (isset($_POST['nuovaPassword'])) {
+            if ($_POST['nuovaPassword'] != "") {
                 $result['nuovaPassword'] = filter_var($_POST['nuovaPassword'], FILTER_SANITIZE_SPECIAL_CHARS);
             }
-            if (isset($_POST['nuovoCorsoStudio'])) {
+            if ($_POST['nuovoCorsoStudio'] != "") {
                 $result['nuovoCorsoStudio'] = filter_var($_POST['nuovoCorsoStudio'], FILTER_SANITIZE_SPECIAL_CHARS);
             }
         } else {

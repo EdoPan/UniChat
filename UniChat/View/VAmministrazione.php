@@ -52,7 +52,7 @@ class VAmministrazione
     }
 
     public function getValorePaginaUtenti(): ?int {
-        if (isset($_POST['pagina'])) {
+        if ($_POST['pagina'] != "") {
            return (int)$_POST['pagina'];
         } else {
             return null;
@@ -60,7 +60,7 @@ class VAmministrazione
     }
 
     public function getValorePaginaCategorie(): ?int {
-        if (isset($_POST['pagina'])) {
+        if ($_POST['pagina'] != "") {
             return (int)$_POST['pagina'];
         } else {
             return null;
@@ -68,7 +68,7 @@ class VAmministrazione
     }
 
     public function getValoreIdCategoriaModeratore(): ?int {
-        if (isset($_POST['categoriaID'])) {
+        if ($_POST['categoriaID'] != "") {
             return (int)$_POST['categoriaID'];
         } else {
             return null;
@@ -76,7 +76,7 @@ class VAmministrazione
     }
 
     public function getValoreIdCategoriaContaThreads(): ?int {
-        if (isset($_POST['categoriaID'])) {
+        if ($_POST['categoriaID'] != "") {
             return (int)$_POST['categoriaID'];
         } else {
             return null;
