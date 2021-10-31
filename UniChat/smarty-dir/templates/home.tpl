@@ -291,7 +291,7 @@
 
                                 <div class="row justify-content-center" >
 
-                                    <img src="/Immagini/icona_chat.png" style="max-width: 64px; margin-right: 10px">
+                                    <img src="/UniChat/Immagini/icona_chat.png" style="max-width: 64px; margin-right: 10px">
                                     <h4 class="py-0 text-white mt-3"><b>Chat</b></h4>
 
                                 </div>
@@ -304,37 +304,6 @@
 
                                 <!-- Contenitore scrollable -->
                                 <div style = "width: auto; height: 500px; line-height: 3em; overflow:auto; padding: 5px;">
-
-
-
-                                    <!-- Messaggio -->
-                                    <div class="card shadow mb-2">
-
-                                        <!-- Utente -->
-                                        <div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">
-                                            <h6 class="m-0 font-weight-bold text-secondary">Franco Bollo</h6>
-
-
-                                            {if $moderatoreAdmin eq true}
-                                            <!-- Bottone elimina messaggio -->
-                                            <a href="#" class="btn btn-danger btn-circle btn-sm" onclick="presentaAlert()">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                            {/if}
-
-                                        </div>
-
-                                        <!-- Testo -->
-                                        <div class="card-body py-2">Messaggio ricevuto</div>
-
-                                        <!-- Data invio messaggio -->
-                                        <div class="container my-auto py-1">
-                                            <div class="copyright text-center my-auto">
-                                                <span>01/03/2020 17:23</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Fine messaggio -->
 
 
                                 </div>
@@ -381,7 +350,7 @@
 
                                 <div class="row justify-content-center" >
 
-                                    <img src="/Immagini/post_popolari.png" style="max-width: 64px; margin-right: 10px">
+                                    <img src="/UniChat/Immagini/post_popolari.png" style="max-width: 64px; margin-right: 10px">
                                     <h4 class="py-0 text-white mt-3"><b>Thread Popolari</b></h4>
 
                                 </div>
@@ -702,7 +671,11 @@
                     }
                 },
                 error: function (result) {                          //  se la richiesta ajax non va a buon fine allora...
-                    alert("NON FUNZIONA");
+                    document.getElementById("chatbox").innerHTML = '<!-- Messaggio errore -->' +
+                        '<div class="alert alert-danger" role="alert">' +
+                        '<b>ERRORE! </b>Aggiornamento della chat fallito.' +
+                        '</div>' +
+                        '<!-- Fine messaggio errore -->';
                 }
             });
         }
@@ -749,12 +722,46 @@
                     lastId = item.idMessaggio;
                 });
                 document.getElementById("chatbox").innerHTML = show;
-                $("#ultimoMessaggio").val(lastId);
+                if (lastId !== 0) {
+                    $("#ultimoMessaggio").val(lastId);
+                } else {
+                    ultimoMessId();
+                }
             },
             error: function (result) {
-                document.getElementById("chatbox").innerHTML += "<p>NON FUNZIONA!</p>";
+                document.getElementById("chatbox").innerHTML = '<!-- Messaggio errore -->' +
+                    '<div class="alert alert-danger" role="alert">' +
+                    '<b>ERRORE! </b>Caricamento della chat fallito.' +
+                    '</div>' +
+                    '<!-- Fine messaggio errore -->';
             }
         });
+    }
+
+    /**
+     * Permette di recuperare l'id associato all'ultimo messaggio pesente nella base dati e risulata utile quando la
+     * chat risulta essere vuota in quanto non ci sono messaggi nelle ultime 24 ore.
+     * Nell'apposito input viene riportato l'ultimo id ottenuto dal server, altrimenti si ottiene un messaggio di errore.
+     * La funzione contatta il server all'url /UniChat/chat/ultimoMessaggio con una HTTP POST.
+     */
+    function ultimoMessId() {
+        $.ajax({
+            url: "/UniChat/chat/ultimoIdMessaggio",
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            success: function (result) {
+                $("#ultimoMessaggio").val(result.messID);
+            },
+            error: function (){
+                document.getElementById("chatbox").innerHTML = '<!-- Messaggio errore -->' +
+                    '<div class="alert alert-danger" role="alert">' +
+                    '<b>ERRORE! </b>Caricamento della chat fallito.' +
+                    '</div>' +
+                    '<!-- Fine messaggio errore -->';
+            }
+        });
+
     }
 
 </script>
