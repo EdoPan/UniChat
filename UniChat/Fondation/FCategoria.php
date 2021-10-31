@@ -157,13 +157,13 @@ class FCategoria
      * assegnato ad un'altra categoria, in tal caso viene prima rimosso da quest'ultima, e nel verificare che la
      * categoria da moderare non sia già moderata, in tal caso il moderatore ad essa assegnato viene prima rimosso.
      * @param ECategoria $categoria
-     * @param EModeratore $mod
+     * @param EUser $user
      * @return bool
      */
-    public function update(ECategoria $categoria, EModeratore $mod): bool
+    public function update(ECategoria $categoria, EUser $user): bool
     {
         $categoriaID = $categoria->getId();
-        $moderatoreID = $mod->getId();
+        $moderatoreID = $user->getId();
 
         try {
             $dbConnection = FConnection::getInstance();

@@ -444,16 +444,16 @@ class FUser
      * Permette di assegnare ad un utente il ruolo di moderatore di una categoria.
      * Viene restituito true se l'operazione va buon fine, false altrimenti.
      * @param PDO $pdo Connessione al database
-     * @param int $moderatoreID Identificativo dell'utente da rendere moderatore
+     * @param int $userID Identificativo dell'utente da rendere moderatore
      * @return bool Esito dell'operazione
      */
-    public function updateToModeratore(PDO $pdo, int $moderatoreID): bool  //usato da FCategoria->update
+    public function updateToModeratore(PDO $pdo, int $userID): bool  //usato da FCategoria->update
     {
         try {
             $sql = ("UPDATE users SET moderatore = true WHERE userID = :moderatoreID");
             $stmt = $pdo->prepare($sql);
             $result = $stmt->execute(array(
-                ':moderatoreID' => $moderatoreID
+                ':moderatoreID' => $userID
             ));
             return $result;
         } catch (PDOException $e) {
