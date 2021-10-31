@@ -291,4 +291,27 @@ class FMessaggio
             return null;
         }
     }
+
+    /**
+     * Restituisce l'identificativo associato all'ultimo messaggio presente nella base dati.
+     * In caso di errori viene restituito null.
+     * @return int|null Identificativo dell'ultimo messaggio presente nella base dati.
+     */
+    public function lastId(): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT messID FROM messaggi ORDER BY messID DESC LIMIT 1");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return (int)$rows[0]['messID'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
 }
