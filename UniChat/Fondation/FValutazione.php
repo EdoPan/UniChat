@@ -71,7 +71,13 @@ class FValutazione
             foreach ($rows as $row) {
                 $userID = (int)$row["userID"];
                 $fUser = FUser::getInstance();
-                $user = $fUser->load($userID);
+                if ($fUser->isModeratore($userID)) {
+                    $user = $fUser->loadModeratore($userID);
+                } else if ($fUser->isAdmin($userID)) {
+                    $user = $fUser->loadAdmin($userID);
+                } else {
+                    $user = $fUser->load($userID);
+                }
                 if (isset($user)) {
                     $utentiPositivi[] = $user;
                 } else {
@@ -92,7 +98,13 @@ class FValutazione
             foreach ($rows as $row) {
                 $userID = (int)$row["userID"];
                 $fUser = FUser::getInstance();
-                $user = $fUser->load($userID);
+                if ($fUser->isModeratore($userID)) {
+                    $user = $fUser->loadModeratore($userID);
+                } else if ($fUser->isAdmin($userID)) {
+                    $user = $fUser->loadAdmin($userID);
+                } else {
+                    $user = $fUser->load($userID);
+                }
                 if (isset($user)) {
                     $utentiNegativi[] = $user;
                 } else {

@@ -272,13 +272,13 @@ class FPersistentManager
      * Permette di aggiornare la categoria memorizzata nella base dati, assegnando il moderatore che la gestisce.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
      * @param ECategoria $categoria Categoria a cui si deve assegnare il moderatore
-     * @param EModeratore $moderatore Moderatore da assegnare alla categoria scelta
+     * @param EUser $user Moderatore da assegnare alla categoria scelta
      * @return bool Esito dell'operazione
      */
-    public function updateModeratoreCategoria(ECategoria $categoria, EModeratore $moderatore): bool
+    public function updateModeratoreCategoria(ECategoria $categoria, EUser $user): bool
     {
         $fCategoria = FCategoria::getInstance();
-        return $fCategoria->update($categoria, $moderatore);
+        return $fCategoria->update($categoria, $user);
     }
 
     /**
@@ -583,5 +583,16 @@ class FPersistentManager
         }else {
             return null;
         }
+    }
+
+    /**
+     * Restituisce l'identificativo associato all'ultimo messaggio presente nella base dati.
+     * In caso di errori viene restituito null.
+     * @return int|null Identificativo dell'ultimo messaggio presente nella base dati.
+     */
+    public function lastIdMess(): ?int
+    {
+        $fMessaggio = FMessaggio::getInstance();
+        return $fMessaggio->lastId();
     }
 }
