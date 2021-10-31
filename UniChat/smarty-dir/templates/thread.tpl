@@ -405,7 +405,7 @@
 
                             <!-- Pulsante invio -->
                             <div class="col-sm-3">
-                                <a href="/UniChat/threads/rispondiThread/{$idThread}" class="btn btn-success btn-icon-split">
+                                <a href="/UniChat/threads/rispondiThread" class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-arrow-right"></i>
                                     </span>
