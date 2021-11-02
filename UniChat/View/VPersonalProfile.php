@@ -8,14 +8,25 @@ require_once "VSmarty.php";
 class VPersonalProfile
 {
 
+    /**
+     * @var Smarty
+     */
     private Smarty $smarty;
 
+    /**
+     * Costruttore, inizializza Smarty.
+     */
     public function __construct() {
 
         $this->smarty = VSmarty::start();
 
     }
 
+    /**
+     * Imposta tutti i valori relativi al proprio profilo, in modo da poterlo visualizzare nella apposita pagina.
+     * Il metodo richiede in ingresso l'utente di cui si vogliono ottenere i dati.
+     * @param EUser $user Utente di cui si deve visualizzare il profilo
+     */
     public function setUtente(EUser $user): void {
 
         $nome = $user->getNome();
@@ -34,6 +45,13 @@ class VPersonalProfile
 
     }
 
+    /**
+     * Imposta o meno un messaggio di conferma o di errore di avvenuta modifica del profilo.
+     * Se in ingresso viene fornito true allora viene settato il messaggio di operazione riuscita, se viene fornito
+     * false allora viene settato il messaggio di errore e se invece viene fornito null allora vuol dire che non è
+     * stata compiuta nessuna operazione e quindi non è necessario settare un messaggio.
+     * @param bool|null $esito Esito operazione di modifica profilo.
+     */
     public function setMessaggioConfermaErroreModificaProfilo(?bool $esito): void {
         $this->smarty->assign('conferma', false);
         $this->smarty->assign('errore', false);
@@ -50,6 +68,9 @@ class VPersonalProfile
         }
     }
 
+    /**
+     * Visualizza la pagina relativa al proprio profilo.
+     */
     public function showPersonalProfile(): void {
 
         $this->smarty->display('mio-profilo.tpl');

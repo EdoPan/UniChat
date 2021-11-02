@@ -57,13 +57,13 @@
                                 <!-- Inserimento nome -->
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                     <input type="text" class="form-control form-control-user" id="nome"
-                                           name="nome" placeholder="Nome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici."required>
+                                           name="nome" placeholder="Nome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici." required>
                                 </div>
 
                                 <!-- Inserimento cognome -->
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control form-control-user" id="cognome"
-                                           name="cognome" placeholder="Cognome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici."required>
+                                           name="cognome" placeholder="Cognome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici." required>
                                 </div>
                             </div>
 
@@ -170,7 +170,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
-<script type="text/javascript"}>
+<script type="text/javascript">
     function verificaPassword() {
         var password;
         var ripetiPassword;
