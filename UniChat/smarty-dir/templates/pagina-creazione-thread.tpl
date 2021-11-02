@@ -283,7 +283,7 @@
 
                     <div class="card-body">
 
-                        <form action="/UniChat/threads/creaThread" enctype="multipart/form-data" method="post">
+                        <form action="/UniChat/threads/creaThread/{$categoriaID}" enctype="multipart/form-data" method="post">
 
                             <!-- Form inserimento titolo -->
 
@@ -298,7 +298,6 @@
                                 <!-- Categoria Thread -->
                                 <label for="categoriathread">Categoria Thread: </label>
                                 <input type="text" id="categoriathread" value="{$categoriaNome}" disabled="disabled"/>
-                                <input type="text" name="categoriathread" value="{$categoriaID}" hidden required/>
 
                                 <!-- Tendina -->
                                 <!--

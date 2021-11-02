@@ -84,7 +84,7 @@ class VAmministrazione
                 $this->smarty->assign('messaggioConferma', "L'operazione è stata eseguita con successo.");
             } else {
                 $this->smarty->assign('errore', true);
-                $this->smarty->assign('messaggioError', 'Si è verificato un errore, riprovare.');
+                $this->smarty->assign('messaggioErrore', 'Si è verificato un errore, riprovare.');
             }
         }
 

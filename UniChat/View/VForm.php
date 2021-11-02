@@ -212,13 +212,11 @@ class VForm
              * I dati da recuperare dalla form sono:
              * - titolo del thread (obbligatorio);
              * - testo del thread (obbligatorio);
-             * - categoria del thread (obbligatoria);
              * - allegati.
              */
             if ($_POST['titolo'] != "" && $_POST['testo'] != "" && $_POST['categoriathread'] != "") {
                 $result['titolo'] = filter_var($_POST['titolo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['testo'] = filter_var($_POST['testo'], FILTER_SANITIZE_SPECIAL_CHARS);
-                $result['categoriaID'] = filter_var($_POST['categoriathread'], FILTER_SANITIZE_SPECIAL_CHARS);
                 if($_FILES['allegati']['name'] != "") {
                     $numeroAllegati = count($_FILES['allegati']['name']);
                     for ($i = 0; $i < $numeroAllegati; $i++) {
