@@ -17,7 +17,20 @@ class CGestioneHome
         $session = new USession();
         $utente = unserialize($session->getValue('user'));
 
-        $view->setMessaggiErroreConferma(VHome::NULLA);
+
+        /*
+         * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
+         * con l'eventuale messaggio di conferma o errore.
+         */
+        if (func_num_args() == 1) {
+            if (func_get_arg(0) == "conferma") {
+                $view->setMessaggiErroreConferma(VHome::SUCCESS);
+            } else if (func_get_arg(0) == "errore") {
+                $view->setMessaggiErroreConferma(VHome::ERROR);
+            } else {
+                $view->setMessaggiErroreConferma(VHome::NULLA);
+            }
+        }
 
 
         /*
@@ -59,8 +72,6 @@ class CGestioneHome
             $view->showHome();
 
         }
-
-        header('Location: /UniChat/home/');
 
     }
 }
