@@ -87,6 +87,7 @@ class EThread
      * @param ECategoria $categoriaThread Categoria di appartenenza del thread da creare
      * @param EValutazione $valutazione Valutazione associata al thread da creare
      * @param array|null $risposte Risposte associate al thread da creare, possono non essere presenti
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati
      */
     public function __construct(?int $id, string $titolo, string $testo, ?string $data, ?array $allegati, EUser $autoreThread,
                                 ECategoria $categoriaThread, EValutazione $valutazione, ?array $risposte)
@@ -104,7 +105,17 @@ class EThread
             $this->data = date(self::FORMATO_DATA);
         }
         if(isset($allegati)){
+
+            $validazione = Validazione::getInstance();
+            foreach ($allegati as $allegato) {
+                try {
+                    $validazione->validaAllegato($allegato['tipo'], $allegato['dimensione']);
+                } catch (ValidationException $e) {
+                    throw new ValidationException($e->getMessage(), $e->getCode());
+                }
+            }
             $this->allegati = $allegati;
+
         } else {
             $this->allegati = array();
         }
@@ -237,9 +248,20 @@ class EThread
     /**
      * Imposta gli allegati del thread.
      * @param array $allegati Allegati thread da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati
      */
     public function setAllegati(array $allegati): void
     {
+
+        $validazione = Validazione::getInstance();
+        foreach ($allegati as $allegato) {
+            try {
+                $validazione->validaAllegato($allegato['tipo'], $allegato['dimensione']);
+            } catch (ValidationException $e) {
+                throw new ValidationException($e->getMessage(), $e->getCode());
+            }
+        }
+
         $this->allegati = $allegati;
     }
 
