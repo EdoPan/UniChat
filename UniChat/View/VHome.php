@@ -8,6 +8,21 @@ require_once "VSmarty.php";
 class VHome
 {
 
+    /**
+     * Costante on success per setMessaggiErroreConferma.
+     */
+    const SUCCESS = "L'operazione è andata a buon fine!";
+
+    /**
+     * Costante on error per setMessaggiErroreConferma.
+     */
+    const ERROR = "OPS.. sembra si sia verificato un errore.";
+
+    /**
+     * Costante per non visualizzare l'alert.
+     */
+    const NULLA = "";
+
     private Smarty $smarty;
 
     public function __construct() {

@@ -23,8 +23,13 @@
 
 </head>
 
-<body id="page-top" onload="loadChat(); presentaAlert()">
+<body id="page-top" onload="loadChat();
 
+        {if $messaggio neq ""}
+            presentaAlert()
+        {/if}
+
+        ">
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">
 

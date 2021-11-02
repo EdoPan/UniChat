@@ -18,6 +18,11 @@ class VThread
      */
     const ERROR = "OPS.. sembra si sia verificato un errore.";
 
+    /**
+     * Costante per non visualizzare l'alert.
+     */
+    const NULLA = "";
+
     private Smarty $smarty;
 
     public function __construct() {
