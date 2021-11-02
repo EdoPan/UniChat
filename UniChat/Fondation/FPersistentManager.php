@@ -272,10 +272,10 @@ class FPersistentManager
      * Permette di aggiornare la categoria memorizzata nella base dati, assegnando il moderatore che la gestisce.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
      * @param ECategoria $categoria Categoria a cui si deve assegnare il moderatore
-     * @param EUser $user Moderatore da assegnare alla categoria scelta
+     * @param EModeratore $user Moderatore da assegnare alla categoria scelta
      * @return bool Esito dell'operazione
      */
-    public function updateModeratoreCategoria(ECategoria $categoria, EUser $user): bool
+    public function updateModeratoreCategoria(ECategoria $categoria, EModeratore $user): bool
     {
         $fCategoria = FCategoria::getInstance();
         return $fCategoria->update($categoria, $user);

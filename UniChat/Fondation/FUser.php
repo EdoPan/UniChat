@@ -312,6 +312,11 @@ class FUser
     public function update(EUser $user): bool
     {
         $userID = $user->getId();
+
+        if ($userID == 1) {
+            return false;
+        }
+
         $password = $user->getPassword();
         $fotoProfilo = $user->getFotoProfilo();
         $corsoStudio = $user->getCorsoStudio();
@@ -596,6 +601,11 @@ class FUser
      * @return bool Esito dell'operazione
      */
     public function delete(int $userID): bool{
+
+        if ($userID == 1 || $userID == 2) {
+            return false;
+        }
+
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
