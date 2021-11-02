@@ -8,12 +8,13 @@ class CGestioneThreads
 
 
     /**
+     * @throws ValidationException
      * Metodo responsabile della creazione di un thread. Recupera i valori passati dall'utente nelle form e salva
      * il nuovo thread nel DB. Se l'operazione va a buon fine verremo reindirizzati sulla pagina del thread
      * appena creato e visualizzeremo un alert di successo altrimenti verremo reindirizzati sulla pagina di errore
      * dedicata (500 Internal Server Error) e visualizzeremo un alert di errore.
      */
-    public function creaThread(): void {
+    public function creaThread(int $categoriaID): void {
 
         $session = new USession();
         $user = unserialize($session->getValue('user'));
@@ -23,31 +24,49 @@ class CGestioneThreads
         $view = new VForm();
         $view2 = new VError();
 
-        $titolo = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['titolo'];
-        $testo = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['testo'];
-        $categoriaID = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['categoriaID'];
-        $allegati = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['allegati'];
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-        $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
-        $valutazione = new EValutazione(null, null, null, null);
+            $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA,FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+            $view->setCategoriaCreazioneThread($categoria);
+            $view->showForm(VForm::FORM_CREAZIONE_THREAD);
 
-        $thread = new EThread(null, $titolo, $testo,null ,$allegati, $user, $categoria, $valutazione, null);
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
+            $titolo = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['titolo'];
+            $testo = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['testo'];
+            $allegati = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['allegati'];
+            $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+            $valutazione = new EValutazione(null, null, null, null);
 
-            //DEVE CORREGGERE IL METODO NINO -> POI PASSI COME PARAMETRO "conferma"
-            header("Location: /UniChat/categoria/$categoriaID/conferma");
+            try {
+
+                $thread = new EThread(null, $titolo, $testo, null, $allegati, $user, $categoria, $valutazione, null);
+
+                if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
+
+                    header("Location: /UniChat/categoria/$categoriaID/conferma");
+
+
+                } else {
+
+                    $view2->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                    $view2->showError();
+                    header('Location: /UniChat/error/');
+
+                }
+
+            } catch (ValidationException $e) {
+
+                $view->setErroreValidazione($e->getCode(), $e->getMessage());
+
+            }
 
 
         } else {
 
-
-            $view2->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-            $view2->showError();
-            header('Location: /UniChat/error/');
+            header('HTTP/1.1 404 Not Found');
 
         }
-
 
     }
 
@@ -64,7 +83,6 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
 
         $view = new VForm();
-        $view1 = new VThread();
 
         $testo = $view->getValori(VForm::FORM_INVIO_RISPOSTA)['testo'];
         $threadID = $view->getValori(VForm::FORM_INVIO_RISPOSTA)['threadID'];
@@ -89,6 +107,7 @@ class CGestioneThreads
     /**
      * @param int $valore
      * @param int $threadID
+     * @throws ValidationException
      * Metodo responsabile della valutazione di un thread. In particolare il metodo prenderà come parametro il valore
      * (Positivo -> 1, Negativo-> 2) e l'id del thread che si sta andando a valutare, poi si verificherà se l'utente
      * ha già espresso un giudizio sul thread in passato di modo da aggiornarlo, altrimenti si procederà a valutarlo
@@ -126,6 +145,7 @@ class CGestioneThreads
 
     /**
      * @param int $threadID
+     * @throws ValidationException
      * Metodo responsabile della visualizzazione di uno specifico thread in base al suo id. Il metodo imposterà tutte
      * le componenti visualizzate nella schermata verificando in oltre se l'utente è abilitato alla visualizzazione di
      * determinati elementi, come ad esempio i cestini di eliminazione (thread/risposta) o la form per l'invio
@@ -167,11 +187,11 @@ class CGestioneThreads
              */
             if (func_num_args() == 2) {
                 if (func_get_arg(1) == "conferma") {
-                    $view->setMessaggiErroreConferma(VHome::SUCCESS);
+                    $view->setMessaggiErroreConferma(VThread::SUCCESS);
                 } else if (func_get_arg(1) == "errore") {
-                    $view->setMessaggiErroreConferma(VHome::ERROR);
+                    $view->setMessaggiErroreConferma(VThread::ERROR);
                 } else {
-                    $view->setMessaggiErroreConferma(VHome::NULLA);
+                    $view->setMessaggiErroreConferma(VThread::NULLA);
                 }
             }
 
@@ -190,8 +210,6 @@ class CGestioneThreads
 
 
     /**
-     * @param int $categoriaID
-     * @return EThread
      * Metodo responsabile del recupero del thread più discusso in base alla categoria.
      */
     public function threadsPiuDiscussi(int $numeroThreads): ?array {
@@ -206,8 +224,6 @@ class CGestioneThreads
     }
 
     /**
-     * @param int $categoriaID
-     * @return EThread
      * Metodo responsabile del recupero del thread maggiormente valutato in base alla categoria.
      */
     public function threadsValutazionePiuAlta(int $numeroThreads): ?array {
@@ -223,6 +239,7 @@ class CGestioneThreads
 
     /**
      * @param int $threadID
+     * @throws ValidationException
      * Metodo responsabile dell'eliminazione di un thread specifico mediante l'id di quest'ultimo. Verrà verificato
      * se l'utente loggato è un Admin o il Moderatore della categoria dove è stato pubblicato il thread, in tal caso
      * verrà eliminato il thread dal DB e se l'operazione è andata a buon fine visualizzeremo un messaggio di successo.
@@ -234,7 +251,6 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-        $view = new VCategoria();
 
         $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
         $categoriaID = $thread->getCategoriaThread()->getID();
@@ -244,7 +260,6 @@ class CGestioneThreads
 
             if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
-                //DEVE CORREGGERE IL METODO NINO
                 header("Location: /UniChat/categoria/$categoriaID/conferma");
 
 
@@ -265,7 +280,6 @@ class CGestioneThreads
 
                 if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
-                    //DEVE CORREGGERE IL METODO NINO
                     header("Location: /UniChat/threads/$categoriaID/conferma");
 
                 } else {
@@ -284,6 +298,7 @@ class CGestioneThreads
     /**
      * @param int $rispostaID
      * @param int $threadID
+     * @throws ValidationException
      * Metodo responsabile dell'eliminazione di una risposta specifica mediante l'id di quest'ultima e l'id del thread.
      * Verrà verificato se l'utente loggato è un Admin o il Moderatore della categoria del thread dove è stato pubblicata
      * la risposta, in tal caso verrà eliminata la risposta dal DB e se l'operazione è andata a buon fine visualizzeremo
@@ -295,8 +310,6 @@ class CGestioneThreads
         $user = unserialize($session->getValue('user'));
 
         $pm = FPersistentManager::getInstance();
-
-        $view = new VThread();
 
 
         if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true){
@@ -338,6 +351,7 @@ class CGestioneThreads
     /**
      * @param int $categoriaID
      * @param int $numeroPagina
+     * @throws ValidationException
      * @return array|null
      * Metodo responsabile del recupero di un array di 6 thread (valore prescelto per la paginazione) in base alla pagina
      * selezionata dall'utente in una determinata categoria.
@@ -396,19 +410,17 @@ class CGestioneThreads
 
             $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $testoRicerca, $categoriaRicerca, $rigaDiPartenza, 6);
             $view1->setCategoriaRicerca($categoriaRicerca);
-            $view1->setActivePage($numeroPagina);
-            $view1->setThreads($threads);
+
 
         } else {
 
             $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $testoRicerca, null, $rigaDiPartenza, 6);
             $view1->setCategoriaRicerca(null);
-            $view1->setActivePage($numeroPagina);
-            $view1->setThreads($threads);
 
         }
 
-
+        $view1->setThreads($threads);
+        $view1->setActivePage($numeroPagina);
         $view1->showRicerca();
 
     }
