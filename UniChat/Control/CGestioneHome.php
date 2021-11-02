@@ -17,6 +17,8 @@ class CGestioneHome
         $session = new USession();
         $utente = unserialize($session->getValue('user'));
 
+        $view->setMessaggiErroreConferma(VHome::NULLA);
+
 
         /*
          * Condizione per utente Guest.
@@ -57,6 +59,8 @@ class CGestioneHome
             $view->showHome();
 
         }
+
+        header('Location: /UniChat/home/');
 
     }
 }

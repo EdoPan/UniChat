@@ -21,7 +21,7 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
 
         $view = new VForm();
-        $view1 = new VThread();
+        $view1 = new VCategoria();
         $view2 = new VError();
 
         $titolo = $view->getValori(VForm::FORM_CREAZIONE_THREAD)['titolo'];
@@ -36,28 +36,17 @@ class CGestioneThreads
 
         if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
 
-            $view1->setMessaggiErroreConferma(VThread::SUCCESS);
-
-            $view1->setURLNavigazione($thread);
-            $view1->setThread($thread);
-
-            if(isset($user)) {
-                $view1->setFormRisposta(true);
-                $view1->setBottoniValutazione(true, null);
-            }
-
-            if(isset($user) && $pm->isA(FPersistentManager::ENTITY_MODERATORE or FPersistentManager::ENTITY_ADMIN, $user->getID()) == true) {
-                $view1->setBottoniElimina(true);
-            }
-
-            $view1->showThread();
+            //DEVE CORREGGERE IL METODO NINO -> POI PASSI COME PARAMETRO "VA TUTTO BENE"
+            $view1->setMessaggioConfermaEliminazioneThread();
+            header("Location: /UniChat/categoria/$categoriaID/");
 
 
         } else {
 
-            $view1->setMessaggiErroreConferma(VThread::ERROR);
+
             $view2->setValoriErrore(VError::CODE_500, VError::TYPE_500);
             $view2->showError();
+            header('Location: /UniChat/error/');
 
         }
 
@@ -88,10 +77,14 @@ class CGestioneThreads
         if ($pm->storeRispostaThread($risposta, $threadID) == true) {
 
             $view1->setMessaggiErroreConferma(VThread::SUCCESS);
+            header("Location: /UniChat/threads/$threadID/conferma");
+
 
         } else {
 
             $view1->setMessaggiErroreConferma(VThread::ERROR);
+            header("Location: /UniChat/threads/$threadID/errore");
+
 
         }
 
@@ -114,6 +107,8 @@ class CGestioneThreads
 
 
         $view = new VThread();
+
+        $view->setMessaggiErroreConferma(VThread::NULLA);
 
         $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
 
@@ -169,12 +164,17 @@ class CGestioneThreads
                 $view->setBottoniElimina(true);
             }
 
+
+            $view->setMessaggiErroreConferma(VThread::NULLA);
             $view->showThread();
+            header("Location: /UniChat/threads/$threadID/");
 
         } else {
 
             $view1->setValoriErrore(VError::CODE_404, VError::TYPE_404);
             $view1->showError();
+            header("Location: /UniChat/error/");
+
 
         }
 
@@ -228,13 +228,22 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
 
         $view = new VCategoria();
+        $view1 = new VThread();
 
 
         if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true){
 
             if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
+                //DEVE CORREGGERE IL METODO NINO
                 $view->setMessaggioConfermaEliminazioneThread();
+                header("Location: /UniChat/threads/$threadID/conferma");
+
+
+            } else {
+
+                $view1->setMessaggiErroreConferma(VThread::ERROR);
+                header("Location: /UniChat/threads/$threadID/errore");
 
             }
 
@@ -249,7 +258,14 @@ class CGestioneThreads
 
                 if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
+                    //DEVE CORREGGERE IL METODO NINO
                     $view->setMessaggioConfermaEliminazioneThread();
+                    header("Location: /UniChat/threads/$threadID/conferma");
+
+                } else {
+
+                    $view1->setMessaggiErroreConferma(VThread::ERROR);
+                    header("Location: /UniChat/threads/$threadID/errore");
 
                 }
 
@@ -283,10 +299,12 @@ class CGestioneThreads
             if ($pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID) == true) {
 
                 $view->setMessaggiErroreConferma(VThread::SUCCESS);
+                header("Location: /UniChat/threads/$threadID/conferma");
 
             } else {
 
                 $view->setMessaggiErroreConferma(VThread::ERROR);
+                header("Location: /UniChat/threads/$threadID/errore");
 
             }
 
@@ -302,10 +320,12 @@ class CGestioneThreads
                 if ($pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID) == true) {
 
                     $view->setMessaggiErroreConferma(VThread::SUCCESS);
+                    header("Location: /UniChat/threads/$threadID/conferma");
 
                 } else {
 
                     $view->setMessaggiErroreConferma(VThread::ERROR);
+                    header("Location: /UniChat/threads/$threadID/errore");
 
                 }
 
@@ -387,6 +407,9 @@ class CGestioneThreads
 
         }
 
+        //NINO DEVE CORREGGERE IL CODICE -> POI IMPOSTI IL PARAMETRO A NULL
+        $view1->setMessaggioConfermaEliminazioneThread();
+
         $view1->showRicerca();
 
     }
@@ -396,13 +419,23 @@ class CGestioneThreads
      * @return array|null
      * Metodo responsabile del recupero di un allegato in base al suo id.
      */
-    public function scaricaAllegato(int $allegatoID): ?array {
+    public function scaricaAllegato(int $allegatoID): void {
 
         $pm = FPersistentManager::getInstance();
 
         $allegato = $pm->loadAllegato($allegatoID);
 
-        return $allegato;
+        $tipo = $allegato['tipo'];
+        $nome = $allegato['nome'];
+        $dimensione = $allegato['dimensione'];
+        $file = base64_decode($allegato['file']);
+
+        header('Content-Transfer-Encoding: binary');
+        header("Content-Type: $tipo");
+        header("Content-disposition: attachment; filename = $nome");
+        header("Content-length: $dimensione");
+
+        echo $file;
 
     }
 
