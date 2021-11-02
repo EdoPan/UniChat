@@ -194,14 +194,14 @@ class CGestioneThreads
      * @return EThread
      * Metodo responsabile del recupero del thread più discusso in base alla categoria.
      */
-    public function threadPiuDiscusso(int $categoriaID): EThread {
+    public function threadsPiuDiscussi(int $numeroThreads): ?array {
 
 
         $pm = FPersistentManager::getInstance();
 
-        $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_PIU_DISCUSSO_CATEGORIA, $categoriaID);
+        $threads = $pm->loadThreadsPiuDiscussi($numeroThreads);
 
-        return $thread;
+        return $threads;
 
     }
 
@@ -210,14 +210,14 @@ class CGestioneThreads
      * @return EThread
      * Metodo responsabile del recupero del thread maggiormente valutato in base alla categoria.
      */
-    public function threadValutazionePiuAlta(int $categoriaID): EThread {
+    public function threadsValutazionePiuAlta(int $numeroThreads): ?array {
 
 
         $pm = FPersistentManager::getInstance();
 
-        $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA, $categoriaID);
+        $threads = $pm->loadThreadsValutazionePiuAlta($numeroThreads);
 
-        return $thread;
+        return $threads;
 
     }
 
@@ -355,7 +355,7 @@ class CGestioneThreads
          */
         $rigaDiPartenza = 6*($numeroPagina - 1);
 
-        $threads = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, $rigaDiPartenza, 10);
+        $threads = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, $rigaDiPartenza, 6);
         return $threads;
 
     }

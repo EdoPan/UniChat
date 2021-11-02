@@ -102,7 +102,7 @@ class VError
      * @param string $tipoErrore
      * Metodo responsabile dell'assegnazione del codice e del tipo di errore.
      */
-    public function setValoriErrore(int $codiceErrore, string $tipoErrore) {
+    public function setValoriErrore(int $codiceErrore, string $tipoErrore): void {
 
         $this->smarty->assign('codiceErrore', $codiceErrore);
         $this->smarty->assign('tipoErrore', $tipoErrore);
@@ -112,7 +112,7 @@ class VError
     /**
      * Metodo responsabile della visualizzazione di pagina-errore.tpl
      */
-    public function showError() {
+    public function showError(): void {
 
         $this->smarty->display('pagina-errore.tpl');
     }

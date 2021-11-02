@@ -34,7 +34,7 @@ class VThread
      * Metodo responsabile dell'assegnazione delle variabili richiamate in thread.tpl per la gestione della barra
      * contenente l'URL del thread specifico /Home/NomeCategoriaThread/NomeThreadSpecifico.
      */
-    public function setURLNavigazione(EThread $thread) {
+    public function setURLNavigazione(EThread $thread): void {
         $this->smarty->assign('categoriaThread', $thread->getCategoriaThread());
         $this->smarty->assign('idCategoria', $thread->getCategoriaThread()->getId());
         $this->smarty->assign('titoloT', $thread->getTitolo());
@@ -45,7 +45,7 @@ class VThread
      * Metodo responsabile dell'assegnazione delle variabili richiamate in thread.tpl relative a tutti i valori
      * assunti dal thread specifico che abbiamo deciso di visualizzare (Titolo, Testo, Allegati ecc.).
      */
-    public function setThread(EThread $thread) {
+    public function setThread(EThread $thread): void {
         $this->smarty->assign('titoloThread', $thread->getTitolo());
         $this->smarty->assign('testoThread', $thread->getTesto());
         $this->smarty->assign('dataThread', $thread->getData());
@@ -64,7 +64,7 @@ class VThread
      * Metodo responsabile dell'assegnazione della variabile richiamata in thread.tpl responsabile della verifica
      * di avvenuta autenticazione per la visualizzazione della form d'invio risposta al thread.
      */
-    public function setFormRisposta(bool $loggato) {
+    public function setFormRisposta(bool $loggato): void {
         $this->smarty->assign('loggato1', $loggato);
     }
 
@@ -74,7 +74,7 @@ class VThread
      * di avvenuta autenticazione da parte di un Moderatore o Admin per la visualizzazione del bottone di eliminazione
      * del Thread e dei bottoni per l'eliminazione delle risposte.
      */
-    public function setBottoniElimina(bool $moderatoreAdminLoggato) {
+    public function setBottoniElimina(bool $moderatoreAdminLoggato): void {
         $this->smarty->assign('moderatoreAdmin', $moderatoreAdminLoggato);
     }
 
@@ -85,7 +85,7 @@ class VThread
      * della valutazione del Thread. In particolare serviranno per gestire la colorazione dei pulsanti in base
      * a se il Thread è stato valutato in precedenza oppure lo si sta valutando al momento (script JS dedicato nel .tpl).
      */
-    public function setBottoniValutazione(bool $loggato, ?int $giudizio) {
+    public function setBottoniValutazione(bool $loggato, ?int $giudizio): void {
         $this->smarty->assign('loggato2', $loggato);
         $this->smarty->assign('giudizio', $giudizio);
     }
@@ -96,14 +96,14 @@ class VThread
      * con un messaggio di conferma o errore (questo metodo viene richiamato solo per l'eliminazione del thread
      * o di una risposta).
      */
-    public function setMessaggiErroreConferma(string $tipologiaMessaggio) {
+    public function setMessaggiErroreConferma(string $tipologiaMessaggio): void {
         $this->smarty->assign('messaggio', $tipologiaMessaggio);
     }
 
     /**
      * Metodo responsabile della visualizzazione di thread.tpl
      */
-    public function showThread() {
+    public function showThread(): void {
         $this->smarty->display('thread.tpl');
     }
 }

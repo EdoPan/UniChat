@@ -17,6 +17,8 @@ class CGestioneHome
         $session = new USession();
         $utente = unserialize($session->getValue('user'));
 
+        $cthread = new CGestioneThreads();
+
 
         /*
          * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
@@ -40,7 +42,7 @@ class CGestioneHome
          */
         if(!isset($utente)){
 
-            $view->setBoxThread($pm->loadThreadsPiuDiscussi(6), $pm->loadThreadsValutazionePiuAlta(6));
+            $view->setBoxThread($cthread->threadsPiuDiscussi(6), $cthread->threadsValutazionePiuAlta(6));
             $view->setInterazioneChat(false);
             $view->showHome();
 
@@ -53,7 +55,7 @@ class CGestioneHome
          */
         elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE or FPersistentManager::ENTITY_ADMIN, $utente->getID()) == false) {
 
-            $view->setBoxThread($pm->loadThreadsPiuDiscussi(6), $pm->loadThreadsValutazionePiuAlta(6));
+            $view->setBoxThread($cthread->threadsPiuDiscussi(6), $cthread->threadsValutazionePiuAlta(6));
             $view->setInterazioneChat(true);
             $view->showHome();
 
@@ -66,7 +68,7 @@ class CGestioneHome
          */
         elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE or FPersistentManager::ENTITY_ADMIN, $utente->getID()) == true) {
 
-            $view->setBoxThread($pm->loadThreadsPiuDiscussi(6), $pm->loadThreadsValutazionePiuAlta(6));
+            $view->setBoxThread($cthread->threadsPiuDiscussi(6), $cthread->threadsValutazionePiuAlta(6));
             $view->setInterazioneChat(true);
             $view->setBottoneElimina(true);
             $view->showHome();

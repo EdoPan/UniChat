@@ -19,7 +19,7 @@ class VProfile
      * Metodo responsabile dell'assegnazione delle variabili richiamate in profile.tpl relative a tutti i valori
      * assunti dall'utente specifico che abbiamo deciso di visualizzare.
      */
-    public function setUtente(EUser $user) {
+    public function setUtente(EUser $user): void {
         $this->smarty->assign('nomeUtente', $user->getNome());
         $this->smarty->assign('cognomeUtente', $user->getCognome());
         $this->smarty->assign('emailUtente', $user->getEmail());
@@ -31,7 +31,7 @@ class VProfile
     /**
      * Metodo responsabile della visualizzazione di profile.tpl
      */
-    public function showUtente() {
+    public function showUtente(): void {
         $this->smarty->display('profile.tpl');
     }
 }
