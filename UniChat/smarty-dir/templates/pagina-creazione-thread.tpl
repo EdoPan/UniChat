@@ -314,7 +314,16 @@
                             </div>
 
                             <!-- Bottone allegati -->
-
+                            <!-- Messaggio errore validazione allegato -->
+                            {if $erroreAllegato == true}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong>{$messaggioErroreAllegato}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {/if}
+                            <!-- Fine messaggio errore -->
                             <label for="allegati">Aggiungi allegati al thread (puoi selezionarne più di 1):</label>
 
                             <input type="file" id="allegati" name="allegati[]" class="btn btn-secondary btn-user btn-block mt-3 " multiple>
