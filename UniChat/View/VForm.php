@@ -94,10 +94,12 @@ class VForm
         $this->smarty->assign('erroreEmail', false);
         $this->smarty->assign('errorePassword', false);
         $this->smarty->assign('erroreImmagine', false);
+        $this->smarty->assign('erroreAllegato', false);
         $this->smarty->assign('messaggioErroreDenominazione', '');
         $this->smarty->assign('messaggioErroreEmail', '');
         $this->smarty->assign('messaggioErrorePassword', '');
         $this->smarty->assign('messaggioErroreImmagine', '');
+        $this->smarty->assign('messaggioErroreAllegato', '');
 
         if (isset($codiceErrore) && isset($messaggioErrore)) {
             if($codiceErrore == ValidationException::ERROR_STRING_CODE) {
@@ -112,6 +114,9 @@ class VForm
             } else if ($codiceErrore == ValidationException::ERROR_IMAGE_MIME_TYPE_CODE || $codiceErrore == ValidationException::ERROR_IMAGE_SIZE_CODE) {
                 $this->smarty->assign('erroreImmagine', true);
                 $this->smarty->assign('messaggioImmagine', $messaggioErrore);
+            } else if ($codiceErrore == ValidationException::ERROR_ATTACHMENT_MIME_TYPE_CODE || $codiceErrore == ValidationException::ERROR_ATTACHMENT_SIZE_CODE) {
+                $this->smarty->assign('erroreAllegato', true);
+                $this->smarty->assign('messaggioErroreAllegato', $messaggioErrore);
             }
         }
     }
@@ -218,14 +223,24 @@ class VForm
                 $result['titolo'] = filter_var($_POST['titolo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 $result['testo'] = filter_var($_POST['testo'], FILTER_SANITIZE_SPECIAL_CHARS);
                 if($_FILES['allegati']['name'] != "") {
+                    $allegati = array();
                     $numeroAllegati = count($_FILES['allegati']['name']);
                     for ($i = 0; $i < $numeroAllegati; $i++) {
+                        $allegato = array();
+                        $allegato['nome'] = $_FILES['allegati']['name'][$i];
+                        $allegato['dimensione'] = $_FILES['allegati']['size'][$i];
+                        $allegato['tipo'] = $_FILES['allegati']['type'][$i];
+                        $allegato['file'] = base64_encode(file_get_contents($_FILES['allegati']['tmp_name'][$i]));
+                        $allegati[] = $allegato;
+                        /*
                         $indice = 'allegato' . $i;
                         $result[$indice."Nome"] = $_FILES['allegati']['name'][$i];
                         $result[$indice."Dimensione"] = $_FILES['allegati']['size'][$i];
                         $result[$indice."Tipo"] = $_FILES['allegati']['type'][$i];
                         $result[$indice."File"] = base64_encode(file_get_contents($_FILES['allegati']['tmp_name'][$i]));
+                        */
                     }
+                    $result['allegati'] = $allegati;
                 }
             } else {
                 $result = null;

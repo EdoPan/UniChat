@@ -5,6 +5,43 @@ class CGestioneAdmin
 {
 
     /**
+     * Gestisce tutte le operazioni necessarie alla rimozione di una utente, notare che tale operazione non comporta
+     * l'eliminazione dei contenuti da esso prodotti: vengono assegnati ad un utente di default.
+     * Se l'utente era un moderatore, allora viene anche rimosso dalla categoria che gestiva.
+     * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
+     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
+     * si viene rimandati alla pagina di login.
+     * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
+     * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
+     * Se l'utente è un admin allora si procede ad eliminare l'utente dalla base dati.
+     * Se l'operazione va a buon fine allora si viene rimandati alla pagina del pannello di controllo e viene
+     * visualizzato un messaggio di operazione riuscita, altrimenti si viene comunque rimandati alla pagina del pannello
+     * di controllo, ma viene visualizzato un messaggio di operazione fallita.
+     * @param int $userID Identificativo dell'utente da eliminare.
+     */
+    public function rimuoviUser(int $userID): void
+    {
+        $session = new USession();
+        $user = $session->getValue('user');
+        if (isset($user)) {
+            $user = unserialize($user);
+            $pm = FPersistentManager::getInstance();
+            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                $result = $pm->delete(FPersistentManager::ENTITY_USER, $userID);
+                if ($result) {
+                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                } else {
+                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                }
+            } else {
+                header('Location: /UniChat/');
+            }
+        } else {
+            header('Location: /UniChat/utenti/login');
+        }
+    }
+
+    /**
      * Metodo incaricato di eseguire tutte le operazioni necessarie per rendere un utente un moderatore di una categoria.
      * L'esecuzione di tale metodo può essere richiesta solo dall'Admin, quindi prima di procedere viene recuperato
      * l'utente associato alla sessione.
@@ -110,6 +147,114 @@ class CGestioneAdmin
             }
         } else {
             header('Location: /UniChat/utenti/Login');
+        }
+    }
+
+    /**
+     * Gestisce tutte le operazioni necessarie alla creazione di una nuova categoria.
+     * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
+     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
+     * si viene rimandati alla pagina di login.
+     * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
+     * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
+     * Se l'utente è un admin allora si verifica che la richiesta del client sia una HTTP GET, in tal caso viene
+     * chiesto alla view responsabile, di mostrare la form. Se la richiesta del client, invece, è una HTTP POST allora
+     * si richiede alla view responsabile, di recuperare i dati immessi dall'utente nella form.
+     * In questo ultimo caso, se i valori sono stati correttamente immessi dall'utente, si procede a creare una nuova
+     * categoria, altrimenti si ottiene un errore HTTP 400.
+     * Se durante la creazione della categoria viene sollevata una eccezione dovuto ad un esito negativo della validazione
+     * dei dati, questa viene gestita mostrando nuovamente la pagina contenente la form e un messaggio di errore.
+     * Se la categoria viene creata correttamente allora viene memorizzata nella base dati e se l'operazione va a buon
+     * fine allora si viene rimandati alla pagina del pannello di controllo e viene visualizzato un messaggio di operazione
+     * riuscita, altrimenti si viene comunque rimandati alla pagina del pannello di controllo, ma viene visualizzato
+     * un messaggio di operazione fallita.
+     */
+    public function aggiungiCategoria(): void
+    {
+        $session = new USession();
+        $user = $session->getValue('user');
+        if (isset($user)) {
+            $user = unserialize($user);
+            $pm = FPersistentManager::getInstance();
+            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                    $view = new VForm();
+                    $view->setErroreValidazione(null, null);
+                    $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $view = new VForm();
+                    $valori = $view->getValori(VForm::FORM_CREAZIONE_CATEGORIA);
+                    if (isset($valori)) {
+                        $nome = $valori['nome'];
+                        $descrizione = $valori['descrizione'];
+                        if (array_key_exists('nomeIcona', $valori)) {
+                            $icona = array();
+                            $icona['nome'] = $valori['nomeIcona'];
+                            $icona['dimensione'] = $valori['dimensioneIcona'];
+                            $icona['tipo'] = $valori['tipoIcona'];
+                            $icona['immagine'] = $valori['immagineIcona'];
+                        } else {
+                            $icona = null;
+                        }
+                        try {
+                            $categoria = new ECategoria(null, $nome, $icona, $descrizione);
+                            $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
+                            if ($result) {
+                                header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                            } else {
+                                header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                            }
+                        } catch (ValidationException $e) {
+                            $view->setErroreValidazione($e->getCode(), $e->getMessage());
+                            $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                        }
+                    } else {
+                        $vError = new VError();
+                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                        $vError->showError();
+                    }
+                }
+            } else {
+                header('Location: /UniChat/');
+            }
+        } else {
+            header('Location: /UniChat/utenti/login');
+        }
+    }
+
+    /**
+     * Gestisce tutte le operazioni necessarie alla rimozione di una categoria, notare che tale operazione non comporta
+     * l'eliminazione dei thread in essa presenti; i threads vengono spostati nella categoria mista.
+     * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
+     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
+     * si viene rimandati alla pagina di login.
+     * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
+     * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
+     * Se l'utente è un admin allora si procede ad eliminare la categoria dalla base dati.
+     * Se l'operazione va a buon fine allora si viene rimandati alla pagina del pannello di controllo e viene
+     * visualizzato un messaggio di operazione riuscita, altrimenti si viene comunque rimandati alla pagina del pannello
+     * di controllo, ma viene visualizzato un messaggio di operazione fallita.
+     * @param int $categoriaID Identificativo della categoria da eliminare.
+     */
+    public function rimuoviCategoria(int $categoriaID): void
+    {
+        $session = new USession();
+        $user = $session->getValue('user');
+        if (isset($user)) {
+            $user = unserialize($user);
+            $pm = FPersistentManager::getInstance();
+            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                $result = $pm->delete(FPersistentManager::ENTITY_CATEGORIA, $categoriaID);
+                if ($result) {
+                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                } else {
+                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                }
+            } else {
+                header('Location: /UniChat/');
+            }
+        } else {
+            header('Location: /UniChat/utenti/login');
         }
     }
 

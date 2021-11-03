@@ -399,7 +399,7 @@
                     <div class="collapse" id="categorie" style="">
                         <div class="card-body">
 
-                            <a href="/UniChat/categorie/aggiungiCategoria" class="btn btn-danger ml-3 mr-3 float-lg-right" role="button" aria-pressed="true">
+                            <a href="/UniChat/admin/aggiungiCategoria" class="btn btn-danger ml-3 mr-3 float-lg-right" role="button" aria-pressed="true">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                 Inserisci nuova Categoria
                             </a>
@@ -596,7 +596,7 @@
                                 '{section name=indice loop=$elencoCategorie} <a class="dropdown-item" href="/UniChat/admin/aggiungiModeratore/'+result[posizione].id+'/{$elencoCategorie[indice]->getId()}">{$elencoCategorie[indice]->getNome()}</a>{/section}' +
                                 '</div>' +
                                 '<!-- Bottone elimina utente -->' +
-                                '<a href="/UniChat/utenti/rimuoviUser/'+result[posizione].id+'" class="btn btn-danger btn-icon-split" style="margin-left:5px">' +
+                                '<a href="/UniChat/admin/rimuoviUser/'+result[posizione].id+'" class="btn btn-danger btn-icon-split" style="margin-left:5px">' +
                                 '<span class="icon text-white-50">' +
                                 '<i class="fas fa-trash"></i>' +
                                 '</span>' +
@@ -656,7 +656,7 @@
                                 '<div class="card border-left-secondary shadow mb-2 card-header-actions">' +
                                 '<div class="card-header text-danger font-weight-bold">'+result[posizione].nome+'<div>' +
                                 '<button class="btn btn-danger btn-icon mr-2">' +
-                                '<a href="/UniChat/categorie/rimuoviCategoria/'+result[posizione].id+'"tyle="color: #fff">' +
+                                '<a href="/UniChat/admin/rimuoviCategoria/'+result[posizione].id+'"tyle="color: #fff">' +
                                 '<i class="fa fa-trash" aria-hidden="true"></i>' +
                                 '</a>' +
                                 '</button>' +
