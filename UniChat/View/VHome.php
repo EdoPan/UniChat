@@ -55,7 +55,7 @@ class VHome
      * di avvenuta autenticazione da parte di un Moderatore o Admin per la visualizzazione del bottone di eliminazione
      * dei messaggi inviati sulla chat.
      */
-    public function setBottoneElimina(?bool $utenteModeratoreAdminLoggato): void {
+    public function setBottoneElimina(bool $utenteModeratoreAdminLoggato): void {
         $this->smarty->assign('moderatoreAdmin', $utenteModeratoreAdminLoggato);
     }
 
