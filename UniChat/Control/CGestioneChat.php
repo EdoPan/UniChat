@@ -74,9 +74,9 @@ class CGestioneChat
 
                 $result = $pm->delete(FPersistentManager::ENTITY_MESSAGGIO, $messID);
                 if ($result) {
-                    header('Location: /UniChat/');
+                    header('Location: /UniChat/home/visualizzaHome/conferma');
                 } else {
-                    header('Location: /UniChat/');
+                    header('Location: /UniChat/home/visualizzaHome/errore');
                 }
 
             } else {

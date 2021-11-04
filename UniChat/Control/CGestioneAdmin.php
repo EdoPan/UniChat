@@ -178,9 +178,15 @@ class CGestioneAdmin
             $pm = FPersistentManager::getInstance();
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
                 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-                    $view = new VForm();
-                    $view->setErroreValidazione(null, null);
-                    $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                    $vForm = new VForm();
+                    $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
+                    if ($impostaElementiPagina) {
+                        $vForm->setErroreValidazione(null, null);
+                        $vForm->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                    } else {
+                        $vError = new VError();
+                        $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                    }
                 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $view = new VForm();
                     $valori = $view->getValori(VForm::FORM_CREAZIONE_CATEGORIA);
@@ -197,7 +203,8 @@ class CGestioneAdmin
                             $icona = null;
                         }
                         try {
-                            $categoria = new ECategoria(null, $nome, $icona, $descrizione);
+                            $categoria = $user->creaCategoria(null, $nome, $icona, $descrizione);
+                            //$categoria = new ECategoria(null, $nome, $icona, $descrizione);
                             $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
                             if ($result) {
                                 header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
@@ -205,13 +212,22 @@ class CGestioneAdmin
                                 header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                             }
                         } catch (ValidationException $e) {
-                            $view->setErroreValidazione($e->getCode(), $e->getMessage());
-                            $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                            $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
+                            if ($impostaElementiPagina) {
+                                $view->setErroreValidazione($e->getCode(), $e->getMessage());
+                                $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+                            } else {
+                                $vError = new VError();
+                                $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                            }
                         }
                     } else {
+                        /*
                         $vError = new VError();
                         $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
                         $vError->showError();
+                        */
+                        header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                     }
                 }
             } else {
