@@ -20,7 +20,7 @@ class VCategoria
     /**
 	 * Imposta l'id della Categoria per le url della paginazione.
 	 */
-	public function setIDThread(ECategoria $categoria): void {
+	public function setIDCategoria(ECategoria $categoria): void {
 
 		$this->smarty->assign('idCategoria', $categoria->getID());
 
@@ -104,16 +104,20 @@ class VCategoria
 
 
 	/**
-	 * Imposta la visualizzazione di un messaggio di conferma di avvenuta rimozione di un thread, visibile solo al 
-	 * moderatore che ha eliminato un thread appartenente a quella determinata categoria. A seguito dell'eliminazione
-	 * si viene reindirizzati sulla pagina della relativa categoria.
+	 * Imposta la visualizzazione di un messaggio di conferma a seguito di una richiesta
+     * di rimozione di un thread da parte del moderatore appartenente a quella determinata categoria.
+     * A richiesta inviata, si viene reindirizzati sulla pagina della relativa categoria.
 	 */
-	public function setMessaggioConfermaEliminazioneThread(): void {
+	public function setMessaggioConfermaEliminazioneThread(?bool $esitoOperazione): void {
 
+        $this->smarty->assign('conferma', false);
 
-		$this->smarty->assign('eliminato', true);
-		$this->smarty->assign('confermaEliminazione', "Thread eliminato con successo.");
-
+        if (isset($esitoOperazione)) {
+            if ($esitoOperazione) {
+                $this->smarty->assign('conferma', true);
+                $this->smarty->assign('messaggioConferma', "L'operazione è stata eseguita con successo.");
+            }
+        }
 
 	}
 
@@ -161,7 +165,6 @@ class VCategoria
 
 
 	 }
-
 
 
 }

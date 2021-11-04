@@ -278,14 +278,16 @@
                 <div class="container-fluid">
 
                     <!-- Messaggio conferma eliminazione -->
-                    {if $eliminato}
+
+                    {if $conferma == true}
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {$confermaEliminazione}
+                            {$messaggioConferma}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                     {/if}
+
                     <!-- Fine messaggio conferma eliminazione -->
 
 
@@ -315,7 +317,7 @@
 
                                         <!-- Pulsante creazione thread -->
 
-                                        <a href="UniChat\Threads\creaThread" class="btn btn-secondary btn-icon-split mt-3 mr-3 float-lg-right">
+                                        <a href="UniChat\Threads\creaThread\{$catNuovoThread->getID()}" class="btn btn-secondary btn-icon-split mt-3 mr-3 float-lg-right">
                                             <span class="icon text-white-50">
                                         <i class="fas fa-arrow-right"></i>
                                     </span>

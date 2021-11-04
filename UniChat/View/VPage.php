@@ -59,7 +59,6 @@ class VPage {
 
         $this->smarty->assign('categorie', $eCategorie);
 
-    
 
     }
 
