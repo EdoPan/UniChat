@@ -396,23 +396,24 @@
 
                         {if $loggato1 eq true}
                         <!-- Form invio messaggio -->
-                        <div class="row mb-2 py-3">
+                        <form action="/UniChat/threads/rispondiThread" class="row mb-2 py-3">
 
                             <!-- Inserimento testo -->
                             <div class="col-sm-9 mb-3 mb-sm-0">
-                                <input type="text" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
+                                <input type="text" name="testo" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
+                                <input type="text" name="threadID" hidden value="{$idThread}">
                             </div>
 
                             <!-- Pulsante invio -->
                             <div class="col-sm-3">
-                                <a href="/UniChat/threads/rispondiThread" class="btn btn-success btn-icon-split">
+                                <button type="submit" class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-arrow-right"></i>
                                     </span>
                                     <span class="text">Invia</span>
-                                </a>
+                                </button>
                             </div>
-                        </div>
+                        </form>
                         <!-- Fine form invio messaggio -->
                         {/if}
 

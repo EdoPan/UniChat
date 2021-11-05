@@ -67,6 +67,17 @@ class VForm
 
     }
 
+    public function setCampiObbligatoriMancanti(bool $campiMancanti): void
+    {
+        if ($campiMancanti) {
+            $this->smarty->assign('erroreDatiObbligatori', true);
+            $this->smarty->assign('messggioErroreDatiObbligatori', "Dati obbligatori mancanti.");
+        } else {
+            $this->smarty->assign('erroreDatiObbligatori', false);
+            $this->smarty->assign('messggioErroreDatiObbligatori', "");
+        }
+    }
+
     /**
      * Imposta nella form di creazione di un nuovo thread, le informazioni relative a quale categoria deve essere
      * inserito quel thread.

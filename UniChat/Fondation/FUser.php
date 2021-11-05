@@ -95,7 +95,7 @@ class FUser
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            $stmt = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
+            //$stmt = $pdo->query("SELECT * FROM fotoprofilo WHERE fotoID = " . $fotoID);
             $sql = ("SELECT * FROM fotoprofilo WHERE fotoID = :fotoID");
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(
@@ -844,7 +844,12 @@ class FUser
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($rows as $row) {
-                $moderatori[] = $this->loadModeratore((int)$row["userID"]);
+                $moderatore = $this->loadModeratore((int)$row["userID"]);
+                if (isset($moderatore)) {
+                    $moderatori[] = $moderatore;
+                } else {
+                    return null;
+                }
             }
             return $moderatori;
         } catch (PDOException $e) {

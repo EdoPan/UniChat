@@ -623,7 +623,7 @@
                             posizione++;
                         }
                     } else { // se il server fornisce un array vuoto allora viene visualizzato un messaggio che indica la mancanza di utenti iscritti.
-                        document.getElementById("utente-0").innerHTML = "Al momento non vi sono utenti iscritti";
+                        document.getElementById("utente-0").innerHTML = "Al momento non vi sono utenti.";
                     }
 
                 },
@@ -688,13 +688,13 @@
                             posizione++;
                         }
                     } else { // se il server fornisce un array vuoto allora viene visualizzato un messaggio che indica la mancanza di utenti iscritti.
-                        document.getElementById("categoria-0").innerHTML = "Al momento non vi sono categorie";
+                        document.getElementById("categoria-0").innerHTML = "Al momento non vi sono categorie.";
                     }
 
                 },
                 error: function (result) {                          //  se la richiesta ajax non va a buon fine allora...
                     document.getElementById("categoria-0").innerHTML = '<div class="alert alert-danger" role="alert">' +
-                        '<b>ERRORE! </b>Caricamento degli utenti fallito.' +
+                        '<b>ERRORE! </b>Caricamento delle categorie fallito.' +
                         '</div>';
                 }
             });
@@ -840,6 +840,38 @@
         }
     }
 </script>
+
+<script type="text/javascript">
+
+    /**
+     * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
+     * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
+     * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
+     * categoria precedentemente scelta, viene deselezionata.
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
+     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * risulterà evidenziato.
+     * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
+     * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
+     * passare la richiesta la server.
+     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     */
+    function seleziona(elemento) {
+        var categoriaID = parseInt(elemento.id);
+        var elementiSelezione = document.getElementsByClassName('filtro-categorie dropdown-item active');
+        if (elementiSelezione.length === 1){
+            elementiSelezione[0].className = 'filtro-categorie dropdown-item'
+        }
+
+        document.getElementById('dropdownMenuButton').innerHTML = elemento.innerHTML;
+        document.getElementById('ricerca').innerHTML = elemento.innerHTML;
+        document.getElementById('categoria-id').value = categoriaID;
+        document.getElementById('categoria-id2').value = categoriaID;
+        elemento.className = 'filtro-categorie dropdown-item active';
+
+    }
+</script>
+
 </body>
 
 </html>

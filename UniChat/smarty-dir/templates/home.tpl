@@ -313,11 +313,13 @@
 
                                 </div>
                                 <!-- Fine contenitore scrollable -->
+                                <form>
+                                    <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
+                                </form>
 
-                                <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
                                 {if $loggato eq true}
                                 <!-- Form invio messaggio -->
-                                <div class="row mb-2">
+                                <form class="row mb-2">
 
                                     <!-- Inserimento testo -->
                                     <div class="col-sm-9 mb-3 mb-sm-0">
@@ -333,7 +335,7 @@
                                             <span class="text">Invia</span>
                                         </button>
                                     </div>
-                                </div>
+                                </form>
                                 <!-- Fine form invio messaggio -->
                                 {/if}
 

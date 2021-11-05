@@ -182,6 +182,7 @@ class CGestioneAdmin
                     $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
                     if ($impostaElementiPagina) {
                         $vForm->setErroreValidazione(null, null);
+                        $vForm->setCampiObbligatoriMancanti(false);
                         $vForm->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
                     } else {
                         $vError = new VError();
@@ -215,6 +216,7 @@ class CGestioneAdmin
                             $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
                             if ($impostaElementiPagina) {
                                 $view->setErroreValidazione($e->getCode(), $e->getMessage());
+                                $view->setCampiObbligatoriMancanti(false);
                                 $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
                             } else {
                                 $vError = new VError();
@@ -227,7 +229,12 @@ class CGestioneAdmin
                         $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
                         $vError->showError();
                         */
-                        header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                        $view->setCampiObbligatoriMancanti(false);
+                        $view->setErroreValidazione(null, null);
+                        $view->setCampiObbligatoriMancanti(true);
+                        $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
+
+                        //header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                     }
                 }
             } else {
@@ -401,29 +408,38 @@ class CGestioneAdmin
                 }
 
                 if (isset($numeroUtenti) && isset($numeroCategorie) && isset($categorie)) {
-                    $vPage = new VPage();
-                    $vPage->setMenuUtente($user, true);
-                    $vPage->setMenuLeft($categorie);
-                    $vPage->setBottoneFiltra($categorie);
 
-                    $vAmministrazione = new VAmministrazione();
-                    $vAmministrazione->setPaginazioneUtenti($numeroUtenti);
-                    $vAmministrazione->setPaginazioneCategorie($numeroCategorie);
-                    $vAmministrazione->setBottoneAggiungiRimuoviModeratore($categorie);
+                    if (CImpostaPagina::impostaModuli($user)) {
+                        /*
+                        $vPage = new VPage();
+                        $vPage->setMenuUtente($user, true);
+                        $vPage->setMenuLeft($categorie);
+                        $vPage->setBottoneFiltra($categorie);
+                        */
 
-                    if (func_num_args() == 1) {
-                        if (func_get_arg(0) == "conferma") {
-                            $vAmministrazione->setMessaggiConfermaErroreOperazioni(true);
-                        } else if (func_get_arg(0) == "errore") {
-                            $vAmministrazione->setMessaggiConfermaErroreOperazioni(false);
+                        $vAmministrazione = new VAmministrazione();
+                        $vAmministrazione->setPaginazioneUtenti($numeroUtenti);
+                        $vAmministrazione->setPaginazioneCategorie($numeroCategorie);
+                        $vAmministrazione->setBottoneAggiungiRimuoviModeratore($categorie);
+
+                        if (func_num_args() == 1) {
+                            if (func_get_arg(0) == "conferma") {
+                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(true);
+                            } else if (func_get_arg(0) == "errore") {
+                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(false);
+                            } else {
+                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
+                            }
                         } else {
                             $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
                         }
-                    } else {
-                        $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
-                    }
 
-                    $vAmministrazione->showPannelloDiControllo();
+                        $vAmministrazione->showPannelloDiControllo();
+                    } else {
+                        $view = new VError();
+                        $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
+                        $view->showError();
+                    }
                 } else {
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );

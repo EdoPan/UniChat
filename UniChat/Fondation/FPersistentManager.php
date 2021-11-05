@@ -224,6 +224,8 @@ class FPersistentManager
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @param string $email Email dell'utente da recuperare
      * @return EUser|null Istanza recuperata
+     * @throws ValidationException Eccezione lanciate nel momento in cui si verifica un errore nella validazione dei
+     * dati al momento della creazione dell'istanza di EUser, EModeratore o EAdmin.
      */
     public function loadUserByEmail(string $email): ?EUser
     {
@@ -525,6 +527,7 @@ class FPersistentManager
      * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
      * @param int $numeroRighe Valore che indica quanti record recuperare
      * @return array|null Elenco contenente il risultato della ricerca
+     * @throws ValidationException Eccezione lanciata nel momento in cui ci sono problemi con la validazione dei dati.
      */
     public function ricercaThreads(int $searchType, string $titolo, ?array $ids, int $rigaPartenza, int $numeroRighe): ?array
     {

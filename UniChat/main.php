@@ -158,9 +158,10 @@ $user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_
 $pm->updateModeratoreCategoria($categoria, $user);
 */
 
-$c = FCategoria::getInstance();
-$u = FUser::getInstance();
-$fV = FValutazione::getInstance();
-$m = $u->loadAdmin(63);
-$v = $fV->load(2);
-print($v->espressoGiudizio($m));
+
+$pm = FPersistentManager::getInstance();
+$admin = $pm->load(FPersistentManager::ENTITY_ADMIN, FPersistentManager::PROPERTY_DEFAULT, 63);
+$user = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, 3);
+$categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, 9);
+$moderatore = $admin->creaModeratore($user, $categoria);
+$pm->updateModeratoreCategoria($categoria, $moderatore);

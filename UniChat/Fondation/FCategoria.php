@@ -174,14 +174,14 @@ class FCategoria
             $pdo = $dbConnection->connect();
 
             /*
-             * L'assegnazione di un moderatore ad una cateogoria nella base dati richiede che vengano compiute una serie di
+             * L'assegnazione di un moderatore ad una categoria nella base dati richiede che vengano compiute una serie di
              * operazioni da eseguire una di seguito all'altra, ma che devono apportare modifiche alla base dati
              * solo se sono avvenute tutte con successo.
              * Tali operazioni sono:
              * - verifica che la categoria designata non sia già moderata, in tal caso viene reso user il suo moderatore
              * (metodo updateToUser di FUser);
              * - l'oggetto di tipo user assume il ruolo di moderatore (metodo updateToModeratore di FUser);
-             * - rimuover il moderatore passato dalla categoria a cui era precedentemente assegnato;
+             * - rimuovere il moderatore passato, dalla categoria a cui era precedentemente assegnato;
              * - il moderatore viene assegnato ad una categoria (quella passata come parametro).
              * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
              * operazioni sopra descritte vengono eseguite in mutua esclusione.

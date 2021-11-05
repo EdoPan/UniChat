@@ -451,6 +451,37 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<script type="text/javascript">
+
+    /**
+     * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
+     * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
+     * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
+     * categoria precedentemente scelta, viene deselezionata.
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
+     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * risulterà evidenziato.
+     * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
+     * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
+     * passare la richiesta la server.
+     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     */
+    function seleziona(elemento) {
+        var categoriaID = parseInt(elemento.id);
+        var elementiSelezione = document.getElementsByClassName('filtro-categorie dropdown-item active');
+        if (elementiSelezione.length === 1){
+            elementiSelezione[0].className = 'filtro-categorie dropdown-item'
+        }
+
+        document.getElementById('dropdownMenuButton').innerHTML = elemento.innerHTML;
+        document.getElementById('ricerca').innerHTML = elemento.innerHTML;
+        document.getElementById('categoria-id').value = categoriaID;
+        document.getElementById('categoria-id2').value = categoriaID;
+        elemento.className = 'filtro-categorie dropdown-item active';
+
+    }
+</script>
+
 </body>
 
 </html>
