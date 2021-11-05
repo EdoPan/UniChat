@@ -11,14 +11,13 @@ class CGestioneThreads
      * @throws ValidationException
      * Metodo responsabile della creazione di un thread. Recupera i valori passati dall'utente nelle form e salva
      * il nuovo thread nel DB. Se l'operazione va a buon fine verremo reindirizzati sulla pagina del thread
-     * appena creato e visualizzeremo un alert di successo altrimenti verremo reindirizzati sulla pagina di errore
-     * dedicata (500 Internal Server Error) e visualizzeremo un alert di errore.
+     * appena creato e visualizzeremo un alert di successo altrimenti verremo reindirizzati sulla pagina
+     * della categoria dove si intendeva pubblicare il thread e visualizzeremo un messaggio d'errore.
      */
     public function creaThread(int $categoriaID): void {
 
         $pm = FPersistentManager::getInstance();
-        $view = new VForm();
-        $view2 = new VError();
+        $vForm = new VForm();
 
         $session = new USession();
 
@@ -31,17 +30,27 @@ class CGestioneThreads
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA,FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
-                $view->setCategoriaCreazioneThread($categoria);
-                $view->showForm(VForm::FORM_CREAZIONE_THREAD);
+
+                $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
+                if ($impostaElementiPagina) {
+
+                    $vForm->setCategoriaCreazioneThread($categoria);
+                    $vForm->showForm(VForm::FORM_CREAZIONE_THREAD);
+
+                } else {
+
+                    $vError = new VError();
+                    $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+
+                }
+
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-                //Potrebbero essere ritornati dei valori null
 
                 $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
                 $valutazione = new EValutazione(null, null, null, null);
 
-                $valori = $view->getValori(VForm::FORM_CREAZIONE_THREAD);
+                $valori = $vForm->getValori(VForm::FORM_CREAZIONE_THREAD);
 
                 if (isset($valori)) {
 
@@ -49,13 +58,17 @@ class CGestioneThreads
                     $testo = $valori['testo'];
 
                     if (array_key_exists('allegati', $valori)) {
+
                         $allegati = array();
                         $allegati['tipo'] = $valori['tipo'];
                         $allegati['nome'] = $valori['nome'];
                         $allegati['dimensione'] = $valori['dimensione'];
                         $allegati['file'] = $valori['file'];
+
                     } else {
+
                         $allegati = null;
+
                     }
 
                     try {
@@ -66,41 +79,40 @@ class CGestioneThreads
 
                             header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/conferma");
 
-
                         } else {
 
-                            //Errore visualizzato nel caso non si riuscisse a salvare il thread
-                            $view2->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                            $view2->showError();
+                            header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/errore");
 
                         }
 
                     } catch (ValidationException $e) {
 
-                        $view->setErroreValidazione($e->getCode(), $e->getMessage());
-                        $view->showForm(VForm::FORM_CREAZIONE_THREAD);
+                        $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
+
+                        if ($impostaElementiPagina) {
+
+                            $vForm->setErroreValidazione($e->getCode(), $e->getMessage());
+                            $vForm->showForm(VForm::FORM_CREAZIONE_THREAD);
+
+                        } else {
+
+                            $vError = new VError();
+                            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+
+                        }
 
                     }
 
 
                 } else {
 
-                    //Errore visualizzato nel caso di POST con campi vuoti
-                    $view2->setValoriErrore(VError::CODE_400, VError::TYPE_400);
-                    $view2->showError();
+                    header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/errore");
 
                 }
-
-
-            } else {
-
-                $view2->setValoriErrore(VError::CODE_404,VError::TYPE_404);
-                $view2->showError();
 
             }
 
         }
-
 
     }
 
@@ -112,7 +124,7 @@ class CGestioneThreads
     public function rispondiThread(): void {
 
         $pm = FPersistentManager::getInstance();
-        $view = new VForm();
+        $vForm = new VForm();
 
         $session = new USession();
         $utente = $session->getValue('user');
@@ -121,7 +133,7 @@ class CGestioneThreads
             $user = unserialize($utente);
 
 
-            $valori = $view->getValori(VForm::FORM_INVIO_RISPOSTA);
+            $valori = $vForm->getValori(VForm::FORM_INVIO_RISPOSTA);
 
             if (isset($valori)) {
                 $testo = $valori['testo'];
@@ -144,9 +156,9 @@ class CGestioneThreads
 
             } else {
 
-                $view1 = new VThread();
-                $view1->setMessaggiErroreConferma(VThread::ERROR);
-                $view1->showThread();
+                $vThread = new VThread();
+                $vThread->setMessaggiErroreConferma(VThread::ERROR);
+                $vThread->showThread();
 
             }
 
@@ -167,23 +179,25 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-        $view = new VThread();
+        $vThread = new VThread();
 
         $session = new USession();
         $utente = $session->getValue('user');
 
-        $view->setMessaggiErroreConferma(VThread::NULLA);
+        $vThread->setMessaggiErroreConferma(VThread::NULLA);
 
-        $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
 
         if (isset($utente)) {
 
             $user = unserialize($utente);
 
-            $view->setBottoniValutazione(true, $valore);
+            $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+            if (isset($valutazione)) {
+                $vThread->setBottoniValutazione(true, $valore);
+                $valutazione->valuta($user, $valore);
+                $pm->updateValutazione($valutazione, $valore, $user);
 
-            $valutazione->valuta($user, $valore);
-            $pm->update(FPersistentManager::ENTITY_VALUTAZIONE, $valutazione);
+            }
 
         }
 
@@ -203,8 +217,7 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
         $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
 
-        $view = new VThread();
-        $view1 = new VError();
+        $vThread = new VThread();
 
         $session = new USession();
         $utente = $session->getValue('user');
@@ -217,15 +230,27 @@ class CGestioneThreads
 
                 $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_DEFAULT, $thread->getID());
 
-                $view->setURLNavigazione($thread);
-                $view->setThread($thread);
-                $view->setFormRisposta(true);
-                $view->setBottoniElimina(false);
-                $view->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
+                $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
+                if ($impostaElementiPagina) {
 
-                if($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true or $pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true) {
-                    $view->setBottoniElimina(true);
+                    $vThread->setURLNavigazione($thread);
+                    $vThread->setThread($thread);
+                    $vThread->setFormRisposta(true);
+                    $vThread->setBottoniElimina(false);
+                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
+
+                    if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true or $pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true) {
+                        $vThread->setBottoniElimina(true);
+                    }
+
+                } else {
+
+                    $vError = new VError();
+                    $vError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
+                    $vError->showError();
+
                 }
+
 
                 /*
                  * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
@@ -233,21 +258,16 @@ class CGestioneThreads
                  */
                 if (func_num_args() == 2) {
                     if (func_get_arg(1) == "conferma") {
-                        $view->setMessaggiErroreConferma(VThread::SUCCESS);
+                        $vThread->setMessaggiErroreConferma(VThread::SUCCESS);
                     } else if (func_get_arg(1) == "errore") {
-                        $view->setMessaggiErroreConferma(VThread::ERROR);
+                        $vThread->setMessaggiErroreConferma(VThread::ERROR);
                     } else {
-                        $view->setMessaggiErroreConferma(VThread::NULLA);
+                        $vThread->setMessaggiErroreConferma(VThread::NULLA);
                     }
                 }
 
-                $view->showThread();
 
-
-            } else {
-
-                $view1->setValoriErrore(VError::CODE_404, VError::TYPE_404);
-                $view1->showError();
+                $vThread->showThread();
 
             }
 
@@ -446,9 +466,9 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-        $view = new VForm();
+        $vForm = new VForm();
 
-        $view1 = new VCategoria();
+        $vCategoria = new VCategoria();
 
         /*
          * La riga di partenza deve essere calcolata in base alla pagina selezionata.
@@ -459,29 +479,29 @@ class CGestioneThreads
          */
         $rigaDiPartenza = 6*($numeroPagina - 1);
 
-        $testoRicerca = $view->getValori(VForm::FORM_RICERCA)['testoricerca'];
+        $testoRicerca = $vForm->getValori(VForm::FORM_RICERCA)['testoricerca'];
         if (isset($testoRicerca)) {
 
-            $categoriaRicerca = $view->getValori(VForm::FORM_RICERCA)['testoricerca'];
+            $categoriaRicerca = $vForm->getValori(VForm::FORM_RICERCA)['testoricerca'];
             $categoriaRicerca = array($categoriaRicerca);
 
 
             if (isset($categoriaRicerca) && $categoriaRicerca != 0) {
 
                 $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $testoRicerca, $categoriaRicerca, $rigaDiPartenza, 6);
-                $view1->setCategoriaRicerca($categoriaRicerca);
+                $vCategoria->setCategoriaRicerca($categoriaRicerca);
 
 
             } else {
 
                 $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $testoRicerca, null, $rigaDiPartenza, 6);
-                $view1->setCategoriaRicerca(null);
+                $vCategoria->setCategoriaRicerca(null);
 
             }
 
-            $view1->setThreads($threads);
-            $view1->setActivePage($numeroPagina);
-            $view1->showRicerca();
+            $vCategoria->setThreads($threads);
+            $vCategoria->setActivePage($numeroPagina);
+            $vCategoria->showRicerca();
 
         }
 
