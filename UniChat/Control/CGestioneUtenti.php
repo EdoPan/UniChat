@@ -414,10 +414,22 @@ class CGestioneUtenti
                 $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
             }
 
+            $cImpostaPagina=new CImpostaPagina();
+
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                $vProfilo->setUtente($user);
-                $vProfilo->showPersonalProfile();
+
+                if($cImpostaPagina->impostaModuli($user)) {
+
+                    $vProfilo->setUtente($user);
+                    $vProfilo->showPersonalProfile();
+
+                }else {
+                    $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                    $viewError->showError();
+                }
+
+
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -483,14 +495,35 @@ class CGestioneUtenti
                             $vProfilo->setMessaggioConfermaErroreModificaProfilo(false);
                         }
 
-                        $vProfilo->showPersonalProfile();
+                        $impostaModuli=$cImpostaPagina->impostaModuli($user);
+
+                        if($impostaModuli) {
+
+                            $vProfilo->setUtente($user);
+                            $vProfilo->showPersonalProfile();
+
+                        }else {
+                            $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                            $viewError->showError();
+                        }
 
 
                     } catch (ValidationException $e) {
 
-                        $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
-                        $vProfilo->showPersonalProfile();
 
+
+                        $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
+
+                        $impostaModuli=$cImpostaPagina->impostaModuli($user);
+
+                        if($impostaModuli) {
+                            $vProfilo->setUtente($user);
+                            $vProfilo->showPersonalProfile();
+
+                        }else {
+                            $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                            $viewError->showError();
+                        }
                     }
 
 
@@ -515,9 +548,17 @@ class CGestioneUtenti
 
     public function showProfile($idUtente): void {
 
+        $session = new USession();
+        $user = $session->getValue('user');
+
+        if (isset($user)) {
+            $user=unserialize($user);
+        }
+
 
         $pm = FPersistentManager::getInstance();
         $viewError=new VError();
+        $cImpostaPagina=new CImpostaPagina();
 
         try {
             $utente=$pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $idUtente);
@@ -529,8 +570,19 @@ class CGestioneUtenti
 
         $vProfilo=new VProfile();
         if (isset($utente)) {
-            $vProfilo->setUtente($utente);
-            $vProfilo->showUtente();
+
+            $impostaModuli=$cImpostaPagina->impostaModuli($user);
+
+            if($impostaModuli) {
+
+                $vProfilo->setUtente($utente);
+                $vProfilo->showUtente();
+
+            }else {
+                $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                $viewError->showError();
+            }
+
         }
         else {
             $viewError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
