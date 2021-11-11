@@ -47,7 +47,7 @@ class CGestioneUtenti
         $mail->Username = "critellinino@gmail.com";
 
         //Imposto la password dell'account Gmail
-        $mail->Password = "nino070499";
+        $mail->Password = "";
 
         //Oggetto dell'email
         $mail->Subject = "Recupero Password UniChat";
