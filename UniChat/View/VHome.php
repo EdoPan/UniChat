@@ -23,10 +23,17 @@ class VHome
      */
     const NULLA = "";
 
+    const NUMERO_MAX_THREADS = 3;
+
     private Smarty $smarty;
 
     public function __construct() {
         $this->smarty = VSmarty::start();
+    }
+
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
     }
 
     /**
@@ -35,18 +42,21 @@ class VHome
      * di avvenuta autenticazione per la visualizzazione della form d'invio messaggio nella chat.
      */
     public function  setInterazioneChat(bool $loggato): void {
-        $this->smarty->assign('loggato', $loggato);
+        $this->smarty->assign('log', $loggato);
     }
 
     /**
      * @param array $threadsConPiuRisposte
-     * @param array $treadsConValutazionePiuAlta
+     * @param array $threadsConValutazionePiuAlta
      * Metodo responsabile dell'assegnazione delle variabili richiamate in home.tpl responsabile
      * della visualizzazione dei Threads più discussi e maggiormente valutati nel loro box specifico.
      */
-    public function setBoxThread(array $threadsConPiuRisposte, array $treadsConValutazionePiuAlta): void {
+    public function setBoxThread(array $threadsConPiuRisposte, array $threadsConValutazionePiuAlta): void {
         $this->smarty->assign('threadsConPiuRisposte', $threadsConPiuRisposte);
-        $this->smarty->assign('treadsConValutazionePiuAlta', $treadsConValutazionePiuAlta);
+        $this->smarty->assign('threadsConValutazionePiuAlta', $threadsConValutazionePiuAlta);
+        $this->smarty->assign('numeroThreadsValutazionePiuAlta', count($threadsConValutazionePiuAlta)-1);
+        $this->smarty->assign('numeroThreadsPiuDiscussi', count($threadsConPiuRisposte)-1);
+
     }
 
     /**
@@ -65,8 +75,27 @@ class VHome
      * con un messaggio di conferma o errore (questo metodo viene richiamato solo per l'eliminazione
      * dei messaggi della chat).
      */
-    public function setMessaggiErroreConferma(string $tipologiaMessaggio): void {
-        $this->smarty->assign('messaggio', $tipologiaMessaggio);
+    public function setMessaggio(bool $messaggio, string $tipologiaMessaggio, ?string $colore): void {
+        $this->smarty->assign('testo', $tipologiaMessaggio);
+        $this->smarty->assign('messaggio', $messaggio);
+        $this->smarty->assign('colore', $colore);    }
+
+    public function getTestoNuovoMessaggio(): ?string
+    {
+        if ($_POST['text'] != "") {
+            return $_POST['text'];
+        } else {
+            return null;
+        }
+    }
+
+    public function getIdUltimoMessaggio(): ?int
+    {
+        if ($_POST['idMessage'] != "") {
+            return (int)$_POST['idMessage'];
+        } else {
+            return null;
+        }
     }
 
     /**

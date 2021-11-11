@@ -12,11 +12,11 @@ class Validazione
 
     private array $IMAGE_MIME_TYPE = array("image/jpeg", "image/png", "image/gif");
 
-    private int $IMAGE_MAX_SIZE = 1048576;      //1 MB espresso in Byte
+    private int $IMAGE_MAX_SIZE = 2097152;      //2 MB espresso in Byte
 
     private array $ATTACHMENT_MIME_TYPE = array("image/jpeg", "image/png", "application/pdf");
 
-    private int $ATTACHMENT_MAX_SIZE = 2097152;     //2 MB espresso in Byte
+    private int $ATTACHMENT_MAX_SIZE = 5242880;     //5 MB espresso in Byte
 
     private static $instance = null;
 

@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body class="bg-gradient-primary">
@@ -45,10 +47,41 @@
                                 <!-- Form di recupero account -->
                                 <form class="user" method="post" action="/UniChat/utenti/recuperoPassword">
 
+                                    {if $messaggio == true}
+                                        <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
+                                            {$testo}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                    {/if}
+
+                                    <!-- Messaggio credenziali errate -->
+                                    {if $credenzialiErrate == true}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Errore. </strong>{$messaggioCredenzialiErrate}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {/if}
+
                                     <!-- Messaggio errore validazione email -->
                                     {if $erroreEmail == true}
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             <strong>Errore. </strong>{$messaggioErroreEmail}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {/if}
+                                    <!-- Fine messaggio errore -->
+
+                                    <!-- Messaggio errore campi obbligatori mancanti -->
+                                    {if $erroreDatiObbligatori == true}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Errore. </strong>{$messaggioErroreDatiObbligatori}
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -81,6 +114,11 @@
                                 <!-- Link pagina login -->
                                 <div class="text-center">
                                     <a class="small" href="/UniChat/utenti/login">Sei già un utente? Effettua il Login!</a>
+                                </div><br>
+
+                                <!-- Link torna alla home  -->
+                                <div class="text-center">
+                                    <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                                 </div>
 
                             </div>
@@ -102,6 +140,12 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+<script>
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 </body>
 

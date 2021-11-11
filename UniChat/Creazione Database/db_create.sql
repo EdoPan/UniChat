@@ -6,7 +6,7 @@ USE UniChat;
 
 CREATE TABLE fotoprofilo(
     fotoID int NOT NULL auto_increment,
-    nome varchar(20) NOT NULL,
+    nome varchar(40) NOT NULL,
     dimensione varchar(20) NOT NULL,
     tipo varchar(20) NOT NULL,
     immagine longblob NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE messaggi(
 
 CREATE TABLE icone(
     iconaID int NOT NULL auto_increment,
-    nome varchar(20) NOT NULL,
+    nome varchar(40) NOT NULL,
     dimensione varchar(20) NOT NULL,
     tipo varchar(20) NOT NULL,
     immagine longblob NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE threads(
 CREATE TABLE allegati(
     allegatoID int NOT NULL auto_increment,
     threadID int NOT NULL,
-    nome varchar(20) NOT NULL,
+    nome varchar(40) NOT NULL,
     dimensione varchar(20) NOT NULL,
     tipo varchar(20) NOT NULL,
     file longblob NOT NULL,

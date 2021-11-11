@@ -95,8 +95,7 @@ class CGestioneUtenti
 
         $pm = FPersistentManager::getInstance();
 
-        $viewForm = new VForm();
-        $viewError = new VError();
+        $vRegistrazione = new VRegistrazione();
 
 
         //se si è già loggati si viene reindirizzati verso il proprio profilo
@@ -109,12 +108,14 @@ class CGestioneUtenti
 
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                $viewForm->setErroreValidazione(null, null);
-                $viewForm->showForm(VForm::FORM_REGISTRAZIONE);
+                $vRegistrazione->setErroreValidazione(null, null);
+                $vRegistrazione->setOperazioneFallita(false);
+                $vRegistrazione->setCampiObbligatoriMancanti(false);
+                $vRegistrazione->showRegistrazione();
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                $valori = $viewForm->getValori(VForm::FORM_REGISTRAZIONE);
+                $valori = $vRegistrazione->getValori();
                 if (isset($valori)) {
                     $nome = $valori['nome'];
                     $cognome = $valori['cognome'];
@@ -131,6 +132,7 @@ class CGestioneUtenti
 
                     if (array_key_exists('nomeFotoProfilo', $valori)) {
                         $fotoProfilo = array();
+                        $fotoProfilo['id'] = 0;
                         $fotoProfilo['nome'] = $valori['nomeFotoProfilo'];
                         $fotoProfilo['dimensione'] = $valori['dimensioneFotoProfilo'];
                         $fotoProfilo['tipo'] = $valori['tipoFotoProfilo'];
@@ -149,19 +151,39 @@ class CGestioneUtenti
                         }
 
                         else {
-                            // rimandare su registrazione con Operazione non Riuscita
+
+                            /**
+                             * Se l'operazione non va a buon fine allora la form viene riproposta all'utente con un
+                             * messaggio di operazione fallita.
+                             */
+                            $vRegistrazione->setErroreValidazione(null, null);
+                            $vRegistrazione->setOperazioneFallita(true);
+                            $vRegistrazione->setCampiObbligatoriMancanti(false);
+                            $vRegistrazione->showRegistrazione();
                         }
 
                     } catch (ValidationException $e) {
 
-                        $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
-                        $viewForm->showForm(VForm::FORM_REGISTRAZIONE);
+                        $vRegistrazione->setErroreValidazione($e->getCode(), $e->getMessage());
+                        $vRegistrazione->setOperazioneFallita(false);
+                        $vRegistrazione->setCampiObbligatoriMancanti(false);
+                        $vRegistrazione->showRegistrazione();
 
                     }
 
                 } else {
-                    $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                    $viewError->showError();
+
+                    /**
+                     * Se l'utente non fornisce tutti i dati obbligatori, allora la form di registrazione viene riproposta
+                     * con un messaggio di errore.
+                     */
+                    $vRegistrazione->setErroreValidazione(null, null);
+                    $vRegistrazione->setOperazioneFallita(false);
+                    $vRegistrazione->setCampiObbligatoriMancanti(true);
+                    $vRegistrazione->showRegistrazione();
+
+                    //$viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                    //$viewError->showError();
                 }
 
             }
@@ -189,76 +211,98 @@ class CGestioneUtenti
 
         $pm = FPersistentManager::getInstance();
 
-        $viewForm = new VForm();
+        $vRecuperaPassword = new VRecuperaPassword();
         $viewError = new VError();
 
         if (! isset($user)) {
 
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                $viewForm->setErroreValidazione(null, null);
-                $viewForm->showForm(VForm::FORM_RECUPERO_PASSWORD);
+                $vRecuperaPassword->setMessaggio(false, VRecuperaPassword::NULLA, null);
+                $vRecuperaPassword->setCredenzialiErrate(false);
+                $vRecuperaPassword->setCampiObbligatoriMancanti(false);
+                $vRecuperaPassword->setErroreValidazione(null, null);
+                $vRecuperaPassword->showRecuperaPassword();
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                $valori = $viewForm->getValori(VForm::FORM_RECUPERO_PASSWORD);
+                $valori = $vRecuperaPassword->getValori();
                 if (isset($valori)) {
                     $email = $valori['email'];
-                }
 
-                else {
+                    try {
 
-                    //gestire in caso di campo vuoto
-                }
+                        if ($pm->existsUserByEmail($email) == true) {
 
-                try {
+                            $utente = $pm->loadUserByEmail($email);
 
-                    if ($pm->existsUserByEmail($email) == true) {
+                            if (isset($utente)) {
 
-                        $utente = $pm->loadUserByEmail($email);
+                                $nuovaPassword=$utente->generaPassword();
 
-                        if (isset($utente)) {
+                                if($pm->update(FPersistentManager::ENTITY_USER, $utente)) {
 
-                            $nuovaPassword=$utente->generaPassword();
+                                    $esito=self::invioEmail($email, $nuovaPassword);
 
-                            if($pm->update(FPersistentManager::ENTITY_USER, $utente)) {
+                                    if ($esito) {
 
-                                $esito=self::invioEmail($email, $nuovaPassword);
+                                        $vRecuperaPassword->setMessaggio(true, VRecuperaPassword::SUCCESS, 'success');
 
-                                if ($esito) {
+                                    } else {
 
-                                    header('/Unichat/utenti/login/');
+                                        $vRecuperaPassword->setMessaggio(true, VRecuperaPassword::ERROR, 'danger');
+                                    }
+
+                                    $vRecuperaPassword->setCredenzialiErrate(false);
+                                    $vRecuperaPassword->setCampiObbligatoriMancanti(false);
+                                    $vRecuperaPassword->setErroreValidazione(null, null);
+                                    $vRecuperaPassword->showRecuperaPassword();
+
 
                                 } else {
-
-                                    $viewForm->setErroreValidazione(null, null);
-                                    $viewForm->showForm(VForm::FORM_RECUPERO_PASSWORD);
+                                    $vRecuperaPassword->setErroreValidazione(null, null);
+                                    $vRecuperaPassword->setMessaggio(true,VRecuperaPassword::ERROR, 'danger');
+                                    $vRecuperaPassword->setCredenzialiErrate(false);
+                                    $vRecuperaPassword->setCampiObbligatoriMancanti(false);
+                                    $vRecuperaPassword->showRecuperaPassword();
                                 }
 
-
                             } else {
-                                $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                                $viewError->showError();
+                                $vRecuperaPassword->setErroreValidazione(null, null);
+                                $vRecuperaPassword->setMessaggio(true,VRecuperaPassword::ERROR, 'danger');
+                                $vRecuperaPassword->setCredenzialiErrate(false);
+                                $vRecuperaPassword->setCampiObbligatoriMancanti(false);
+                                $vRecuperaPassword->showRecuperaPassword();
                             }
 
                         } else {
-                            $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                            $viewError->showError();
+                            $vRecuperaPassword->setCredenzialiErrate(true);
+                            $vRecuperaPassword->setMessaggio(false,VRecuperaPassword::NULLA, null);
+                            $vRecuperaPassword->setCampiObbligatoriMancanti(false);
+                            $vRecuperaPassword->setErroreValidazione(null, null);
+                            $vRecuperaPassword->showRecuperaPassword();
                         }
 
-                    } else {
-                        $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                        $viewError->showError();
+
+                    } catch (ValidationException $e) {
+
+                        $vRecuperaPassword->setErroreValidazione($e->getCode(), $e->getMessage());
+                        $vRecuperaPassword->setMessaggio(false,VRecuperaPassword::NULLA, null);
+                        $vRecuperaPassword->setCredenzialiErrate(false);
+                        $vRecuperaPassword->setCampiObbligatoriMancanti(true);
+                        $vRecuperaPassword->showRecuperaPassword();
+
                     }
-
-
-                } catch (ValidationException $e) {
-
-                    $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
-                    $viewForm->showForm(VForm::FORM_RECUPERO_PASSWORD);
-
                 }
 
+                else {
+                    $vRecuperaPassword->setErroreValidazione(null, null);
+                    $vRecuperaPassword->setMessaggio(false, VRecuperaPassword::NULLA, null);
+                    $vRecuperaPassword->setCredenzialiErrate(false);
+                    $vRecuperaPassword->setCampiObbligatoriMancanti(true);
+                    $vRecuperaPassword->showRecuperaPassword();
+
+                }
             }
 
         } else {
@@ -284,7 +328,7 @@ class CGestioneUtenti
 
         $pm = FPersistentManager::getInstance();
 
-        $viewForm = new VForm();
+        $vLogin = new VLogin();
         $viewError = new VError();
 
 
@@ -294,54 +338,120 @@ class CGestioneUtenti
             header("Location: /UniChat/Utenti/editShowPersonalProfile");
         } else {
 
+            /**
+             * Se non si è loggati allora si può aver contattato questo metodo per visualizare la form da compilare
+             * o per voler elaborare i dati sottomessi alla form di login.
+             */
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                $viewForm->setErroreValidazione(null, null);
-                $viewForm->showForm(VForm::FORM_LOGIN);
+                /**
+                 * Visualizza la form di login.
+                 */
+                $vLogin->setErroreValidazione(null, null);
+                $vLogin->setCampiObbligatoriMancanti(false);
+                $vLogin->setCredenzialiErrate(false);
+                $vLogin->showLogin();
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                //verificare isset valori email e password
+                /**
+                 * Recupera i dati dalla form di login.
+                 */
+                $valori = $vLogin->getValori();
 
-                $email = $viewForm->getValori(VForm::FORM_LOGIN)['email'];
-                $password = $viewForm->getValori(VForm::FORM_LOGIN)['password'];
+                if (isset($valori)) {
 
-                try {
+                    /**
+                     * Se i campi obbligatori sono stati compilati dall'utente, allora si procede a valutarli.
+                     */
+                    $email = $vLogin->getValori()['email'];
+                    $password = $vLogin->getValori()['password'];
 
-                    if ($pm->existsUserByEmail($email) == true) {
+                    try {
+                        $utenteEsistente = $pm->existsUserByEmail($email);
+                        if (isset($utenteEsistente)) {
+                            if ($utenteEsistente == true) {
 
-                        $userLoggato = $pm->loadUserByEmail($email);
+                                $userLoggato = $pm->loadUserByEmail($email);
 
-                        if (isset($userLoggato)) {
+                                if (isset($userLoggato)) {
 
-                            //verifica password
-                            if($userLoggato->getPassword()==$password) {
+                                    //verifica password
+                                    if ($userLoggato->verificaPassword($password)) {
 
-                                //avvio sessione
+                                        //avvio sessione
 
-                                    $userLoggato = serialize($userLoggato);
-                                    $session = new USession();
-                                    $session->setValue('user', $userLoggato);
+                                        $userLoggato = serialize($userLoggato);
+                                        $session = new USession();
+                                        $session->setValue('user', $userLoggato);
 
-                                    header("Location: /UniChat/");
+                                        header("Location: /UniChat/");
+                                    } else {
+
+                                        /**
+                                         * L'utente ha inserito una password errata e quindi gli viene
+                                         * riproposta la form con un messaggio di errore di credenziali errate.
+                                         */
+                                        $vLogin->setErroreValidazione(null, null);
+                                        $vLogin->setCampiObbligatoriMancanti(false);
+                                        $vLogin->setCredenzialiErrate(true);
+                                        $vLogin->showLogin();
+                                    }
+
+                                } else {
+
+                                    /**
+                                     * Se si Se si è ottenuto un null allora vuol dire che il database è offline, anche
+                                     * se è possibile ottenere tale valore anche per una email sbagliata, arrivati a
+                                     * questo punto non può essere.
+                                     */
+                                    $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                                    $viewError->showError();
+                                }
+
+                            } else {
+
+                                /**
+                                 * L'utente ha fornito un email non presente nella base dati e quindi gli viene
+                                 * riproposta la form con un messaggio di errore di credenziali errate.
+                                 */
+                                $vLogin->setErroreValidazione(null, null);
+                                $vLogin->setCampiObbligatoriMancanti(false);
+                                $vLogin->setCredenzialiErrate(true);
+                                $vLogin->showLogin();
+
                             }
-
                         } else {
-                            //rimandare a login che segnala credenziali errate
+
+                            /**
+                             * Se si è ottenuto un null allora vuol dire che il databse è offline.
+                             */
+                            $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                            $viewError->showError();
                         }
 
-                    } else {
+                    } catch (ValidationException $e) {
 
-                        //rimandare a login che segnala credenziali errate [DA CAMBIARE]
-                        $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                        $viewError->showError();
+                        /**
+                         * L'utente he compilato i campi con dati non ammessi e quindi gli viene riproposta la form con
+                         * un messaggio di errore.
+                         */
+                        $vLogin->setErroreValidazione($e->getCode(), $e->getMessage());
+                        $vLogin->setCampiObbligatoriMancanti(false);
+                        $vLogin->setCredenzialiErrate(false);
+                        $vLogin->showLogin();
+
                     }
+                } else {
 
-                } catch (ValidationException $e) {
-
-                    $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
-                    $viewForm->showForm(VForm::FORM_LOGIN);
-
+                    /**
+                     * L'utente non ha compilato tutti i campi obbligatori e quindi gli viene riproposta la form con un
+                     * messaggio di errore di campi obbligatori mancanti.
+                     */
+                    $vLogin->setErroreValidazione(null, null);
+                    $vLogin->setCampiObbligatoriMancanti(true);
+                    $vLogin->setCredenzialiErrate(false);
+                    $vLogin->showLogin();
                 }
 
             }
@@ -385,9 +495,9 @@ class CGestioneUtenti
 
         $pm = FPersistentManager::getInstance();
 
-        $viewForm = new VForm();
+        $vProfilo = new VPersonalProfile();
+        $vPage = new VPage($vProfilo->getSmarty());
         $viewError = new VError();
-
 
         //se non si è già loggati si viene reindirizzati verso la pagina di login
 
@@ -400,41 +510,52 @@ class CGestioneUtenti
 
             $user=unserialize($user);
 
-            $vProfilo=new VPersonalProfile();
-
-            if (func_num_args() == 1) {
-                if (func_get_arg(0) == "conferma") {
-                    $vProfilo->setMessaggioConfermaErroreModificaProfilo(true);
-                } else if (func_get_arg(0) == "errore") {
-                    $vProfilo->setMessaggioConfermaErroreModificaProfilo(false);
-                } else {
-                    $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
-                }
-            } else {
-                $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
-            }
-
-            $cImpostaPagina=new CImpostaPagina();
-
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
+                if (func_num_args() == 1) {
+                    if (func_get_arg(0) == "conferma") {
+                        $vProfilo->setMessaggioConfermaErroreModificaProfilo(true);
+                        $vProfilo->setAvvisoCampiVuoti(false);
+                    } else if (func_get_arg(0) == "errore") {
+                        $vProfilo->setMessaggioConfermaErroreModificaProfilo(false);
+                        $vProfilo->setAvvisoCampiVuoti(false);
+                    } else if (func_get_arg(0) == "avviso") {
 
-                if($cImpostaPagina->impostaModuli($user)) {
+                        $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
+                        $vProfilo->setAvvisoCampiVuoti(true);
+                    } else {
+                        $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
+                        $vProfilo->setAvvisoCampiVuoti(false);
+                    }
+                } else {
+                    $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
+                    $vProfilo->setAvvisoCampiVuoti(false);
+                }
 
+                try {
+                    $categorie = $pm->loadAllCategorie();
+                } catch (ValidationException $e) {
+                    $categorie = null;
+                }
+                if (isset($categorie)) {
+                    $vPage->setMenuUtente($user, false);
+                    $vPage->setMenuLeft($categorie);
+                    $vPage->setBottoneFiltra($categorie);
+                    if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                        $vPage->setMenuUtente($user, true);
+                    }
                     $vProfilo->setUtente($user);
+                    $vProfilo->setErroreValidazione(null, null);
                     $vProfilo->showPersonalProfile();
-
-                }else {
+                } else {
                     $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
                     $viewError->showError();
                 }
 
-
-
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
-                $valori = $viewForm->getValori(VForm::FORM_PROFILO_PERSONALE);
+                $valori = $vProfilo->getValori();
 
                 if (count($valori)!=0) {
 
@@ -465,7 +586,6 @@ class CGestioneUtenti
 
                     try {
 
-                        //$utente=$pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
 
                         if (isset($password)) {
                             $user->setPassword($password);
@@ -487,56 +607,52 @@ class CGestioneUtenti
 
                             $session->updateValue('user', $user);
 
-                            $vProfilo->setMessaggioConfermaErroreModificaProfilo(true);
+                            header("Location: /UniChat/utenti/editShowPersonalProfile/conferma");
+
 
 
                         } else {
 
-                            $vProfilo->setMessaggioConfermaErroreModificaProfilo(false);
-                        }
+                            header("Location: /UniChat/utenti/editShowPersonalProfile/errore");
 
-                        $impostaModuli=$cImpostaPagina->impostaModuli($user);
-
-                        if($impostaModuli) {
-
-                            $vProfilo->setUtente($user);
-                            $vProfilo->showPersonalProfile();
-
-                        }else {
-                            $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                            $viewError->showError();
                         }
 
 
                     } catch (ValidationException $e) {
 
-
-
-                        $viewForm->setErroreValidazione($e->getCode(), $e->getMessage());
-
-                        $impostaModuli=$cImpostaPagina->impostaModuli($user);
-
-                        if($impostaModuli) {
+                        $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
+                        try {
+                            $categorie = $pm->loadAllCategorie();
+                        } catch (ValidationException $e1) {
+                            $categorie = null;
+                        }
+                        if (isset($categorie)) {
+                            $vPage->setMenuUtente($user, false);
+                            $vPage->setMenuLeft($categorie);
+                            $vPage->setBottoneFiltra($categorie);
+                            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                                $vPage->setMenuUtente($user, true);
+                            }
                             $vProfilo->setUtente($user);
+                            $vProfilo->setErroreValidazione($e->getCode(), $e->getMessage());
+                            $vProfilo->setAvvisoCampiVuoti(false);
                             $vProfilo->showPersonalProfile();
-
-                        }else {
+                        } else {
                             $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
                             $viewError->showError();
                         }
-                    }
 
+                    }
 
                 } else {
 
-                    //vedere come gestire campi vuoti
-                    $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                    $viewError->showError();
+
+                    header("Location: /UniChat/utenti/editShowPersonalProfile/avviso");
+
                 }
 
             }
         }
-
     }
 
 
@@ -549,47 +665,47 @@ class CGestioneUtenti
     public function showProfile($idUtente): void {
 
         $session = new USession();
-        $user = $session->getValue('user');
-
-        if (isset($user)) {
-            $user=unserialize($user);
-        }
-
-
+        $vProfile = new VProfile();
+        $vPage = new VPage($vProfile->getSmarty());
         $pm = FPersistentManager::getInstance();
-        $viewError=new VError();
-        $cImpostaPagina=new CImpostaPagina();
 
         try {
-            $utente=$pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $idUtente);
+            $utente = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $idUtente);
         } catch (ValidationException $e) {
-
-            $utente=null;
-
+            $utente = null;
         }
 
-        $vProfilo=new VProfile();
-        if (isset($utente)) {
+        try {
+            $categorie = $pm->loadAllCategorie();
+        } catch (ValidationException $e) {
+            $categorie = null;
+        }
 
-            $impostaModuli=$cImpostaPagina->impostaModuli($user);
+        if (isset($utente) && isset($categorie)) {
+            $vProfile->setUtente($utente);
 
-            if($impostaModuli) {
+            $vPage->setBottoneFiltra($categorie);
+            $vPage->setMenuLeft($categorie);
+            $vPage->setMenuUtente(null, null);
 
-                $vProfilo->setUtente($utente);
-                $vProfilo->showUtente();
+            $utenteSessione = $session->getValue('user');
+            if (isset($utenteSessione)) {
+                $utenteSessione = unserialize($utenteSessione);
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $utenteSessione->getId())) {
+                    $vPage->setMenuUtente($utenteSessione, true);
+                } else {
+                    $vPage->setMenuUtente($utenteSessione, false);
 
-            }else {
-                $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                $viewError->showError();
+                }
             }
 
-        }
-        else {
-            $viewError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
-            $viewError->showError();
+            $vProfile->showUtente();
+        } else {
+            $vError = new VError();
+            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+            $vError->showError();
         }
 
     }
-
 
 }

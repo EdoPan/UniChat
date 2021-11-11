@@ -309,26 +309,6 @@ class EUser implements JsonSerializable
         $this->corsoStudio = $corsoStudioPrimaMaiuscola;
     }
 
-    /**
-     * Imposta la foto profilo dell'utente con quella di default.
-     */
-    public function resetFotoProfilo(): void
-    {
-        $this->fotoProfilo["id"] = 1;
-        $this->fotoProfilo["nome"] = "";
-        $this->fotoProfilo["dimensione"] = "";
-        $this->fotoProfilo["tipo"] = "";
-        $this->fotoProfilo["immagine"] = "";
-    }
-
-    /**
-     * Imposta il corso di studio dell'utente a Sconosciuto.
-     */
-    public function resetCorsoStudio(): void
-    {
-        $this->corsoStudio = "Sconosciuto";
-    }
-
 
     /**
      * Verifica che la password fornita dall'utente sia quella corretta.
@@ -344,6 +324,7 @@ class EUser implements JsonSerializable
     /**
      * Genera una nuova password per l'utente, ne esegue l'hash e la memorizza. Restituisce la nuova password in chiaro.
      * @return string
+     * @throws ValidationException
      */
     public function generaPassword(): string
     {

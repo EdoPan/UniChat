@@ -1,20 +1,42 @@
 <?php
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
-require_once "VPage.php";
+//require_once "VPage.php";
 
 class VCategoria 
 
 {
 
+    /**
+     * Costante on success per setMessaggiErroreConferma.
+     */
+    const SUCCESS = "L'operazione è andata a buon fine!";
+
+    /**
+     * Costante on error per setMessaggiErroreConferma.
+     */
+    const ERROR = "OPS.. sembra si sia verificato un errore.";
+
+    /**
+     * Costante per non visualizzare l'alert.
+     */
+    const NULLA = "";
+
+    const NUMERO_THREAD_PER_PAGINA = 6;
+
 	private Smarty $smarty;
-	const NUMERO_THREAD_PER_PAGINA = 6;
+
 
 
     public function __construct() {
 
         $this->smarty = VSmarty::start();
 
+    }
+
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
     }
 
     /**
@@ -35,7 +57,8 @@ class VCategoria
 	 */
 	public function setIntestazionePagina(ECategoria $categoria): void {
 
-		$this->smarty->assign('iconaCategoria', $categoria->getIcona());
+        $this->smarty->assign('iTipo', $categoria->getIcona()['tipo']);
+		$this->smarty->assign('iImmagine', $categoria->getIcona()['immagine']);
 		$this->smarty->assign('nomeCategoria', $categoria->getNome());
 		$this->smarty->assign('descrizioneCategoria', $categoria->getDescrizione());
 
@@ -48,7 +71,9 @@ class VCategoria
 	public function setThreads(array $threads): void {
 
 
-		$this->smarty->assign('listaThread', $threads);
+		$this->smarty->assign('listathread', $threads);
+        $this->smarty->assign('posizioneMax', count($threads));
+        $this->smarty->assign('maxrighe', ceil(count($threads)/2));
 
 	}
 
@@ -97,7 +122,10 @@ class VCategoria
 			$this->smarty->assign('isLoggato', true);
 			$this->smarty->assign('catNuovoThread', $categoria);
 
-		}
+		} else {
+            $this->smarty->assign('isLoggato', false);
+            $this->smarty->assign('catNuovoThread', "");
+        }
 
 
 	}
@@ -108,63 +136,22 @@ class VCategoria
      * di rimozione di un thread da parte del moderatore appartenente a quella determinata categoria.
      * A richiesta inviata, si viene reindirizzati sulla pagina della relativa categoria.
 	 */
-	public function setMessaggioConfermaEliminazioneThread(?bool $esitoOperazione): void {
+	public function setMessaggio(bool $messaggio, string $tipologiaMessaggio, ?string $colore): void {
 
-        $this->smarty->assign('conferma', false);
+        $this->smarty->assign('testo', $tipologiaMessaggio);
+        $this->smarty->assign('messaggio', $messaggio);
+        $this->smarty->assign('colore', $colore);
 
-        if (isset($esitoOperazione)) {
-            if ($esitoOperazione) {
-                $this->smarty->assign('conferma', true);
-                $this->smarty->assign('messaggioConferma', "L'operazione è stata eseguita con successo.");
-            }
-        }
+    }
 
-	}
-
-	/**
-	 * Imposta la visualizzazione, nella pagina di ricerca, del nome della categoria in cui si stanno cercando i 
-	 * thread. Se null allora vuol dire che si sta cercando in tutte le categorie e quindi non è stato posto un 
-	 * filtro.
-	 */
-	public function setCategoriaRicerca(?ECategoria $categoria): void {
-
-		if (isset($categoria)) {
-
-			$this->smarty->assign('categoria', $categoria);
-		}
-
-		else {
-
-			$this->smarty->assign('categoria', "Tutte le categorie.");
-		}
-
-
-
-	}
 
 	/**
 	 * Permette di visualizzare la pagina delle categorie nella sua totalità.
 	 */
 	 public function showCategoria(): void {
 
-
-
 	 	$this->smarty->display('categoria_thread.tpl');
 
-
 	 }
-
-	 /**
-	 * Permette di visualizzare la pagina della ricerca nella sua totalità.
-	 */
-	 public function showRicerca(): void {
-
-
-	 	$this->smarty->display('risultati_cerca.tpl');
-
-
-
-	 }
-
 
 }

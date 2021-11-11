@@ -27,6 +27,11 @@ class VAmministrazione
         $this->smarty = VSmarty::start();
     }
 
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
+    }
+
     /**
      * Imposta il numero di pagine necessarie da visualizzare nella barra di paginazione degli utenti del pannello di
      * controllo. Per calcolare tale numero è necessario fornire in ingresso il numero di utenti attualmente registrati
@@ -81,13 +86,23 @@ class VAmministrazione
         if (isset($esitoOperazione)) {
             if ($esitoOperazione) {
                 $this->smarty->assign('conferma', true);
-                $this->smarty->assign('messaggioConferma', "L'operazione è stata eseguita con successo.");
+                $this->smarty->assign('messaggioConferma', "L'operazione è andata a buon fine!");
             } else {
                 $this->smarty->assign('errore', true);
-                $this->smarty->assign('messaggioErrore', 'Si è verificato un errore, riprovare.');
+                $this->smarty->assign('messaggioErrore', 'OPS.. sembra si sia verificato un errore.');
             }
         }
 
+    }
+
+    public function setAvviso(bool $visualizza): void
+    {
+        $this->smarty->assign('avviso', false);
+        $this->smarty->assign('messaggioAvviso', "");
+        if ($visualizza) {
+            $this->smarty->assign('avviso', true);
+            $this->smarty->assign('messaggioAvviso', "L'utente selezionato non è un moderatore.");
+        }
     }
 
     /**

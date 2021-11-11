@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <meta charset="utf-8">
@@ -14,14 +13,16 @@
     <title>UniChat - {$nomeCategoria}</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../css/pannello_di_controllo.css" rel="stylesheet">
+    <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/UniChat/Template/css/pannello_di_controllo.css" rel="stylesheet">
+
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
 
@@ -31,7 +32,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
             <!-- Logo sito e Sidebar -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/visualizzaHome">
@@ -51,18 +52,18 @@
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Categorie</span>
                 </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
 
-                        {foreach $categorie as $categoria}
-                            {if $categoria = $nomeCategoria}
+                        {foreach from=$cate item=cat}
+                            {if $cat->getNome() == $nomeCategoria}
 
-                                <a class="collapse-item active" href=UniChat\Categorie\visualizzaCategoria\{$categoria->getID()}\1">{$nomeCategoria}</a>
+                                <a class="collapse-item active" href=\UniChat\Categorie\visualizzaCategoria\{$cat->getId()}\1>{$nomeCategoria}</a>
 
                             {else}
 
-                                <a class="collapse-item" href=UniChat\Categorie\visualizzaCategoria\{$categoria->getID()}\1">{$categoria->getNome()}</a>
+                                <a class="collapse-item" href=\UniChat\Categorie\visualizzaCategoria\{$cat->getId()}\1>{$cat->getNome()}</a>
 
                             {/if}
                         {/foreach}
@@ -81,6 +82,9 @@
         </ul>
         <!-- Fine della Sidebar -->
 
+
+
+
         <!-- Inizio del Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -95,10 +99,12 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
+
+
                     <!-- Topbar Search -->
                     <div class="col justify-content-center" style="display: grid">
 
-                        <form method="post" action="\UniChat\Threads\ricerca"
+                        <form method="get" action="/UniChat/threads/ricerca/1"
                               class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group">
 
@@ -110,7 +116,7 @@
 
                                         <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                        {foreach $categorie as $categoria}
+                                        {foreach from=$categorie item=categoria}
 
                                             <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -150,7 +156,7 @@
 
                                     <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -175,7 +181,7 @@
 
                             <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                                  aria-labelledby="searchDropdown">
-                                <form method="post" action="\UniChat\Threads\ricerca" class="form-inline mr-auto w-100 navbar-search">
+                                <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
 
                                         <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -208,9 +214,9 @@
 
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                     <img class="img-profile rounded-circle"
-                                         src="data:image/jpeg;base64,{$icona}">
+                                         src="data:{$iconaTipo};base64,{$iconaImmagine}">
                                 </a>
 
 
@@ -219,14 +225,14 @@
                                      aria-labelledby="userDropdown">
 
 
-                                    <a class="dropdown-item" href="UniChat\Utenti\editShowPersonalProfile">
+                                    <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Profilo
                                     </a>
 
                                     {if $controlpanel}
 
-                                        <a class="dropdown-item" href="UniChat\Admin\visualizzaPannelloDiControllo">
+                                        <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                             <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Pannello di Controllo
                                         </a>
@@ -245,8 +251,7 @@
 
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                    {html_image file="../Immagini/icona_autore.png"}
+                                    <button class="btn btn-primary">Entra</button>
                                 </a>
 
                                 <!-- Tendina -->
@@ -254,14 +259,14 @@
                                      aria-labelledby="userDropdown">
 
 
-                                    <a class="dropdown-item" href="UniChat\Utenti\login">
-                                        <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <a class="dropdown-item" href="/UniChat/Utenti/login">
+                                        <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Login
                                     </a>
 
-                                    <a class="dropdown-item" href="UniChat\Utenti\logout">
-                                        <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Logout
+                                    <a class="dropdown-item" href="/UniChat/Utenti/registrazione">
+                                        <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Registrazione
                                     </a>
 
 
@@ -274,21 +279,27 @@
                 </nav>
                 <!-- Fine della Topbar -->
 
+
+
+
+
+
                 <!-- Inizio del Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Messaggio conferma eliminazione -->
+                    <!-- Messaggio -->
 
-                    {if $conferma == true}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {$messaggioConferma}
+                    {if $messaggio == true}
+                        <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
+                            {$testo}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+
                     {/if}
 
-                    <!-- Fine messaggio conferma eliminazione -->
+                    <!-- Fine messaggio -->
 
 
 
@@ -299,7 +310,7 @@
                             <div class="row">
 
                                 <div class="col-sm-1" style="min-width: max-content">
-                                    <img src="data:image/jpeg;base64,{$iconaCategoria}" class="img-thumbnail"  style="border:none; max-width: 100px; ">
+                                    <img src="data:{$iTipo};base64,{$iImmagine}" class="img-thumbnail"  style="border:none; max-width: 100px; ">
                                 </div>
 
                                 <br>
@@ -317,7 +328,7 @@
 
                                         <!-- Pulsante creazione thread -->
 
-                                        <a href="UniChat\Threads\creaThread\{$catNuovoThread->getID()}" class="btn btn-secondary btn-icon-split mt-3 mr-3 float-lg-right">
+                                        <a href="\UniChat\Threads\creaThread\{$catNuovoThread->getID()}" class="btn btn-secondary btn-icon-split mt-3 mr-3 float-lg-right">
                                             <span class="icon text-white-50">
                                         <i class="fas fa-arrow-right"></i>
                                     </span>
@@ -347,14 +358,11 @@
 
                         <!--inizio righe thread-->
 
-                            {if $listaThread}
-                                {if is_array($listaThread) }
 
-                                    {maxrighe = ceil(count($listaThread())/2)} <!--numero righe date dal n° thread/2 (il numero di colonne)-->
                                     {$j=0} <!--variabile che gestisce l'accesso ai threads -->
 
 
-                                    {for $i=1;  i<$maxrighe; i++}
+                                    {for $i=1 to $maxrighe}
 
 
                                             <div class="row">
@@ -371,19 +379,19 @@
 
 
                                                                 <div class="col mr-4">
-                                                                    <h5 class="m-0 font-weight-bold text-primary">{$listathread[j]->getNome()}<sup>{$listathread[j]->getValutazione()} <i class="fas fa-star"></i></sup></h5><br>
-                                                                    <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b>{$listathread[j]->getAutore()}</b></h6>
+                                                                    <h5 class="m-0 font-weight-bold text-primary">{$listathread[$j]->getTitolo()}<sup>{$listathread[$j]->getValutazione()->getTotale()} <i class="fas fa-star"></i></sup></h5><br>
+                                                                    <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b><a href="/UniChat/utenti/showProfile/{$listathread[$j]->getAutoreThread()->getID()}">{$listathread[$j]->getAutoreThread()->getNome()} {$listathread[$j]->getAutoreThread()->getCognome()}</a></b></h6>
 
                                                                     <!-- Data di pubblicazione -->
                                                                     <div class="py-0">
-                                                                        <span>il: <b>{$listathread[j]->getData()}</b></span>
+                                                                        <span>il: <b>{$listathread[$j]->getData()}</b></span>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
 
                                                                     <!-- Pulsante thread specifico -->
-                                                                    <a href="UniChat\Thread\showThread\{$idCategoria}\{$listathread[j]->getID()}" class="btn btn-info btn-icon-split">
+                                                                    <a href="\UniChat\Threads\visualizzaThread\{$listathread[$j]->getID()}" class="btn btn-info btn-icon-split">
                                                     <span class="icon text-white-600">
                                                         <i class="fas fa-arrow-right"></i>
                                                     </span>
@@ -397,13 +405,13 @@
 
                                                         <!-- Descrizione Thread -->
                                                         <div class="card-body">
-                                                            {$listathread[j]->getDescrizione()}
+                                                            {$listathread[$j]->getTesto()}
                                                         </div>
 
                                                         <!-- Contatore risposte -->
                                                         <div class="container my-auto py-3">
                                                             <div class="copyright text-center my-auto">
-                                                                <span>Risposte: {$listathread[j]->count(getRisposte())} </span>
+                                                                <span>Risposte: {$listathread[$j]->contaRisposte()} </span>
                                                                 <i class="fa fa-comments text-primary"></i>
                                                             </div>
                                                         </div>
@@ -412,7 +420,7 @@
 
                                                 </div>
 
-                                                {if $j+1 < count($listaThread())}
+                                                {if $j+1 < $posizioneMax}
 
                                                     <div class="col">
 
@@ -426,22 +434,22 @@
 
 
                                                                     <div class="col mr-4">
-                                                                        <h5 class="m-0 font-weight-bold text-primary">{$listathread[j+1]->getNome()}<sup>{$listathread[j+1]->getValutazione()} <i class="fas fa-star"></i></sup></h5><br>
-                                                                        <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b>{$listathread[j+1]->getAutore()}</b></h6>
+                                                                        <h5 class="m-0 font-weight-bold text-primary">{$listathread[$j+1]->getTitolo()}<sup>{$listathread[$j+1]->getValutazione()->getTotale()} <i class="fas fa-star"></i></sup></h5><br>
+                                                                        <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b><a href="/UniChat/utenti/showProfile/{$listathread[$j+1]->getAutoreThread()->getId()}">{$listathread[$j+1]->getAutoreThread()->getNome()} {$listathread[$j+1]->getAutoreThread()->getCognome()}</a></b></h6>
 
                                                                         <!-- Data di pubblicazione -->
                                                                         <div class="py-0">
-                                                                            <span>il: <b>{$listathread[j+1]->getData()}</b></span>
+                                                                            <span>il: <b>{$listathread[$j+1]->getData()}</b></span>
                                                                         </div>
                                                                     </div>
 
                                                                     <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
 
                                                                         <!-- Pulsante thread specifico -->
-                                                                        <a href="\UniChat\Threads\showThread\{$idCategoria}\{$listathread[j+1]->getID()}" class="btn btn-info btn-icon-split">
-                                                    <span class="icon text-white-600">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </span>
+                                                                        <a href="\UniChat\Threads\visualizzaThread\{$listathread[$j+1]->getID()}" class="btn btn-info btn-icon-split">
+                                                                            <span class="icon text-white-600">
+                                                                                <i class="fas fa-arrow-right"></i>
+                                                                            </span>
                                                                         </a>
                                                                     </div>
 
@@ -452,13 +460,13 @@
 
                                                             <!-- Descrizione Thread -->
                                                             <div class="card-body">
-                                                                {$listathread[j+1]->getDescrizione()}
+                                                                {$listathread[$j+1]->getTesto()}
                                                             </div>
 
                                                             <!-- Contatore risposte -->
                                                             <div class="container my-auto py-3">
                                                                 <div class="copyright text-center my-auto">
-                                                                    <span>Risposte: {$listathread[j+1]->count(getRisposte())} </span>
+                                                                    <span>Risposte: {$listathread[$j+1]->contaRisposte()} </span>
                                                                     <i class="fa fa-comments text-primary"></i>
                                                                 </div>
                                                             </div>
@@ -474,8 +482,6 @@
                                             {$j=$j+2}
 
                                     {/for}
-                                {/if}
-                            {/if}
 
                         <!--fine righe tread-->
 
@@ -486,21 +492,21 @@
 
                                 {if $activePage!=1}
 
-                                    <a href="UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$activePage -1}">&laquo;</a>
+                                    <a href="\UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$activePage -1}">&laquo;</a>
 
                                 {/if}
 
 
 
-                                {for $pagThread=1; $pagThread<=$numeroPagine; $pagThread++}
+                                {for $pagThread=1 to $numeroPagine}
 
-                                    {if $pagThread=$activePage}
+                                    {if $pagThread==$activePage}
 
-                                        <a href="UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$pagThread}" class="active">{$pagThread}</a>
+                                        <a href="\UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$pagThread}" class="active">{$pagThread}</a>
 
                                     {else}
 
-                                        <a href="UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$pagThread}">{$pagThread}</a>
+                                        <a href="\UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$pagThread}">{$pagThread}</a>
 
                                     {/if}
 
@@ -508,7 +514,7 @@
 
                                 {if $activePage!=$numeroPagine}
 
-                                    <a href="UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$activePage +1}">&raquo;</a>
+                                    <a href="\UniChat\Categorie\visualizzaCategoria\{$idCategoria}\{$activePage +1}">&raquo;</a>
 
                                 {/if}
 
@@ -577,14 +583,20 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/UniChat/Template/vendor/jquery/jquery.min.js"></script>
+    <script src="/UniChat/Template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="/UniChat/Template/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="../js/sb-admin-2.min.js"></script>
+    <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+    <script type="text/javascript">
+        if (navigator.cookieEnabled === false) {
+            window.location.replace('/UniChat/client/cookieDisabilitati');
+        }
+    </script>
 
     <script type="text/javascript">
 

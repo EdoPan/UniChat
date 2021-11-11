@@ -9,26 +9,6 @@ require_once __DIR__ . "\..\utility.php";
 class CGestioneCategorie {
 
     /**
-     * Metodo responsabile del recupero da Db delle
-     * categorie inserite dall'Admin e della loro
-     * visualizzazione (solo titolo) per il Left Menu.
-     *
-     */
-
-    /*
-    public function elencaCategorie(): ?array {
-
-        $pm = FPersistentManager::getInstance();
-        try {
-            $categorie=$pm->loadAllCategorie();
-        } catch(ValidationException $e) {
-            $categorie=null;
-        }
-        return $categorie;
-    } */
-
-
-    /**
      * Metodo responsabile del recupero da Db della
      * categoria selezionata e della visualizzazione della propria
      * intestazione (icona, Titolo e descrizione) e dei thread in essa inseriti.
@@ -37,85 +17,76 @@ class CGestioneCategorie {
 
     public function visualizzaCategoria(int $idCategoria, int $numeroPaginaThread):void {
 
-
         $session = new USession();
         $user = $session->getValue('user');
-        $pm=FPersistentManager::getInstance();
 
-
-        // Impostazione di VPage
-        $admin = false;
-        $loggato=false;
-
-        $vPage=new VPage();
-        $categorie=self::elencaCategorie();
-
-        if (isset($user)) {
-            $loggato=true;
-            $user=unserialize($user);
-            if (isset($categorie)) {
-
-                if($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID())) {
-                    $admin=true;
-                }
-
-                $vPage->setMenuLeft($categorie);
-                $vPage->setBottoneFiltra($categorie);
-                $vPage->setMenuUtente($user, $admin);
-
-            }
-        }
-
-        //Fine imp VPage
-
+        $pm = FPersistentManager::getInstance();
+        $vCategoria = new VCategoria();
+        $vPage = new vPage($vCategoria->getSmarty());
 
         try {
-
-            $categoria=$pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $idCategoria);
-
-            $cThread=new CGestioneThreads();
-            $threads=$cThread->elencaThreads($idCategoria, $numeroPaginaThread);
-            $numeroThread=$pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria);
-
-        } catch(ValidationException $e) {
-            $categoria=null;
-            $threads=null;
-            $numeroThread=null;
+            $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $idCategoria);
+        } catch (ValidationException $e) {
+            $categoria = null;
         }
 
-        $view=new VCategoria();
+        $numeroRiga = VCategoria::NUMERO_THREAD_PER_PAGINA * ($numeroPaginaThread - 1);
+        try {
+            $threads = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria, $numeroRiga, VCategoria::NUMERO_THREAD_PER_PAGINA);
+        } catch (ValidationException $e) {
+            $threads = null;
+        }
 
-        if(isset($categoria) && isset($threads) && isset($numeroThread)) {
+        $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria, null);
 
-            $view->setIDCategoria($categoria);
-            $view->setIntestazionePagina($categoria);
-            $view->setActivePage($numeroPaginaThread);
-            $view->setThreads($threads);
-            $view->setPaginazione($numeroThread);
+        try {
+            $categorie = $pm->loadAllCategorie();
+        } catch (ValidationException $e) {
+            $categorie = null;
+        }
 
-            if ($loggato) {
-                $view->setBottoneCreazioneThread(true, $categoria);
+        if (isset($categoria) && isset($threads) && isset($numeroThreads) && isset($categorie)) {
+
+            $vCategoria->setActivePage($numeroPaginaThread);
+            $vCategoria->setBottoneCreazioneThread(false, null);
+            $vCategoria->setIDCategoria($categoria);
+            $vCategoria->setIntestazionePagina($categoria);
+            $vCategoria->setPaginazione($numeroThreads);
+            $vCategoria->setThreads($threads);
+
+            $vPage->setMenuUtente(null, false);
+            $vPage->setMenuLeft($categorie);
+            $vPage->setBottoneFiltra($categorie);
+
+            if (isset($user)) {
+                $user = unserialize($user);
+                $vCategoria->setBottoneCreazioneThread(true, $categoria);
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                    $vPage->setMenuUtente($user, true);
+                } else {
+                    $vPage->setMenuUtente($user, false);
+                }
             }
 
-
-            if (func_num_args() == 1) {
-                if (func_get_arg(0) == "conferma") {
-                    $view->setMessaggioConfermaEliminazioneThread(true);
+            if (func_num_args() == 3) {
+                if (func_get_arg(2) == "conferma") {
+                    $vCategoria->setMessaggio(true, VCategoria::SUCCESS, 'success');
+                } else if (func_get_arg(2) == "errore") {
+                    $vCategoria->setMessaggio(true, VCategoria::ERROR, 'danger');
                 } else {
-                    $view->setMessaggioConfermaEliminazioneThread(null);
+                    $vCategoria->setMessaggio(false, VCategoria::NULLA, null);
                 }
             } else {
-                $view->setMessaggioConfermaEliminazioneThread(null);
+                $vCategoria->setMessaggio(false, VCategoria::NULLA, null);
             }
 
-            $view->showCategoria();
+            $vCategoria->showCategoria();
 
         } else {
-            $view = new VError();
-            $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
-            $view->showError();
+            $vError = new VError();
+            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+            $vError->showError();
         }
-
     }
 
 
@@ -123,7 +94,6 @@ class CGestioneCategorie {
      * Metodo responsabile della stampa del nome, cognome ed email del moderatore
      * di una categoria. (recuperata tramite id da richiesta POST)
      */
-
 
     public function visualizzaModeratoreCategoria():void {
 
@@ -169,8 +139,6 @@ class CGestioneCategorie {
         } else {
             header('/UniChat/Utenti/login');
         }
-
-
     }
 
     public function contaThreadsCategoria():void {
@@ -189,7 +157,7 @@ class CGestioneCategorie {
 
                     try {
 
-                        $numeroThread = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria);
+                        $numeroThread = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria, null);
                         if (isset($numeroThread)) {
                             echo json_encode(array('numeroThreads' => $numeroThread));
                         }

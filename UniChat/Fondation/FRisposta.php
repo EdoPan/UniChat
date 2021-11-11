@@ -36,13 +36,14 @@ class FRisposta
          return self::$instance;
      }
 
-     /**
-      * Restituisce l'oggetto ERisposta, memorizzato nel database, avente come id quello passato come parametro.
-      * Per ottenere un oggetto ERisposta è necessario recuperare prima l'autore della risposta (utilizzo il metodo load di FUser).
-      * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
-      * @param int $rispostaID
-      * @return Erisposta|null
-      */
+    /**
+     * Restituisce l'oggetto ERisposta, memorizzato nel database, avente come id quello passato come parametro.
+     * Per ottenere un oggetto ERisposta è necessario recuperare prima l'autore della risposta (utilizzo il metodo load di FUser).
+     * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
+     * @param int $rispostaID
+     * @return Erisposta|null
+     * @throws ValidationException
+     */
      public function load(int $rispostaID): ?ERisposta
      {
          try {
@@ -198,6 +199,7 @@ class FRisposta
      * Recupero delle risposte di un thread che ha per id quello passato come parametro.
      * @param int $threadID
      * @return array
+     * @throws ValidationException
      */
     public function loadRisposteThread(int $threadID): ?array
     {

@@ -14,11 +14,12 @@ class EAdmin extends EModeratore implements JsonSerializable {
      * @param string $cognome
      * @param string $email
      * @param string $password
-     * @param array $fotoProfilo
+     * @param array|null $fotoProfilo
      * @param string|null $corsoStudio
      * @param ECategoria|null $categoriaGestita
+     * @throws ValidationException
      */
-    public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, array $fotoProfilo, ?string $corsoStudio, ?ECategoria $categoriaGestita)
+    public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, ?array $fotoProfilo, ?string $corsoStudio, ?ECategoria $categoriaGestita)
     {
         parent::__construct($id, $nome, $cognome, $email, $password, $fotoProfilo, $corsoStudio, $categoriaGestita);
     }
@@ -30,6 +31,7 @@ class EAdmin extends EModeratore implements JsonSerializable {
      * @param array|null $icona
      * @param string $descrizione
      * @return ECategoria
+     * @throws ValidationException
      */
     public function creaCategoria(?int $categoriaID, string $nomeCategoria, ?array $icona, string $descrizione): ECategoria
     {
@@ -41,16 +43,13 @@ class EAdmin extends EModeratore implements JsonSerializable {
      * @param EUser|null $user
      * @param ECategoria|null $categoria
      * @return EModeratore|null
+     * @throws ValidationException
      */
-    public function creaModeratore(?EUser $user, ?ECategoria $categoria): ?EModeratore
+    public function creaModeratore(EUser $user, ECategoria $categoria): EModeratore
     {
 
-        //Controllo per verificare se l'utente e la categoria da moderare esistono.
-        if(isset($user) and isset($categoria)){
-            return new EModeratore($user->getId(), $user->getNome(), $user->getCognome(), $user->getEmail(), $user->getPassword(), $user->getFotoProfilo(), $user->getCorsoStudio(), $categoria);
-        } else {
-            return null;
-        }
+        return new EModeratore($user->getId(), $user->getNome(), $user->getCognome(), $user->getEmail(), $user->getPassword(), $user->getFotoProfilo(), $user->getCorsoStudio(), $categoria);
+
     }
 
     /**

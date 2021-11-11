@@ -1,5 +1,45 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-09 18:28:21
+         compiled from "smarty-dir\templates\inserisci-categoria.tpl" */ ?>
+<?php /*%%SmartyHeaderCode:20579440526189329c5d8657-32719891%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    '33bd4ecd37d645d1ed5d4f8b734df671423f069a' => 
+    array (
+      0 => 'smarty-dir\\templates\\inserisci-categoria.tpl',
+      1 => 1636476867,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '20579440526189329c5d8657-32719891',
+  'function' => 
+  array (
+  ),
+  'version' => 'Smarty-3.1.13',
+  'unifunc' => 'content_6189329c608486_30513747',
+  'variables' => 
+  array (
+    'cate' => 0,
+    'c' => 0,
+    'categorie' => 0,
+    'categoria' => 0,
+    'loggato' => 0,
+    'nome' => 0,
+    'cognome' => 0,
+    'iconaTipo' => 0,
+    'iconaImmagine' => 0,
+    'controlpanel' => 0,
+    'erroreDatiObbligatori' => 0,
+    'messaggioErroreDatiObbligatori' => 0,
+    'erroreDenominazione' => 0,
+    'messaggioErroreDenominazione' => 0,
+    'erroreImmagine' => 0,
+    'messaggioErroreImmagine' => 0,
+  ),
+  'has_nocache_code' => false,
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_6189329c608486_30513747')) {function content_6189329c608486_30513747($_smarty_tpl) {?><!DOCTYPE html>
+<html lang="en">
 
 <head>
 
@@ -10,17 +50,18 @@
     <meta name="author" content="">
 
     <!-- Titolo tab del browser -->
-    <title>UniChat - Risultato ricerca</title>
+    <title>UniChat - Crea una categoria</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="../css/pannello_di_controllo.css" rel="stylesheet">
+    <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
 
@@ -30,7 +71,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/visualizzaHome">
@@ -51,15 +92,21 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    <?php  $_smarty_tpl->tpl_vars['c'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['c']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['cate']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['c']->key => $_smarty_tpl->tpl_vars['c']->value){
+$_smarty_tpl->tpl_vars['c']->_loop = true;
+?>
 
-                        <a class="collapse-item" href="\UniChat\Categorie\visualizzaCategoria\{$categoria->getID()}\1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/<?php echo $_smarty_tpl->tpl_vars['c']->value->getID();?>
+/1"><?php echo $_smarty_tpl->tpl_vars['c']->value->getNome();?>
+</a>
 
-                    {/foreach}
+                    <?php } ?>
                 </div>
             </div>
         </li>
@@ -95,7 +142,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="\UniChat\Threads\ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -107,11 +154,17 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
+$_smarty_tpl->tpl_vars['categoria']->_loop = true;
+?>
 
-                                        <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
+                                        <label class="filtro-categorie dropdown-item" id="<?php echo $_smarty_tpl->tpl_vars['categoria']->value->getID();?>
+-categoria" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->value->getNome();?>
+</label>
 
-                                    {/foreach}
+                                    <?php } ?>
 
 
                                 </div>
@@ -147,11 +200,17 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
+ $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
+foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
+$_smarty_tpl->tpl_vars['categoria']->_loop = true;
+?>
 
-                                    <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
+                                    <label class="dropdown-item" id="<?php echo $_smarty_tpl->tpl_vars['categoria']->value->getID();?>
+cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->value->getNome();?>
+</label>
 
-                                {/foreach}
+                                <?php } ?>
 
                             </div>
                         </div>
@@ -172,7 +231,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="\UniChat\Threads\ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -201,13 +260,17 @@
                         <!-- Informazioni profilo loggato e relativa tendina -->
                         <li class="nav-item dropdown no-arrow">
 
-                            {if $loggato}
+                            <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
+ <?php echo $_smarty_tpl->tpl_vars['cognome']->value;?>
+</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:<?php echo $_smarty_tpl->tpl_vars['iconaTipo']->value;?>
+;base64,<?php echo $_smarty_tpl->tpl_vars['iconaImmagine']->value;?>
+">
                             </a>
 
 
@@ -216,19 +279,19 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="UniChat\Utenti\editShowPersonalProfile">
+                                <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
                                 </a>
 
-                                {if $controlpanel}
+                                <?php if ($_smarty_tpl->tpl_vars['controlpanel']->value){?>
 
-                                    <a class="dropdown-item" href="UniChat\Admin\visualizzaPannelloDiControllo">
+                                    <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
                                     </a>
 
-                                {/if}
+                                <?php }?>
 
 
 
@@ -238,12 +301,11 @@
                                 </a>
                             </div>
 
-                            {else}
+                            <?php }else{ ?>
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -251,18 +313,18 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="UniChat\Utenti\login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="/UniChat/utenti/login">
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="UniChat\Utenti\logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
-                                {/if}
+                                <?php }?>
 
 
                         </li>
@@ -275,200 +337,106 @@
             <div class="container-fluid">
 
                 <!-- Intestazione della pagina -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Risultato Ricerca</h1>
-                </div>
-
-                <div class="container-fluid">
-                    <h6>Hai cercato:
-                        <![CDATA["testo ricercato"]]>
-                        in <b>"{$categoria}"</b></h6>
-                    <h7>Risultati:</h7><br><br>
+                <h1 class="h3 mb-4 text-gray-800">Crea una categoria</h1>
 
 
-                    {if $numeroPagine>0 }
 
-                    <!--inizio righe thread-->
-
-                    {if $listaThread}
-                        {if is_array($listaThread) }
-
-                            {maxrighe = ceil(count($listaThread())/2)} <!--numero righe date dal n° thread/2 (il numero di colonne)-->
-                            {$j=0} <!--variabile che gestisce l'accesso ai threads -->
+                <!-- Box creazione thread -->
+                <div class="card shadow mb-4 mr-5 ml-5">
 
 
-                            {for $i=1;  i<$maxrighe; i++}
 
+                    <div class="card-body">
 
-                                <div class="row">
+                        <form enctype="multipart/form-data" method="post" action="/UniChat/admin/aggiungiCategoria" style="text-align: center">
+                            <!-- Messaggio errore campi obbligatori -->
 
-                                    <div class="col">
+                            <!-- Fine messaggio errore -->
+                            <?php if ($_smarty_tpl->tpl_vars['erroreDatiObbligatori']->value){?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong><?php echo $_smarty_tpl->tpl_vars['messaggioErroreDatiObbligatori']->value;?>
 
-                                        <!-- Contenitore Thread  -->
-                                        <div class="card shadow mb-2">
-
-                                            <!-- Intestazione Thread -->
-                                            <div class="card-header py-3">
-
-                                                <div class="row">
-
-
-                                                    <div class="col mr-4">
-                                                        <h5 class="m-0 font-weight-bold text-primary">{$listathread[j]->getNome()}<sup>{$listathread[j]->getValutazione()} <i class="fas fa-star"></i></sup></h5><br>
-                                                        <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b>{$listathread[j]->getAutore()}</b></h6>
-
-                                                        <!-- Data di pubblicazione -->
-                                                        <div class="py-0">
-                                                            <span>il: <b>{$listathread[j]->getData()}</b></span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
-
-                                                        <!-- Pulsante thread specifico -->
-                                                        <a href="UniChat\Thread\showThread\{$idCategoria}\{$listathread[j]->getID()}" class="btn btn-info btn-icon-split">
-                                                <span class="icon text-white-600">
-                                                    <i class="fas fa-arrow-right"></i>
-                                                </span>
-                                                        </a>
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-
-                                            <!-- Descrizione Thread -->
-                                            <div class="card-body">
-                                                {$listathread[j]->getDescrizione()}
-                                            </div>
-
-                                            <!-- Contatore risposte -->
-                                            <div class="container my-auto py-3">
-                                                <div class="copyright text-center my-auto">
-                                                    <span>Risposte: {$listathread[j]->count(getRisposte())} </span>
-                                                    <i class="fa fa-comments text-primary"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Fine Thread -->
-
-                                    </div>
-
-                                    {if $j+1 < count($listaThread())}
-
-                                        <div class="col">
-
-                                            <!-- Contenitore Thread  -->
-                                            <div class="card shadow mb-2">
-
-                                                <!-- Intestazione Thread -->
-                                                <div class="card-header py-3">
-
-                                                    <div class="row">
-
-
-                                                        <div class="col mr-4">
-                                                            <h5 class="m-0 font-weight-bold text-primary">{$listathread[j+1]->getNome()}<sup>{$listathread[j+1]->getValutazione()} <i class="fas fa-star"></i></sup></h5><br>
-                                                            <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b>{$listathread[j+1]->getAutore()}</b></h6>
-
-                                                            <!-- Data di pubblicazione -->
-                                                            <div class="py-0">
-                                                                <span>il: <b>{$listathread[j+1]->getData()}</b></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
-
-                                                            <!-- Pulsante thread specifico -->
-                                                            <a href="UniChat\Thread\showThread\{$idCategoria}\{$listathread[j+1]->getID()}" class="btn btn-info btn-icon-split">
-                                                <span class="icon text-white-600">
-                                                    <i class="fas fa-arrow-right"></i>
-                                                </span>
-                                                            </a>
-                                                        </div>
-
-
-                                                    </div>
-
-                                                </div>
-
-                                                <!-- Descrizione Thread -->
-                                                <div class="card-body">
-                                                    {$listathread[j+1]->getDescrizione()}
-                                                </div>
-
-                                                <!-- Contatore risposte -->
-                                                <div class="container my-auto py-3">
-                                                    <div class="copyright text-center my-auto">
-                                                        <span>Risposte: {$listathread[j+1]->count(getRisposte())} </span>
-                                                        <i class="fa fa-comments text-primary"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Fine Thread -->
-
-                                        </div>
-
-                                    {/if}
-
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
+                            <?php }?>
+                            <!-- Messaggio errore validazione nome -->
+                            <?php if ($_smarty_tpl->tpl_vars['erroreDenominazione']->value==true){?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong><?php echo $_smarty_tpl->tpl_vars['messaggioErroreDenominazione']->value;?>
 
-                                {$j=$j+2}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <?php }?>
+                            <!-- Fine messaggio errore -->
 
-                            {/for}
-                        {/if}
-                    {/if}
+                            <div class="row" style="justify-content: center">
 
-                    <!--fine righe tread-->
-
-
-                    <!--inizio paginazione-->
-
-                    <div class="pagination mt-3 mb-3" style="justify-content: center">
-
-                        {if $activePage!=1}
-
-                            <a href="UniChat\Threads\ricerca\{$activePage -1}">&laquo;</a>
-
-                        {/if}
+                                <!-- Inserimento nome categoria -->
+                                <input type="text" class="form-control mb-4 mt-4 mr-4 ml-4" id="name" name="nome" placeholder="Nome Categoria" required>
 
 
 
-                        {for $pagThread=1; $pagThread<=$numeroPagine; $pagThread++}
 
-                            {if $pagThread=$activePage}
+                                <!-- Inserimento descrizione categoria -->
+                                <textarea class="mb-4 form-control mr-4 ml-4 " id="descrizione" name="descrizione" placeholder="Inserisci descrizione Categoria"
+                                          style="width: 100%" required></textarea>
 
-                                <a href="UniChat\Threads\ricerca\{$pagThread}" class="active">{$pagThread}</a>
+                                <!-- Messaggio errore validazione icona -->
+                                <?php if ($_smarty_tpl->tpl_vars['erroreImmagine']->value==true){?>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Errore. </strong><?php echo $_smarty_tpl->tpl_vars['messaggioErroreImmagine']->value;?>
 
-                            {else}
-
-                                <a href="UniChat\Threads\ricerca\{$pagThread}">{$pagThread}</a>
-
-                            {/if}
-
-                        {/for}
-
-                        {if $activePage!=$numeroPagine}
-
-                            <a href="UniChat\Threads\ricerca\{$activePage +1}">&raquo;</a>
-
-                        {/if}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                <?php }?>
+                                <!-- Fine messaggio di errore -->
 
 
-                    </div>
 
-                    <!--fine paginazione-->
-
-
-                    {else}
-
-                    <h5 class="h5 mb-0 text-gray-800 mt-0">La ricerca non ha prodotto alcun risultato.</h5>
-
-                    {/if}
+                                <div>
 
 
-                </div>
+                                    <div>
+
+                                        <!--p class="mb-2 mt-4">Inserisci l'icona della nuova categoria</p-->
+                                        <!--input type="file" id="icona" name="icona" class="btn btn-secondary btn-user btn-block mt-3 "-->
+
+                                        <!-- <input type="file" id="icona" name="icona" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
+                                       <label for="icona" style="display: block; position: relative; width: 100%; height: 40px; border-radius: 5px; background: linear-gradient(40deg, #777777, #a9a9a9); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                           Inserisci icona
+                                       </label> -->
+
+                                        <input type="file" id="icona" name="icona" hidden="hidden" />
+                                        <button class="btn btn-secondary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Carica un'icona</button>
+                                        <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna icona caricata</span>
+
+
+                                   </div>
+
+
+
+                                   <div class="mb-4 mt-4">
+                                       <a><input class="btn btn-primary mb-2" type="submit" value="Crea"></a>
+                                       <a href="/UniChat/admin/visualizzaPannelloDiControllo" class="btn btn-danger mb-2" role="button" aria-pressed="true">Annulla</a>
+                                   </div>
+
+                               </div>
+
+
+                       </form>
+
+
+
+                   </div>
+
+               </div>
+               <!-- Fine box creazione Thread -->
 
             </div>
             <!-- Fine del Page Content -->
@@ -487,10 +455,10 @@
         <!-- Fine del Footer -->
 
     </div>
-    <!-- Fine del Content Wrapper -->
+    <!-- End of Content Wrapper -->
 
 </div>
-<!-- Fine Page Wrapper -->
+<!-- Fine del Page Wrapper -->
 
 <!-- Bottone Scroll to Top -->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -511,7 +479,7 @@
             <div class="modal-body">Seleziona "Logout" qui sotto se sei pronto a terminare la sessione attuale.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="\UniChat\Utenti\logout">Logout</a>
+                <a class="btn btn-primary" href="/UniChat/utenti/logout">Logout</a>
             </div>
         </div>
     </div>
@@ -527,12 +495,11 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="/UniChat/Template/vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
-<script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 <script type="text/javascript">
 
@@ -565,7 +532,26 @@
     }
 </script>
 
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("icona");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function() {
+        realFileBtn.click();
+    });
+
+    realFileBtn.addEventListener("change", function() {
+        if (realFileBtn.value) {
+            customTxt.innerHTML = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.innerHTML = "Nessuna icona caricata.";
+        }
+    });
+</script>
 
 </body>
 
-</html>
+</html><?php }} ?>

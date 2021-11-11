@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body id="page-top">
@@ -29,10 +31,10 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/visualizzaHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -42,6 +44,7 @@
         <!-- Divisore -->
         <hr class="sidebar-divider my-0">
 
+
         <!-- Menu laterale categorie -->
         <li class="nav-item active">
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
@@ -49,18 +52,19 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
                 </div>
             </div>
         </li>
+
 
         <!-- Divisore -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -92,7 +96,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -104,7 +108,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -144,7 +148,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -169,7 +173,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -202,9 +206,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -239,8 +243,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -248,14 +251,14 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="/UniChat/utenti/login">
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -283,34 +286,21 @@
 
                     <div class="card-body">
 
-                        <form action="/UniChat/threads/creaThread/{$categoriaID}" enctype="multipart/form-data" method="post">
+                        <form id="creaThread" action="/UniChat/threads/creaThread/{$categoriaID}" enctype="multipart/form-data" method="post">
 
                             <!-- Form inserimento titolo -->
 
-                            <input type="text" class="form-control form-control-user" id="titolo" name="titolo" placeholder="Inserisci titolo..." required><br>
+                            <input type="text" class="form-control form-control-user" autocomplete="off" id="titolo" name="titolo" placeholder="Titolo" required><br>
 
 
                             <!-- Form inserimento testo thread -->
-                            <textarea id="testoThread" name="testo" placeholder="Inserisci testo..." style="width: 100%" required></textarea>
+                            <textarea class="form-control" autocomplete="off" id="testoThread" name="testo" placeholder="Descrizione" style="width: 100%" required></textarea>
 
-                            <div class="dropdown m-3" align="center">
+                            <div class="mt-4 mb-5" align="center">
 
                                 <!-- Categoria Thread -->
-                                <label for="categoriathread">Categoria Thread: </label>
-                                <input type="text" id="categoriathread" value="{$categoriaNome}" disabled="disabled"/>
+                                <input class="form-control" type="text" id="categoriathread" name="categoriathread" disabled="disabled" value="{$categoriaNome}"  style="text-align: center"/>
 
-                                <!-- Tendina -->
-                                <!--
-                                <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#">DISIM</a>
-                                    <a class="dropdown-item" href="#">DIIIE</a>
-                                    <a class="dropdown-item" href="#">DICEAA</a>
-                                    <a class="dropdown-item" href="#">DSFC</a>
-                                    <a class="dropdown-item" href="#">MESVA</a>
-                                    <a class="dropdown-item" href="#">DISCAB</a>
-                                    <a class="dropdown-item" href="#">DSU</a>
-                                    <a class="dropdown-item" href="#">Mista</a>
-                                </div-->
                             </div>
 
                             <!-- Bottone allegati -->
@@ -324,9 +314,26 @@
                                 </div>
                             {/if}
                             <!-- Fine messaggio errore -->
-                            <label for="allegati">Aggiungi allegati al thread (puoi selezionarne più di 1):</label>
 
-                            <input type="file" id="allegati" name="allegati[]" class="btn btn-secondary btn-user btn-block mt-3 " multiple>
+                            <div>
+
+                                <!--p align="center" class="mt-4 mb-2">Allega documenti</p-->
+                                <!--input type="file" id="allegati" name="allegati[]" class="btn btn-secondary btn-user btn-block mt-3 " multiple-->
+
+
+                                <!-- <input type="file" id="allegati" name="allegati[]" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;" multiple>
+                                <label for="allegati" style="display: block; position: relative; width: 100%; height: 40px; border-radius: 5px; background: linear-gradient(40deg, #777777, #a9a9a9); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                    Allega documenti
+                                </label> -->
+
+                                <input type="file" id="allegati" name="allegati[]" multiple hidden="hidden"/>
+                                <button class="btn btn-secondary btn-user btn-block"
+                                        type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>
+                                    Inserisci allegati</button>
+                                <span style="display: block; position: relative; text-align: center;" id="custom-text">Nessun allegato caricato</span><br><br>
+
+                            </div>
+
 
 
                             <!-- Divisore -->
@@ -338,15 +345,14 @@
                             </button>
 
                             <!-- Bottone reset form -->
-                            <input type="reset" class="btn btn-info btn-user btn-block" placeholder="Reimposta"</input>
+                            <input type="reset" id="reset" onclick="funReset()" class="btn btn-info btn-user btn-block" value="Reimposta i dati" />
 
                             <!-- Bottone annulla -->
-                            <a class="btn btn-danger btn-user btn-block" href="/UniChat/threads/elencaThreads/{$categoriaID}/1" role="button">Annulla</a>
+                            <a class="btn btn-danger btn-user btn-block" href="/UniChat/categorie/visualizzaCategoria/{$categoriaID}/1" role="button">Annulla</a>
 
 
 
                         </form>
-
 
 
                     </div>
@@ -411,6 +417,12 @@
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 <script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
+
+<script type="text/javascript">
 
     /**
      * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
@@ -438,6 +450,38 @@
         document.getElementById('categoria-id2').value = categoriaID;
         elemento.className = 'filtro-categorie dropdown-item active';
 
+    }
+</script>
+
+
+<script type="text/javascript">
+    const nofile=document.getElementById("allegati");
+    var realFileBtn = document.getElementById("allegati").files;
+    const customBtn = document.getElementById("custom-button");
+    var customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function() {
+        nofile.click();
+    });
+
+    nofile.addEventListener("change", function() {
+
+        customTxt.innerHTML="";
+
+        for (var i=0; i<realFileBtn.length; i++) {
+
+            customTxt.innerHTML+=realFileBtn[i].name + "<br>";
+
+        }
+
+    });
+
+</script>
+
+
+<script>
+    function funReset(){
+        document.getElementById("custom-text").innerHTML="Nessun allegato caricato";
     }
 </script>
 

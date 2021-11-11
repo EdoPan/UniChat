@@ -1,5 +1,6 @@
 <?php
-
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 /**
  * Classe di controllo contenente tutti i metodi con operazioni in cui sono coinvolti Threads.
  */
@@ -17,9 +18,9 @@ class CGestioneThreads
     public function creaThread(int $categoriaID): void {
 
         $pm = FPersistentManager::getInstance();
-        $vForm = new VForm();
 
         $session = new USession();
+
 
         $utente = $session->getValue('user');
 
@@ -27,30 +28,37 @@ class CGestioneThreads
 
             $user = unserialize($utente);
 
+            $vCreazioneThread = new VCreazioneThread();
+
+            $vPage = new VPage($vCreazioneThread->getSmarty());
+            $vPage->setBottoneFiltra($pm->loadAllCategorie());
+            $vPage->setMenuLeft($pm->loadAllCategorie());
+            $vPage->setMenuUtente($user, false);
+
+            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) || $pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getId())) {
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                    $vPage->setMenuUtente($user, true);
+                } else {
+                    $vPage->setMenuUtente($user, false);
+                }
+            }
+
+
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA,FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
 
-                $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
-                if ($impostaElementiPagina) {
 
-                    $vForm->setCategoriaCreazioneThread($categoria);
-                    $vForm->showForm(VForm::FORM_CREAZIONE_THREAD);
-
-                } else {
-
-                    $vError = new VError();
-                    $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-
-                }
-
+                $vCreazioneThread->setCategoriaCreazioneThread($categoria);
+                $vCreazioneThread->setErroreValidazione(null, null);
+                $vCreazioneThread->showCreaThread();
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
                 $valutazione = new EValutazione(null, null, null, null);
 
-                $valori = $vForm->getValori(VForm::FORM_CREAZIONE_THREAD);
+                $valori = $vCreazioneThread->getValori();
 
                 if (isset($valori)) {
 
@@ -59,11 +67,7 @@ class CGestioneThreads
 
                     if (array_key_exists('allegati', $valori)) {
 
-                        $allegati = array();
-                        $allegati['tipo'] = $valori['tipo'];
-                        $allegati['nome'] = $valori['nome'];
-                        $allegati['dimensione'] = $valori['dimensione'];
-                        $allegati['file'] = $valori['file'];
+                        $allegati = $valori['allegati'];
 
                     } else {
 
@@ -77,36 +81,27 @@ class CGestioneThreads
 
                         if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
 
-                            header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/conferma");
+                            header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
 
                         } else {
 
-                            header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/errore");
+                            header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
 
                         }
 
                     } catch (ValidationException $e) {
 
-                        $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
-
-                        if ($impostaElementiPagina) {
-
-                            $vForm->setErroreValidazione($e->getCode(), $e->getMessage());
-                            $vForm->showForm(VForm::FORM_CREAZIONE_THREAD);
-
-                        } else {
-
-                            $vError = new VError();
-                            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-
-                        }
+                        $vCreazioneThread->setErroreValidazione($e->getCode(), $e->getMessage());
+                        $vCreazioneThread->setCategoriaCreazioneThread($categoria);
+                        $vCreazioneThread->setCampiObbligatoriMancanti(false);
+                        $vCreazioneThread->showCreaThread();
 
                     }
 
 
                 } else {
 
-                    header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/errore");
+                    header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
 
                 }
 
@@ -124,7 +119,7 @@ class CGestioneThreads
     public function rispondiThread(): void {
 
         $pm = FPersistentManager::getInstance();
-        $vForm = new VForm();
+        $vRisposta = new VRisposta();
 
         $session = new USession();
         $utente = $session->getValue('user');
@@ -133,11 +128,11 @@ class CGestioneThreads
             $user = unserialize($utente);
 
 
-            $valori = $vForm->getValori(VForm::FORM_INVIO_RISPOSTA);
+            $valori = $vRisposta->getValori();
 
             if (isset($valori)) {
                 $testo = $valori['testo'];
-                $threadID = $valori['threadID'];
+                $threadID = (int) $valori['threadID'];
 
                 $rispID = null;
                 $risposta = new ERisposta($rispID, $testo, null, $user);
@@ -157,7 +152,7 @@ class CGestioneThreads
             } else {
 
                 $vThread = new VThread();
-                $vThread->setMessaggiErroreConferma(VThread::ERROR);
+                $vThread->setMessaggio(true, VThread::ERROR, 'danger');
                 $vThread->showThread();
 
             }
@@ -179,25 +174,26 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-        $vThread = new VThread();
 
         $session = new USession();
         $utente = $session->getValue('user');
-
-        $vThread->setMessaggiErroreConferma(VThread::NULLA);
-
 
         if (isset($utente)) {
 
             $user = unserialize($utente);
 
             $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-            if (isset($valutazione)) {
-                $vThread->setBottoniValutazione(true, $valore);
-                $valutazione->valuta($user, $valore);
-                $pm->updateValutazione($valutazione, $valore, $user);
+            $giudizio = $valutazione->valuta($user, $valore);
 
-            }
+            $pm->updateValutazione($valutazione, $giudizio , $user);
+
+
+            header("Location: /UniChat/threads/visualizzaThread/$threadID");
+
+
+        } else {
+
+            header('Location: /UniChat/home/visualizzaHome');
 
         }
 
@@ -217,40 +213,88 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
         $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
 
+        $categorie = $pm->loadAllCategorie();
+
         $vThread = new VThread();
+
+        $vPage = new VPage($vThread->getSmarty());
 
         $session = new USession();
         $utente = $session->getValue('user');
 
-        if (isset($utente)) {
+        //Verifica se le categorie sono state recuperate.
+        if (!isset($categorie)) {
 
-            $user = unserialize($utente);
+            $vError = new VError();
+            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+            $vError->showError();
 
+        } else {
+
+            //Verifica se il thread è stato caricato.
             if (isset($thread)) {
 
-                $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_DEFAULT, $thread->getID());
+                //Condizione per utente loggato.
+                if (isset($utente)) {
 
-                $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
-                if ($impostaElementiPagina) {
+                    $user = unserialize($utente);
 
+                    $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $thread->getID());
+
+                    $vThread->setBottoniElimina(false);
+                    $vThread->setFormRisposta(true);
+                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
                     $vThread->setURLNavigazione($thread);
                     $vThread->setThread($thread);
-                    $vThread->setFormRisposta(true);
-                    $vThread->setBottoniElimina(false);
-                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
 
-                    if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true or $pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true) {
+                    $vPage->setMenuLeft($categorie);
+                    $vPage->setBottoneFiltra($categorie);
+
+
+
+                    /*
+                     * Condizione per utente Admin (Visualizza bottone elimina thread/risposta)
+                     */
+                    if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) == true) {
+
                         $vThread->setBottoniElimina(true);
                     }
 
+                    /*
+                     * Condizione per utente Moderatore e Admin (Visualizza bottone elimina thread/risposta)
+                     */
+                    if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
+
+                        $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+                        $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+
+                        if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
+
+                            $vThread->setBottoniElimina(true);
+
+                        }
+
+                    }
+
+                    $vThread->setFormRisposta(true);
+                    $vPage->setMenuUtente($user, false);
+                    $vThread->setBottoniValutazione(true, null);
+                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
+
+
+                //Condizione per utente non loggato.
                 } else {
 
-                    $vError = new VError();
-                    $vError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
-                    $vError->showError();
+                    $vThread->setBottoniElimina(false);
+                    $vThread->setFormRisposta(false);
+                    $vThread->setBottoniValutazione(false, null);
+                    $vThread->setURLNavigazione($thread);
+                    $vPage->setBottoneFiltra($categorie);
+                    $vPage->setMenuUtente(null, false);
+                    $vThread->setThread($thread);
+                    $vPage->setMenuLeft($categorie);
 
                 }
-
 
                 /*
                  * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
@@ -258,51 +302,34 @@ class CGestioneThreads
                  */
                 if (func_num_args() == 2) {
                     if (func_get_arg(1) == "conferma") {
-                        $vThread->setMessaggiErroreConferma(VThread::SUCCESS);
+                        $vThread->setMessaggio(true, VCategoria::SUCCESS, 'success');
                     } else if (func_get_arg(1) == "errore") {
-                        $vThread->setMessaggiErroreConferma(VThread::ERROR);
+                        $vThread->setMessaggio(true, VCategoria::ERROR, 'danger');
                     } else {
-                        $vThread->setMessaggiErroreConferma(VThread::NULLA);
+                        $vThread->setMessaggio(false, VCategoria::NULLA, null);
                     }
+                } else {
+
+                    $vThread->setMessaggio(false, VCategoria::NULLA, null);
+
                 }
 
-
                 $vThread->showThread();
+
+            //Condizione nel caso in cui non dovesse essere recuperato il thread.
+            } else {
+
+                $vError = new VError();
+                $vError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
+                $vError->showError();
 
             }
 
         }
 
-    }
-
-
-    /**
-     * Metodo responsabile del recupero del thread più discusso in base alla categoria.
-     */
-    public function threadsPiuDiscussi(int $numeroThreads): ?array {
-
-
-        $pm = FPersistentManager::getInstance();
-
-        $threads = $pm->loadThreadsPiuDiscussi($numeroThreads);
-
-        return $threads;
 
     }
 
-    /**
-     * Metodo responsabile del recupero del thread maggiormente valutato in base alla categoria.
-     */
-    public function threadsValutazionePiuAlta(int $numeroThreads): ?array {
-
-
-        $pm = FPersistentManager::getInstance();
-
-        $threads = $pm->loadThreadsValutazionePiuAlta($numeroThreads);
-
-        return $threads;
-
-    }
 
     /**
      * @param int $threadID
@@ -329,7 +356,7 @@ class CGestioneThreads
 
                 if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
-                    header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/conferma");
+                    header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
 
 
                 } else {
@@ -349,13 +376,17 @@ class CGestioneThreads
 
                     if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
-                        header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/conferma");
+                        header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/1/conferma");
 
                     } else {
 
                         header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
 
                     }
+
+                } else {
+
+                    header("Location: /UniChat/threads/visualizzaThread/$threadID");
 
                 }
 
@@ -416,6 +447,10 @@ class CGestioneThreads
 
                     }
 
+                } else {
+
+                    header("Location: /UniChat/threads/visualizzaThread/$threadID");
+
                 }
             }
 
@@ -424,31 +459,6 @@ class CGestioneThreads
 
     }
 
-    /**
-     * @param int $categoriaID
-     * @param int $numeroPagina
-     * @throws ValidationException
-     * @return array|null
-     * Metodo responsabile del recupero di un array di 6 thread (valore prescelto per la paginazione) in base alla pagina
-     * selezionata dall'utente in una determinata categoria.
-     */
-    public function elencaThreads(int $categoriaID, int $numeroPagina): ?array {
-
-        $pm = FPersistentManager::getInstance();
-
-        /*
-         * La riga di partenza deve essere calcolata in base alla pagina selezionata.
-         * Se siamo in pagina 1 la riga di partenza sarà 0, se siamo in pagina 2 la riga di partenza sarà 6
-         * se siamo in pagina 3 la riga di partenza sarà 12 e così via.
-         * rigaDiPartenza = (6 x numeroPaginaSelezionata) - 6
-         * Questo perché le pagine partono con indice 1 e le righe con indice 0
-         */
-        $rigaDiPartenza = 6*($numeroPagina - 1);
-
-        $threads = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $categoriaID, $rigaDiPartenza, 6);
-        return $threads;
-
-    }
 
     /**
      * @param int $numeroPagina
@@ -464,49 +474,150 @@ class CGestioneThreads
      */
     public function ricerca(int $numeroPagina): void {
 
+        $session = new USession();
+        $vRicerca = new VRicerca();
+        $vPage = new VPage($vRicerca->getSmarty());
         $pm = FPersistentManager::getInstance();
 
-        $vForm = new VForm();
-
-        $vCategoria = new VCategoria();
-
-        /*
-         * La riga di partenza deve essere calcolata in base alla pagina selezionata.
-         * Se siamo in pagina 1 la riga di partenza sarà 0, se siamo in pagina 2 la riga di partenza sarà 6
-         * se siamo in pagina 3 la riga di partenza sarà 12 e così via.
-         * rigaDiPartenza = (6 x numeroPaginaSelezionata) - 6
-         * Questo perché le pagine partono con indice 1 e le righe con indice 0
-         */
-        $rigaDiPartenza = 6*($numeroPagina - 1);
-
-        $testoRicerca = $vForm->getValori(VForm::FORM_RICERCA)['testoricerca'];
-        if (isset($testoRicerca)) {
-
-            $categoriaRicerca = $vForm->getValori(VForm::FORM_RICERCA)['testoricerca'];
-            $categoriaRicerca = array($categoriaRicerca);
-
-
-            if (isset($categoriaRicerca) && $categoriaRicerca != 0) {
-
-                $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $testoRicerca, $categoriaRicerca, $rigaDiPartenza, 6);
-                $vCategoria->setCategoriaRicerca($categoriaRicerca);
-
-
-            } else {
-
-                $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $testoRicerca, null, $rigaDiPartenza, 6);
-                $vCategoria->setCategoriaRicerca(null);
-
-            }
-
-            $vCategoria->setThreads($threads);
-            $vCategoria->setActivePage($numeroPagina);
-            $vCategoria->showRicerca();
-
+        try {
+            $categorie = $pm->loadAllCategorie();
+        } catch (ValidationException $e) {
+            $categorie = null;
         }
 
 
+        if (isset($categorie)) {
+            $vPage->setBottoneFiltra($categorie);
+            $vPage->setMenuLeft($categorie);
+            $vPage->setMenuUtente(null, null);
 
+            $user = $session->getValue('user');
+            if (isset($user)) {
+                $user = unserialize($user);
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                    $vPage->setMenuUtente($user, true);
+                } else {
+                    $vPage->setMenuUtente($user, false);
+                }
+            }
+
+            $valori = $vRicerca->getValori();
+            $rigaDiPartenza = VRicerca::NUMERO_THREAD_PER_PAGINA*($numeroPagina - 1);
+
+            try {
+                if (array_key_exists('testoricerca', $valori)) {
+                    $titoloCercato = $valori['testoricerca'];
+                    if (array_key_exists('categoriaID', $valori) && $valori['categoriaID'] != 0) {
+                        $categoriaID = $valori['categoriaID'];
+                        $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+
+                    } else {
+                        $categoriaID = null;
+                        $categoria = null;
+                    }
+
+
+                    if (isset($categoriaID)) {
+
+                        /**
+                         * Ricerca in base al titolo e rispetto ad una categoria.
+                         */
+                        $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloCercato, $categoriaID, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
+                        $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_SEARCH, $categoriaID, $titoloCercato);
+                    } else {
+
+                        /**
+                         * Ricerca in base al titolo e rispetto a tutte le categorie.
+                         */
+                        $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $titoloCercato, null, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
+                        $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_SEARCH, null, $titoloCercato);
+
+                    }
+
+                    if (isset($threads) && isset($numeroThreads) && !(isset($categoriaID) && !isset($categoria))) {
+
+                        if (!(isset($categoriaID))) {
+                            $categoriaID = 0;
+                        }
+
+                        $vRicerca->setPaginazione($numeroThreads, $categoriaID, $titoloCercato);
+                        $vRicerca->setActivePage($numeroPagina);
+                        $vRicerca->setCategoriaRicerca($titoloCercato, $categoria);
+                        $vRicerca->setThreads($threads);
+                        $vRicerca->showRicerca();
+
+                    } else {
+
+                        /**
+                         * Se non si riescono a recuperare i threads e il numero di threads ottenuti e se in particolare
+                         * risulta che l'utente ha impostato una categoria di ricerca, ma la categoria non viene recuperata
+                         * allora vuol dire che la base dati non è raggiungibile, quindi viene mostrata la pagina di errore.
+                         */
+                        $vError = new VError();
+                        $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                        $vError->showError();
+                    }
+
+                } else {
+
+                    if (array_key_exists('categoriaID', $valori) && $valori['categoriaID'] != 0) {
+
+                        /**
+                         * Se l'utente effettua una ricerca senza testo, ma selezionando una categoria allora si viene
+                         * riamdanti alla pagina della categoria selezionata.
+                         */
+                        $categoriaID = $valori['categoriaID'];
+                        header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1");
+
+                    } else {
+
+                        /**
+                         * Se l'utente sottomette al server una ricerca senza testo e senza specificare una categoria
+                         * allora vengono visualizzati tutti i thread.
+                         */
+                        $threads = $pm->loadEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, null, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
+                        $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, null, null);
+                        if (isset($threads) && isset($numeroThreads)) {
+                            $vRicerca->setPaginazione($numeroThreads, 0, "");
+                            $vRicerca->setActivePage($numeroPagina);
+                            $vRicerca->setCategoriaRicerca("", null);
+                            $vRicerca->setThreads($threads);
+                            $vRicerca->showRicerca();
+                        } else {
+
+                            /**
+                             * Se non si riescono a recuperare i dati allora vuol dire che la base dati non è raggiungibile,
+                             * quindi viene mostrata la pagina di errore.
+                             */
+                            $vError = new VError();
+                            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                            $vError->showError();
+                        }
+                    }
+                }
+            } catch (ValidationException $e) {
+
+                /**
+                 * Se si hannno problemi con la validazione dei dati presenti nella base dati vuol dire che i dati in
+                 * essa presenti sono stati manomessi o che il codice di validazione è stato modificato ed i dati presenti
+                 * nella base dati non sono più validi.
+                 * L'utente riceverà una pagina di errore.
+                 */
+                $vError = new VError();
+                $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                $vError->showError();
+            }
+
+        } else {
+
+            /**
+             * Se non si riescono a recuperare le categorie allora vuol dire che la base dati non è raggiungibile,
+             * quindi viene mostrata la pagina di errore.
+             */
+            $vError = new VError();
+            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+            $vError->showError();
+        }
     }
 
     /**

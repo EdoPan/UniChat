@@ -20,6 +20,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body class="bg-gradient-primary">
@@ -38,7 +40,29 @@
                         </div>
 
                         <!-- Form registrazione -->
-                        <form class="user">
+                        <form class="user" enctype="multipart/form-data" action="/UniChat/utenti/registrazione" method="post">
+
+                            <!-- Messaggio operazione fallita -->
+                            {if $erroreOperazione == true}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong>{$messaggioErroreOperazione}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {/if}
+                            <!-- Fine messaggio errore -->
+
+                            <!-- Messaggio errore campi obbligatori mancanti -->
+                            {if $erroreDatiObbligatori == true}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong>{$messaggioErroreDatiObbligatori}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {/if}
+                            <!-- Fine messaggio errore -->
 
                             <!-- Messaggio errore validazione nome o cognome -->
                             {if $erroreDenominazione == true}
@@ -96,12 +120,16 @@
                             {/if}
                             <!-- Fine messaggio errore -->
 
+                            <!-- Messaggio avviso password non uguali -->
+                            <div id="avvisoPasswordNonUguali"></div>
+                            <!-- Fine messaggio -->
+
                             <div class="form-group row">
 
                                 <!-- Inserimento password -->
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                     <input type="password" class="form-control form-control-user"
-                                           id="password" name="password" placeholder="Password" pattern="^[a-zA-z0-9@.\-_]{8,}$" title="Sono ammessi solo i caratteri alfanumerici e i simboli speciali: . \ - _ . La password deve essere lunga almeno 8 caratteri." required>
+                                           id="password" name="password" placeholder="Password" title="Sono ammessi solo i caratteri alfanumerici e i simboli speciali: . \ - _ . La password deve essere lunga almeno 8 caratteri." required>
                                 </div>
 
                                 <!-- Conferma password -->
@@ -129,12 +157,24 @@
                             <!-- Fine messaggio di errore -->
 
                             <!-- Pulsante caricamento foto profilo -->
-                            <label for="fotoProfilo">Carica foto profilo:</label>
-                            <input type="file" id="fotoProfilo" name="fotoProfilo" class="btn btn-google btn-user btn-block">
 
-                            <!-- Pulsante registrazione account -->
+
+                            <input type="file" id="fotoProfilo" name="fotoProfilo" hidden="hidden" />
+                            <button class="btn btn-secondary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Carica Foto Profilo</button>
+                            <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna foto caricata</span><br><br>
+
+
+                            <!--<label for="fotoProfilo" style="display: block; position: relative; border-radius: 25px; background: linear-gradient(40deg, #ff2525, #e33535); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                Carica foto profilo
+                            </label>
+
+                            <label for="fotoProfilo" style="display: block; position: relative; width: 100%; height: 45px; border-radius: 25px; background: linear-gradient(40deg, #ff2525, #e33535); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                 Carica foto profilo
+                             </label>
+                             <input class="btn btn-google" type="file" id="fotoProfilo" name="fotoProfilo">  -->
+                              <!-- Pulsante registrazione account -->
                             <button type="submit" class="btn btn-primary btn-user btn-block">
-                                Regista Account
+                                Registra Account
                             </button>
                         </form>
                         <!-- Fine form registrazione -->
@@ -150,6 +190,13 @@
                         <!-- Link pagina registrazione -->
                         <div class="text-center">
                             <a class="small" href="/UniChat/utenti/login">Sei già un utente? Effettua il Login!</a>
+                        </div>
+
+                        <br>
+
+                        <!-- Link torna alla home  -->
+                        <div class="text-center">
+                            <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                         </div>
                     </div>
                 </div>
@@ -170,6 +217,12 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<script>
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
+
 <script type="text/javascript">
     function verificaPassword() {
         var password;
@@ -177,10 +230,38 @@
         password = document.getElementById("password").value;
         ripetiPassword = document.getElementById("ripetiPassword").value;
         if (password !== ripetiPassword) {
-            alert("Le due password non coincidono");
+            document.getElementById("avvisoPasswordNonUguali").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">' +
+                '<b>Attenzione. </b>Le due password non sono uguali.' +
+                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                '<span aria-hidden="true">&times;</span>' +
+                '</button>' +
+                '</div>';
+        } else {
+            document.getElementById("avvisoPasswordNonUguali").innerHTML = '';
         }
     }
 </script>
+
+<script type="text/javascript">
+        const realFileBtn = document.getElementById("fotoProfilo");
+        const customBtn = document.getElementById("custom-button");
+        const customTxt = document.getElementById("custom-text");
+
+        customBtn.addEventListener("click", function() {
+            realFileBtn.click();
+        });
+
+        realFileBtn.addEventListener("change", function() {
+            if (realFileBtn.value) {
+                customTxt.innerHTML = realFileBtn.value.match(
+                    /[\/\\]([\w\d\s\.\-\(\)]+)$/
+                )[1];
+            } else {
+                customTxt.innerHTML = "Nessuna foto caricata.";
+            }
+        });
+</script>
+
 
 </body>
 

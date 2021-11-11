@@ -20,24 +20,19 @@
 
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
 
-<body id="page-top" onload="loadChat();
-
-        {if $messaggio neq ""}
-            presentaAlert()
-        {/if}
-
-        ">
+<body id="page-top" onload="loadChat()">
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/showHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/home/visualizzaHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -55,15 +50,16 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
+
                 </div>
             </div>
         </li>
@@ -99,7 +95,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -111,7 +107,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -151,7 +147,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -176,7 +172,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -209,9 +205,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -246,8 +242,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -256,13 +251,13 @@
 
 
                                 <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -278,6 +273,20 @@
 
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
+
+                <!-- Messaggio -->
+
+                {if $messaggio == true}
+                    <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
+                        {$testo}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                {/if}
+
+                <!-- Fine messaggio -->
 
                 <!-- Intestazione della pagina -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -308,7 +317,7 @@
                             <div class="card-body">
 
                                 <!-- Contenitore scrollable -->
-                                <div style = "width: auto; height: 500px; line-height: 3em; overflow:auto; padding: 5px;">
+                                <div id="chatbox" style = "width: auto; height: 500px; line-height: 3em; overflow:auto; padding: 5px;">
 
 
                                 </div>
@@ -317,13 +326,13 @@
                                     <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
                                 </form>
 
-                                {if $loggato eq true}
+                                {if $log eq true}
                                 <!-- Form invio messaggio -->
                                 <form class="row mb-2">
 
                                     <!-- Inserimento testo -->
                                     <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control" id="usrmsg" placeholder="Messaggio">
+                                        <input type="text" autocomplete="off" class="form-control" id="usrmsg" placeholder="Messaggio">
                                     </div>
 
                                     <!-- Pulsante invio -->
@@ -371,7 +380,7 @@
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
-                                    <a href="#piuvotati" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="piuvotati">
+                                    <a href="#piuvotati" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="piuvotati">
                                         <h6 class="m-0 font-weight-bold text-primary">Thread più votati</h6>
                                     </a>
 
@@ -392,41 +401,32 @@
                                                     <!--/.Controls-->
                                                 </div>
 
-                                                <!--Indicators-->
-                                                <ol class="carousel-indicators">
-                                                    <li data-target="#multi-item-piuvotati" data-slide-to="0" class="active"></li>
-                                                    <li data-target="#multi-item-piuvotati" data-slide-to="1"></li>
-                                                    <li data-target="#multi-item-piuvotati" data-slide-to="2"></li>
-
-                                                </ol>
-                                                <!--/.Indicators-->
 
                                                 <!-- Contenitore slides -->
                                                 <div class="carousel-inner" role="listbox">
 
-                                                    {foreach from=$treadsConValutazionePiuAlta item=thread}
-                                                    <!-- Inizio prima slide -->
-                                                    <div class="carousel-item active">
-
-                                                        <div class="row ml-1 mb-2 border-bottom-primary text-primary" >
-                                                            <h4>Categoria: <b>{$thread->getCategoria()}</b></h4>
-                                                        </div>
+                                                    {for $i = 0 to $numeroThreadsValutazionePiuAlta}
+                                                        {if $i == 0} <div class="carousel-item active"> {else} <div class="carousel-item"> {/if}
+                                                                <div class="row ml-1 mb-2 {if $i==0}border-bottom-primary text-primary{elseif $i==1}border-bottom-success text-success{elseif $i==2}border-bottom-danger text-danger{/if}" >
+                                                                    <h4>Categoria: <b>{$threadsConValutazionePiuAlta[$i]->getCategoriaThread()->getNome()}</b></h4>
+                                                                </div>
 
 
-                                                        <div class="card mb-2">
-                                                            <div class="card-body">
-                                                                <h4 class="card-title text-primary font-weight-bold">{$thread->getTitolo()}<sup> {$thread->getValutazione()} <i class="fas fa-star"></i></sup></h4>
-                                                                <h6 class="font-italic">di <b>{$thread->getAutoreThread()->getNome()} {$thread->getAutoreThread()->getCognome()}</b></h6>
-                                                                <p class="card-text">{$thread->getTesto()}</p>
+                                                                <div class="card mb-2">
+                                                                    <div class="card-body">
+                                                                        <h4 class="card-title {if $i==0}text-primary{elseif $i==1}text-success{elseif $i==2}text-danger{/if} font-weight-bold">{$threadsConValutazionePiuAlta[$i]->getTitolo()}<sup> {$threadsConValutazionePiuAlta[$i]->getValutazione()->getTotale()} <i class="fas fa-star"></i></sup></h4>
+                                                                        <h6 class="font-italic">di <b>{$threadsConValutazionePiuAlta[$i]->getAutoreThread()->getNome()} {$threadsConValutazionePiuAlta[$i]->getAutoreThread()->getCognome()}</b></h6>
+                                                                        <p class="card-text">{$threadsConValutazionePiuAlta[$i]->getTesto()}</p>
 
-                                                                <a class="btn btn-primary">Leggi tutto</a>
+                                                                        <a class="btn {if $i==0}btn-primary{elseif $i==1}btn-success{elseif $i==2}btn-danger{/if}" href="/UniChat/threads/visualizzaThread/{$threadsConValutazionePiuAlta[$i]->getID()}">Leggi tutto</a>
+                                                                    </div>
+                                                                </div>
+
+
                                                             </div>
-                                                        </div>
+                                                    {/for}
 
 
-                                                    </div>
-                                                    <!-- Fine prima slide -->
-                                                    {/foreach}
 
 
                                                 </div>
@@ -447,7 +447,7 @@
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
-                                    <a href="#piurisposte" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="piurisposte">
+                                    <a href="#piurisposte" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="piurisposte">
                                         <h6 class="m-0 font-weight-bold text-primary">Thread con più risposte</h6>
                                     </a>
 
@@ -468,42 +468,25 @@
                                                     <!--/.Controls-->
                                                 </div>
 
-                                                <!--Indicators-->
-                                                <ol class="carousel-indicators">
-                                                    <li data-target="#multi-item-piurisposte" data-slide-to="0" class="active"></li>
-                                                    <li data-target="#multi-item-piurisposte" data-slide-to="1"></li>
-                                                    <li data-target="#multi-item-piurisposte" data-slide-to="2"></li>
-
-                                                </ol>
-                                                <!--/.Indicators-->
-
                                                 <!-- Inizio contenitore slides -->
                                                 <div class="carousel-inner" role="listbox">
 
-                                                    {foreach from=$threadsConPiuRisposte item=thread}
-                                                    <!-- Inizio prima slide -->
-                                                    <div class="carousel-item active">
+                                                    {for $j = 0 to $numeroThreadsPiuDiscussi}
+                                                        {if $j == 0} <div class="carousel-item active"> {else} <div class="carousel-item"> {/if}
+                                                            <div class="row ml-1 mb-2 {if $j==0}border-bottom-primary text-primary{elseif $j==1}border-bottom-success text-success{elseif $j==2}border-bottom-danger text-danger{/if}">
+                                                                <h4>Categoria: <b>{$threadsConPiuRisposte[$j]->getCategoriaThread()->getNome()}</b></h4>
+                                                            </div>
+                                                            <div class="card mb-2">
+                                                                <div class="card-body">
+                                                                    <h4 class="card-title {if $j==0}text-primary{elseif $j==1}text-success{elseif $j==2}text-danger{/if} font-weight-bold">{$threadsConPiuRisposte[$j]->getTitolo()}<sup> {$threadsConPiuRisposte[$j]->contaRisposte()} <i class="fas fa-comment"></i></sup></h4>
+                                                                    <h6 class="font-italic">di <b>{$threadsConPiuRisposte[$j]->getAutoreThread()->getNome()} {$threadsConPiuRisposte[$j]->getAutoreThread()->getCognome()}</b></h6>
+                                                                    <p class="card-text">{$threadsConPiuRisposte[$j]->getTesto()}</p>
 
-                                                        <div class="row ml-1 mb-2 border-bottom-primary text-primary" >
-                                                            <h4>Categoria: <b>{$thread->getCategoria()}</b></h4>
-                                                        </div>
-
-
-                                                        <div class="card mb-2">
-                                                            <div class="card-body">
-                                                                <h4 class="card-title text-primary font-weight-bold">{$thread->getTitolo()}<sup> {$thread->getValutazione()} <i class="fas fa-comment"></i></sup></h4>
-                                                                <h6 class="font-italic">di <b>{$thread->getAutoreThread()->getNome()} {$thread->getAutoreThread()->getCognome()}</b></h6>
-                                                                <p class="card-text">{$thread->getTesto()}</p>
-
-                                                                <a class="btn btn-primary" href="/UniChat/threads/showThread/{$thread->getCategoriaThread()->getID()}/{$thread->getID()}">Leggi tutto</a>
+                                                                    <a class="btn {if $j==0}btn-primary{elseif $j==1}btn-success{elseif $j==2}btn-danger{/if}" href="/UniChat/threads/visualizzaThread/{$threadsConPiuRisposte[$j]->getID()}">Leggi tutto</a>
+                                                                </div>
                                                             </div>
                                                         </div>
-
-                                                    </div>
-                                                    <!-- Fine prima slide -->
-                                                    {/foreach}
-
-
+                                                    {/for}
                                                 </div>
                                                 <!-- Fine contenitore slides -->
 
@@ -576,14 +559,6 @@
 
 
 
-<!-- Script per la visualizzazione messaggio conferma/errore -->
-<script>
-    function presentaAlert() {
-        {if {$messaggio} neq ""}
-            alert({$messaggio});
-        {/if}
-    }
-</script>
 
 
 
@@ -604,6 +579,12 @@
 <!-- Page level custom scripts -->
 <script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
 <script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
+
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 <!-- Libreria jquery -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -772,7 +753,6 @@
     }
 
 </script>
-
 <script type="text/javascript">
 
     /**

@@ -9,7 +9,7 @@ class CFrontController
      * Se non si hanno classi e metodi nella url allora si viene rimandati alla home.
      * Se vengono forniti classi o metodi inesistenti si riceve il codice di errore HTTP 400.
      */
-    public function run()
+    public function run(): void
     {
         $url = $_SERVER['REQUEST_URI'];
         $urlComponents = explode('/', $url);
@@ -37,8 +37,25 @@ class CFrontController
                 if (isset($method)) {
                     if (method_exists($controller, $method)) {
                         if (isset($params)) {
-                            if (count($params) == 1) $controller->$method($params[0]);
-                            elseif (count($params) == 2) $controller->$method($params[0], $params[1]);
+                            if (count($params) == 1) {
+                                if ((int)$params[0] == 0) {
+                                    $controller->$method($params[0]);
+                                } else {
+                                    $controller->$method((int)$params[0]);
+                                }
+                            } elseif (count($params) == 2) {
+                                if ((int)$params[1] == 0) {
+                                    $controller->$method((int)$params[0], $params[1]);
+                                } else {
+                                    $controller->$method((int)$params[0], (int)$params[1]);
+                                }
+                            } else if (count($params) == 3) {
+                                if ((int)$params[2] == 0) {
+                                    $controller->$method((int)$params[0], (int)$params[1], $params[2]);
+                                } else {
+                                    $controller->$method((int)$params[0], (int)$params[1], (int)$params[2]);
+                                }
+                            }
                         } else {
                             $controller->$method();
                         }

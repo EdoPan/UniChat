@@ -14,6 +14,11 @@ class VProfile
         $this->smarty = VSmarty::start();
     }
 
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
+    }
+
     /**
      * @param EUser $user
      * Metodo responsabile dell'assegnazione delle variabili richiamate in profile.tpl relative a tutti i valori

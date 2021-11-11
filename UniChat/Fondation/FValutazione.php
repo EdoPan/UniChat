@@ -297,7 +297,7 @@ class FValutazione
      * @param int $userID Identificativo dell'utente che ha espresso il giudizio
      * @return bool Esito dell'operazione
      */
-    private function storeVotiNegativi(PDO $pdo, int $valutazioneID, $userID): bool
+    private function storeVotiNegativi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
         try {
             $sql = ("INSERT INTO votinegativi(valutazioneID, userID) VALUES (:valutazioneID, :userID)");

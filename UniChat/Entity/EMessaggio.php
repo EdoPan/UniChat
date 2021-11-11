@@ -9,11 +9,6 @@
  */
 class EMessaggio implements JsonSerializable {
 
-    /**
-     * Imposta il formato del metodo data.
-     * @var string
-     */
-    private static string $formatoData = "Y-m-d H:i:s";
 
     /**
      * Identificativo dell'oggetto EMessaggio.
@@ -34,6 +29,12 @@ class EMessaggio implements JsonSerializable {
     private string $data;
 
     /**
+     * Imposta il formato del metodo data.
+     * @var string
+     */
+    private static string $formatoData = "Y-m-d H:i:s";
+
+    /**
      * Utente che ha pubblicato il messaggio.
      * @var EUser
      */
@@ -42,6 +43,7 @@ class EMessaggio implements JsonSerializable {
     /**
      * @param int|null $id
      * @param string $testo
+     * @param string|null $data
      * @param EUser $autoreMessaggio
      */
     public function __construct(?int $id, string $testo, ?string $data, EUser $autoreMessaggio)

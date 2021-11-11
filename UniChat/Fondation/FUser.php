@@ -248,19 +248,22 @@ class FUser
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 $record = $rows[0];
-
-                /*
-                 * Verifica della tipologia di utente e scelta del metodo di load corrispondente.
-                 */
-                if ((int)$record["moderatore"] == 1) {
-                    $user = $this->loadModeratore((int)$record["userID"]);
-                } else if ((int)$record["admin"] == 1) {
-                    $user = $this->loadAdmin((int)$record['userID']);
+                if ((int)$record['userID'] == 1) {
+                    return null;
                 } else {
-                    $user = $this->load((int)$record['userID']);
-                }
+                    /*
+                     * Verifica della tipologia di utente e scelta del metodo di load corrispondente.
+                     */
+                    if ((int)$record["moderatore"] == 1) {
+                        $user = $this->loadModeratore((int)$record["userID"]);
+                    } else if ((int)$record["admin"] == 1) {
+                        $user = $this->loadAdmin((int)$record['userID']);
+                    } else {
+                        $user = $this->load((int)$record['userID']);
+                    }
 
-                return $user;
+                    return $user;
+                }
             } else {
                 return null;
             }
@@ -713,7 +716,11 @@ class FUser
             ));
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
-                return true;
+                if ((int)$rows[0]['userID'] == 1) {
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
                 return false;
             }
@@ -818,40 +825,6 @@ class FUser
                 }
             }
             return $users;
-        } catch (PDOException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * Permette di ottenere un certo numero di EModeratori specificando da quale riga dell tabella della base dati
-     * partire (riga di partenza esclusa) e il numero di righe da visualizzare.
-     * Viene restituito un array di moderatori, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
-     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
-     * @param int $numeroRighe Valore che indica quanti record recuperare
-     * @return array|null Elenco contenente i moderatori recuperati
-     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati
-     */
-    public function loadAllModeratori(int $rigaPartenza, int $numeroRighe): ?array
-    {
-        $moderatori = array();
-
-        try {
-            $dbConnection = FConnection::getInstance();
-            $pdo = $dbConnection->connect();
-
-            $stmt = $pdo->query("SELECT userID FROM users WHERE moderatore = true ORDER BY cognome LIMIT " . $rigaPartenza . ", " . $numeroRighe);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($rows as $row) {
-                $moderatore = $this->loadModeratore((int)$row["userID"]);
-                if (isset($moderatore)) {
-                    $moderatori[] = $moderatore;
-                } else {
-                    return null;
-                }
-            }
-            return $moderatori;
         } catch (PDOException $e) {
             return null;
         }

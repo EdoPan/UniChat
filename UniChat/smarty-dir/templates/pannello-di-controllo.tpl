@@ -22,6 +22,8 @@
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/UniChat/Template/css/pannello_di_controllo.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body id="page-top" onload="loadElementiPaginati(1, 'utenti');loadElementiPaginati(1, 'categorie');contaThreads(1, 0)">
@@ -30,10 +32,10 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -50,13 +52,13 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
                 </div>
@@ -93,7 +95,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -105,7 +107,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -145,7 +147,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -170,7 +172,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -203,9 +205,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -240,8 +242,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -250,13 +251,13 @@
 
 
                                 <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -273,6 +274,16 @@
             <div class="container-fluid">
 
                 <!-- Intestazione della pagina -->
+                <!-- Avviso operazione non possibile -->
+                {if $avviso == true}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <b>Attenzione. </b>{$messaggioAvviso}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {/if}
+                <!-- Fine avviso -->
                 <!-- Messaggi conferma errore -->
                 {if $conferma == true}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -284,7 +295,7 @@
                 {/if}
                 {if $errore == true}
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Attenzione. </strong> {$messaggioErrore}
+                        {$messaggioErrore}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -306,48 +317,47 @@
                     <!-- Contenitore utenti -->
                     <div class="collapse" id="utenti" style="">
                         <div class="card-body">
+
+                            <!-- riga utenti-->
                             <div class="row">
-
-
-                                <!-- Utente-->
                                 <div class="col" id="utente-0">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
-
-                                <!-- Utente-->
                                 <div class="col" id="utente-1">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
+                            </div>
 
-                                <!-- Utente-->
+                            <!-- riga utenti-->
+                            <div class="row">
                                 <div class="col" id="utente-2">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
-
-
-                                <!-- Utente-->
                                 <div class="col" id="utente-3">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
+                            </div>
 
-
-                                <!-- Utente-->
+                            <!-- riga utenti-->
+                            <div class="row">
                                 <div class="col" id="utente-4">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
-
-
-                                <!-- Utente-->
                                 <div class="col" id="utente-5">
+                                    <!-- Utente -->
 
+                                    <!-- Fine Utente -->
                                 </div>
-                                <!-- Fine Utente -->
-
                             </div>
 
                             <br>
@@ -536,6 +546,12 @@
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 <script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
+
+<script type="text/javascript">
 
     /**
      * La funzione permette di richiedere al server un elenco di utenti o di categorie e poi li dispone sulla pagina.
@@ -551,7 +567,7 @@
     function loadElementiPaginati(pagina, tipologia) {
         if (tipologia === "utenti") {
             $.ajax({
-                url: "/UniChat/utenti/elencaUsers",                 //  richiesta al server
+                url: "/UniChat/admin/elencaUsers",                 //  richiesta al server
                 cache: false,
                 type: "POST",                                       //  metodo utilizzato per la richiesta
                 data: "pagina=" + pagina,                           //  parametro passato al server in formato chiave-valore
@@ -568,46 +584,53 @@
                     if (numUtenti !== 0) {                                       // se il server non risponde con un array vuoto allora..
                         while (posizione < numUtenti) {                             // visualizzazione degli utenti forniti dal server
                             var id = "utente-" + posizione;
-                            document.getElementById(id).innerHTML = '<div>' +
-                                '<div class="card border-left-primary shadow mb-2">' +
-                                '<div class="card-body">' +
-                                '<div class="utente">' +
-                                '<div class="row">' +
-                                '<div class="col">' +
-                                '<div><b>Nome: </b>'+result[posizione].nome+'</div>' +
-                                '<div><b>Cognome: </b>'+result[posizione].cognome+'</div>' +
-                                '<div><b>Email: </b>'+result[posizione].email+'</div>' +
-                                '<div><b>Corso di studio: </b>'+result[posizione].corsoStudio+'</div>' +
-                                '<div><b>Ruolo: </b>'+result[posizione].ruolo+'</div>' +
-                                '<div id="categoriaModerata-'+posizione+'"><b>Categoria Moderata:</b> - </div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row">' +
-                                '<div class="col">' +
-                                '<br>' +
+                            document.getElementById(id).innerHTML = '<!-- Utente --> ' +
+                                '<div> ' +
+                                '<div class="card border-left-primary shadow mb-2"> ' +
+                                '<div class="card-body"> ' +
+                                '<div class="utente"> ' +
+                                '<div class="row"> ' +
+                                '<div class="col"> ' +
+                                '<label class="mr-4 m-0"><b>Nome: </b>' + result[posizione].nome + '</label> ' +
+                                '<br> ' +
+                                '<div class="mr-4 m-0"><b>Email:<br> </b>' + result[posizione].email + '</div> ' +
+
+                                '<label class="mr-4 m-0"><b>Ruolo: </b>' + result[posizione].ruolo + '</label> ' +
+                                '</div> ' +
+                                '<div class="col"> ' +
+                                '<label class="mr-4 m-0"><b>Cognome: </b>' + result[posizione].cognome + '</label> ' +
+                                '<br> ' +
+                                '<label class="mr-4 m-0"><b>Corso di studio: </b>' + result[posizione].corsoStudio + '</label> ' +
+                                '<br> ' +
+                                '<label class="mr-4 m-0" id="categoriaModerata-' + posizione + '"><b>Categoria Moderata:</b> - </label> ' +
+                                '</div> ' +
+                                '</div> ' +
+                                '<div class="row"> ' +
+                                '<div class="col"> ' +
+                                '<br> ' +
                                 '<div class="row" style="justify-content: center">' +
-                                '<!-- Pulsante a tendina selezione categoria moderata -->' +
-                                '<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuCategoria3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-                                'Assegna Categoria' +
+                                '<!-- Pulsante a tendina selezione categoria moderata --> ' +
+                                '<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuCategoria2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                'Assegna Categoria ' +
                                 '</button>' +
-                                '<!-- Tendina selezione categoria da moderare -->' +
-                                '<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">' +
+                                '<!-- Tendina --> ' +
+                                '<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style=""> ' +
                                 '<a class="dropdown-item" href="/UniChat/admin/rimuoviModeratore/'+result[posizione].id+'">RIMUOVI MODERATORE</a>'+
                                 '{section name=indice loop=$elencoCategorie} <a class="dropdown-item" href="/UniChat/admin/aggiungiModeratore/'+result[posizione].id+'/{$elencoCategorie[indice]->getId()}">{$elencoCategorie[indice]->getNome()}</a>{/section}' +
+                                '</div> ' +
+                                '<a href="/UniChat/admin/rimuoviUtente/'+ result[posizione].id +'" class="btn btn-danger btn-icon-split" style="margin-left:5px"> ' +
+                                '<span class="icon text-white-50"> ' +
+                                '<i class="fas fa-trash text-white"></i> ' +
+                                '</span> ' +
+                                '</a> ' +
                                 '</div>' +
-                                '<!-- Bottone elimina utente -->' +
-                                '<a href="/UniChat/admin/rimuoviUser/'+result[posizione].id+'" class="btn btn-danger btn-icon-split" style="margin-left:5px">' +
-                                '<span class="icon text-white-50">' +
-                                '<i class="fas fa-trash"></i>' +
-                                '</span>' +
-                                '</a>' +
-                                '</div>'+
+                                '</div> ' +
+                                '</div>' +
+                                '</div> ' +
+                                '</div> ' +
                                 '</div>' +
                                 '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>';
+                                '<!-- Fine Utente -->';
                             /**
                              * Se l'utente caricato riveste il ruolo di admin o di moderatore, allora viene visualizzato il nome della categoria che gestiscono.
                              * Se l'utente non riveste uno di questi ruoli allora non gestisce nessuna categoria e quindi viene messo il valore "-".
@@ -655,11 +678,9 @@
                             document.getElementById(id).innerHTML = '<div>' +
                                 '<div class="card border-left-secondary shadow mb-2 card-header-actions">' +
                                 '<div class="card-header text-danger font-weight-bold">'+result[posizione].nome+'<div>' +
-                                '<button class="btn btn-danger btn-icon mr-2">' +
-                                '<a href="/UniChat/admin/rimuoviCategoria/'+result[posizione].id+'"tyle="color: #fff">' +
+                                '<a class="btn btn-danger btn-icon mr-2" href="/UniChat/admin/rimuoviCategoria/'+result[posizione].id+'" tyle="color: #fff">' +
                                 '<i class="fa fa-trash" aria-hidden="true"></i>' +
                                 '</a>' +
-                                '</button>' +
                                 '</div>' +
                                 '</div>' +
                                 '<div class="card-body">' +

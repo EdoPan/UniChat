@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body id="page-top">
@@ -29,10 +31,10 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar-->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -49,13 +51,13 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
                 </div>
@@ -92,7 +94,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -104,7 +106,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -144,7 +146,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -169,7 +171,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -202,9 +204,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -239,8 +241,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -249,13 +250,13 @@
 
 
                                 <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -272,6 +273,16 @@
             <div class="container-fluid">
 
                 <!-- Intestazione della pagina -->
+                <!-- Messaggio avviso campi vuoti -->
+                {if $avvisoCampiVuoti == true}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Avviso. </strong>{$messaggioAvvisoCampiVuoti}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {/if}
+                <!-- Fine messaggio avviso -->
                 <!-- Messaggi conferma errore -->
                 {if $conferma == true}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -293,7 +304,7 @@
 
                 <h1 class="h3 mb-4 text-gray-800">Il mio Profilo</h1>
 
-                <form method="post" enctype="multipart/form-data" action="/UniChat/users/editShowPersonalProfile">
+                <form method="post" enctype="multipart/form-data" action="/UniChat/utenti/editShowPersonalProfile">
 
 
                     <div class="row">
@@ -317,17 +328,31 @@
                                 <!-- Titolo Contenitore -->
                                 <div class="card-header">Immagine di Profilo</div>
                                 <div class="card-body text-center">
+
+
                                     <!-- Immagine di profilo-->
-                                    <img class="img-account-profile rounded-circle mb-2" src="data:{$tipoFotoProfilo};base64,{$immagineFotoProfilo}" alt="" style="max-width: 314px">
+                                    <img class="img-account-profile mt-2" src="data:{$tipoFotoProfilo};base64,{$immagineFotoProfilo}" style="max-width: 100%">
 
                                     <!-- Informazioni sul formato e dimensioni foto profilo accettate -->
-                                    <div class="small font-italic text-muted mb-4">JPG o PNG di dimensioni non maggiori a 5 MB</div>
+                                    <div class="small font-italic text-muted mb-4 mt-2">Formati supportati: .JPG - .PNG</div>
 
                                     <!-- Pulsante selezione foto profilo -->
-                                    <div class="row">
-                                        <label style="text-align: center">Sostituisci immagine profilo: </label>
-                                        <input type="file" name="nuovaFotoProfilo" class="btn btn-primary">
+                                    <div>
+                                        <!--p>Sostituisci immagine profilo</p-->
+                                        <!--input type="file" name="nuovaFotoProfilo" class="btn btn-primary"
+
+                                        <input type="file" id="file" name="nuovaFotoProfilo" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
+                                        <label for="file" style="display: block; position: relative; width: 100%; height: 50px; border-radius: 5px; background: linear-gradient(40deg, #4758ff, #3c67c4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                            Sostituisci immagine profilo
+                                        </label> -->
+
+                                        <input type="file" id="nuovaFotoProfilo" name="nuovaFotoProfilo" hidden="hidden" />
+                                        <button class="btn btn-primary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Sostituisci immagine profilo</button>
+                                        <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna foto caricata</span><br><br>
+
+
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -452,6 +477,12 @@
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 <script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
+
+<script type="text/javascript">
 
     /**
      * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
@@ -480,6 +511,26 @@
         elemento.className = 'filtro-categorie dropdown-item active';
 
     }
+</script>
+
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("nuovaFotoProfilo");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function() {
+        realFileBtn.click();
+    });
+
+    realFileBtn.addEventListener("change", function() {
+        if (realFileBtn.value) {
+            customTxt.innerHTML = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.innerHTML = "Nessuna foto caricata.";
+        }
+    });
 </script>
 
 </body>

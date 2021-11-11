@@ -77,13 +77,8 @@ class FPersistentManager
     /**
      * Costante che indica che si vuole lavorare con il thread che sia il più discusso di una determinata categoria.
      */
-    const PROPERTY_PIU_DISCUSSO_CATEGORIA = 4;
+    const PROPERTY_BY_SEARCH = 4;
 
-    /**
-     * Costante che indica che si vuole lavorare con il thread che sia quello con la valutazione più alta all'interno di
-     * una data categoria.
-     */
-    const PROPERTY_VALUTAZIONE_MAGGIORE_CATEGORIA = 5;
 
     /*
      * Costanti che permettono di specificare il tipo di ricerca che si vuole effettuare.
@@ -381,10 +376,8 @@ class FPersistentManager
      * allora viene restituito null.
      * Gli entityType ammessi sono:
      * - ENTITY_USER;
-     * - ENTITY_MODERATORE;
      * - ENTITY_THREAD;
-     * - ENTITY_CATEGORIA;
-     * - ENTITY_MESSAGGIO.
+     * - ENTITY_CATEGORIA.
      * @param int $entityType Valore che indica la tipologia di entity da recuperare dalla base dati.
      * @param int $property Valore che indica se è necessario l'identificativo e quale entity è riferito, per effettuare
      * l'operazione
@@ -400,19 +393,16 @@ class FPersistentManager
         if ($entityType == self::ENTITY_USER && $property == self::PROPERTY_DEFAULT && !isset($id)) {
             $fUser = FUser::getInstance();
             return $fUser->loadAll($rigaPartenza, $numeroRighe);
-        } else if ($entityType == self::ENTITY_MODERATORE && $property == self::PROPERTY_DEFAULT && !isset($id)) {
-            $fUser = FUser::getInstance();
-            return $fUser->loadAllModeratori($rigaPartenza, $numeroRighe);
-        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_CATEGORIA && isset($id)) {
+        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_DEFAULT && !isset($id)) {
+            $fThread = FThread::getInstance();
+            return $fThread->loadAll($rigaPartenza, $numeroRighe);
+        }else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_CATEGORIA && isset($id)) {
             $fThread = FThread::getInstance();
             return $fThread->loadThreadsCategoria($id, $rigaPartenza, $numeroRighe);
         } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_DEFAULT && !isset($id)) {
             $fCategoria = FCategoria::getInstance();
             return $fCategoria->loadAll($rigaPartenza, $numeroRighe);
-        } else if ($entityType == self::ENTITY_MESSAGGIO && $property == self::PROPERTY_DEFAULT && !isset($id)) {
-            $fMessaggio = FMessaggio::getInstance();
-            return $fMessaggio->loadAll($rigaPartenza, $numeroRighe);
-        } else {
+        }  else {
             return null;
         }
     }
@@ -436,6 +426,8 @@ class FPersistentManager
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @param int $numeroThreads Valore che indica il numero di threads da recuperare
      * @return array|null Elenco di threads recuperati
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
+     * creazione delle istanze EThread.
      */
     public function loadThreadsPiuDiscussi(int $numeroThreads): ?array
     {
@@ -449,6 +441,8 @@ class FPersistentManager
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @param int $numeroThreads Valore che indica il numero di threads da recuperare
      * @return array|null Elenco di threads recuperati
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
+     * creazione delle istanze EThread.
      */
     public function loadThreadsValutazionePiuAlta(int $numeroThreads): ?array
     {
@@ -523,20 +517,20 @@ class FPersistentManager
      * di input o ci sono errori durante l'esecuzione dei metodi richiamati, allora viene restituito null.
      * @param int $searchType Valore che indica il tipo di ricerca
      * @param string $titolo Titolo del thread da cercare nella base dati
-     * @param array|null $ids Elenco di categorie a cui i threads trovati devono appartenere
+     * @param int|null $id Elenco di categorie a cui i threads trovati devono appartenere
      * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
      * @param int $numeroRighe Valore che indica quanti record recuperare
      * @return array|null Elenco contenente il risultato della ricerca
      * @throws ValidationException Eccezione lanciata nel momento in cui ci sono problemi con la validazione dei dati.
      */
-    public function ricercaThreads(int $searchType, string $titolo, ?array $ids, int $rigaPartenza, int $numeroRighe): ?array
+    public function ricercaThreads(int $searchType, string $titolo, ?int $id, int $rigaPartenza, int $numeroRighe): ?array
     {
-        if ($searchType == self::SEARCH_TYPE_TITOLO && !isset($ids)) {
+        if ($searchType == self::SEARCH_TYPE_TITOLO && !isset($id)) {
             $fThread = FThread::getInstance();
             return $fThread->ricercaPerTitolo($titolo, $rigaPartenza, $numeroRighe);
-        } else if ($searchType == self::SEARCH_TYPE_TITOLO_CATEGORIE && isset($ids)) {
+        } else if ($searchType == self::SEARCH_TYPE_TITOLO_CATEGORIE && isset($id)) {
             $fThread = FThread::getInstance();
-            return $fThread->ricercaPerTitoloECategorie($titolo, $ids, $rigaPartenza, $numeroRighe);
+            return $fThread->ricercaPerTitoloECategoria($titolo, $id, $rigaPartenza, $numeroRighe);
         } else {
             return null;
         }
@@ -570,20 +564,30 @@ class FPersistentManager
      * @param int $entityType Valore che indica la tipologia di entity da contare
      * @param int $property Valore che indica attraverso quale identificativo, se necessario, si ottiene il conteggio
      * @param int|null $id
+     * @param string|null $titolo
      * @return int|null Risultato del conteggio
      */
-    public function contaEntities(int $entityType, int $property, ?int $id): ?int
+    public function contaEntities(int $entityType, int $property, ?int $id, ?string $titolo): ?int
     {
-        if ($entityType == self::ENTITY_USER && $property == self::PROPERTY_DEFAULT && !isset($id)) {
+        if ($entityType == self::ENTITY_USER && $property == self::PROPERTY_DEFAULT && !isset($id) && !isset($titolo)) {
             $fUser = FUser::getInstance();
             return $fUser->conta();
-        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_DEFAULT && !isset($id)) {
+        } else if ($entityType == self::ENTITY_CATEGORIA && $property == self::PROPERTY_DEFAULT && !isset($id) && !isset($titolo)) {
             $fCategoria = FCategoria::getInstance();
             return $fCategoria->conta();
-        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_CATEGORIA && isset($id)) {
+        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_DEFAULT && !isset($id) && !isset($titolo)) {
+            $fThread = FThread::getInstance();
+            return $fThread->conta();
+        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_CATEGORIA && isset($id) && !isset($titolo)) {
             $fThread = FThread::getInstance();
             return $fThread->contaThreadsCategoria($id);
-        }else {
+        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_SEARCH && isset($id) && isset($titolo)) {
+            $fThread = FThread::getInstance();
+            return $fThread->contaThreadsRicercaPerTitoloECategoria($titolo, $id);
+        } else if ($entityType == self::ENTITY_THREAD && $property == self::PROPERTY_BY_SEARCH && !isset($id) && isset($titolo)) {
+            $fThread = FThread::getInstance();
+            return $fThread->contaThreadsRicercaPerTitolo($titolo);
+        } else {
             return null;
         }
     }

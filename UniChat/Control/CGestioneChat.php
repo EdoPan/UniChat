@@ -35,12 +35,9 @@ class CGestioneChat
      */
     public function aggiornaChat(): void
     {
-
-        $view = new VForm();
-        $valori = $view->getValori(VForm::FORM_INVIO_MESSAGGIO);
-
-        if (isset($valori)) {
-            $messID = $valori['messaggioID'];
+        $vHome = new VHome();
+        $messID = $vHome->getIdUltimoMessaggio();
+        if (isset($messID)) {
             $pm = FPersistentManager::getInstance();
             $nuoviMessaggi = $pm->loadNuoviMessaggi($messID);
             if (isset($nuoviMessaggi)) {
@@ -48,7 +45,6 @@ class CGestioneChat
                 echo $messaggiJson;
             }
         }
-
     }
 
     /**
@@ -102,15 +98,12 @@ class CGestioneChat
         $user = $session->getValue("user");
         if (isset($user)){
             $user = unserialize($user);
-            $view = new VForm();
-            $valori = $view->getValori(VForm::FORM_INVIO_MESSAGGIO);
-            if (isset($valori)) {
-                if (array_key_exists('testo', $valori)) {
-                    $testo = $valori['testo'];
-                    $messaggio = new EMessaggio(null, $testo, null, $user);
-                    $pm = FPersistentManager::getInstance();
-                    $result = $pm->store(FPersistentManager::ENTITY_MESSAGGIO, $messaggio);
-                }
+            $view = new VHome();
+            $testo = $view->getTestoNuovoMessaggio();
+            if (isset($testo)) {
+                $messaggio = new EMessaggio(null, $testo, null, $user);
+                $pm = FPersistentManager::getInstance();
+                $pm->store(FPersistentManager::ENTITY_MESSAGGIO, $messaggio);
             }
         } else {
             header('Location: /UniChat/utenti/login');

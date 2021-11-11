@@ -19,7 +19,7 @@ class CGestioneAdmin
      * di controllo, ma viene visualizzato un messaggio di operazione fallita.
      * @param int $userID Identificativo dell'utente da eliminare.
      */
-    public function rimuoviUser(int $userID): void
+    public function rimuoviUtente(int $userID): void
     {
         $session = new USession();
         $user = $session->getValue('user');
@@ -124,23 +124,27 @@ class CGestioneAdmin
             $user = unserialize($user);
             $pm = FPersistentManager::getInstance();
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
-                try {
-                    $moderatore = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
-                } catch (ValidationException $e) {
-                    $moderatore = null;
-                }
-                if (isset($moderatore)) {
-                    $categoriaGestita = $moderatore->getCategoriaGestita();
-                    $result = $pm->rimuoviModeratoreCategoria($categoriaGestita->getId(), $moderatore);
-                    if ($result) {
-                        header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $moderatoreID)) {
+                    try {
+                        $moderatore = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
+                    } catch (ValidationException $e) {
+                        $moderatore = null;
+                    }
+                    if (isset($moderatore)) {
+                        $categoriaGestita = $moderatore->getCategoriaGestita();
+                        $result = $pm->rimuoviModeratoreCategoria($categoriaGestita->getId(), $moderatore);
+                        if ($result) {
+                            header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                        } else {
+                            header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                        }
                     } else {
-                        header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                        $view = new VError();
+                        $view->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                        $view->showError();
                     }
                 } else {
-                    $view = new VError();
-                    $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
-                    $view->showError();
+                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/avviso');
                 }
             } else {
                 header('Location: /UniChat/');
@@ -177,64 +181,73 @@ class CGestioneAdmin
             $user = unserialize($user);
             $pm = FPersistentManager::getInstance();
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
-                if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-                    $vForm = new VForm();
-                    $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
-                    if ($impostaElementiPagina) {
-                        $vForm->setErroreValidazione(null, null);
-                        $vForm->setCampiObbligatoriMancanti(false);
-                        $vForm->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
-                    } else {
-                        $vError = new VError();
-                        $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                    }
-                } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                    $view = new VForm();
-                    $valori = $view->getValori(VForm::FORM_CREAZIONE_CATEGORIA);
-                    if (isset($valori)) {
-                        $nome = $valori['nome'];
-                        $descrizione = $valori['descrizione'];
-                        if (array_key_exists('nomeIcona', $valori)) {
-                            $icona = array();
-                            $icona['nome'] = $valori['nomeIcona'];
-                            $icona['dimensione'] = $valori['dimensioneIcona'];
-                            $icona['tipo'] = $valori['tipoIcona'];
-                            $icona['immagine'] = $valori['immagineIcona'];
-                        } else {
-                            $icona = null;
-                        }
-                        try {
-                            $categoria = $user->creaCategoria(null, $nome, $icona, $descrizione);
-                            //$categoria = new ECategoria(null, $nome, $icona, $descrizione);
-                            $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
-                            if ($result) {
-                                header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
-                            } else {
-                                header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
-                            }
-                        } catch (ValidationException $e) {
-                            $impostaElementiPagina = CImpostaPagina::impostaModuli($user);
-                            if ($impostaElementiPagina) {
-                                $view->setErroreValidazione($e->getCode(), $e->getMessage());
-                                $view->setCampiObbligatoriMancanti(false);
-                                $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
-                            } else {
-                                $vError = new VError();
-                                $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                            }
-                        }
-                    } else {
-                        /*
-                        $vError = new VError();
-                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
-                        $vError->showError();
-                        */
-                        $view->setCampiObbligatoriMancanti(false);
-                        $view->setErroreValidazione(null, null);
-                        $view->setCampiObbligatoriMancanti(true);
-                        $view->showForm(VForm::FORM_CREAZIONE_CATEGORIA);
 
-                        //header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                try {
+                    $categorie = $pm->loadAllCategorie();
+                } catch (ValidationException $e) {
+                    $categorie = null;
+                }
+
+                if (isset($categorie)) {
+                    $vCreaCategoria = new VCreazioneCategoria();
+
+                    $vPage = new VPage($vCreaCategoria->getSmarty());
+                    $vPage->setBottoneFiltra($categorie);
+                    $vPage->setMenuLeft($categorie);
+                    $vPage->setMenuUtente($user, true);
+
+                    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+                        $vCreaCategoria->setErroreValidazione(null, null);
+                        $vCreaCategoria->setCampiObbligatoriMancanti(false);
+
+                        $vCreaCategoria->showCreaCategoria();
+
+
+                    } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+                        $valori = $vCreaCategoria->getValori();
+
+
+                        if (isset($valori)) {
+                            $nome = $valori['nome'];
+                            $descrizione = $valori['descrizione'];
+                            if (array_key_exists('nomeIcona', $valori)) {
+                                $icona = array();
+                                $icona['id'] = 0;
+                                $icona['nome'] = $valori['nomeIcona'];
+                                $icona['dimensione'] = $valori['dimensioneIcona'];
+                                $icona['tipo'] = $valori['tipoIcona'];
+                                $icona['immagine'] = $valori['immagineIcona'];
+                            } else {
+                                $icona = null;
+                            }
+
+                            try {
+                                $categoria = $user->creaCategoria(null, $nome, $icona, $descrizione);
+
+
+                                //$categoria = new ECategoria(null, $nome, $icona, $descrizione);
+                                $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
+
+                                if ($result) {
+                                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/conferma');
+                                } else {
+                                    header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
+                                }
+                            } catch (ValidationException $e) {
+
+                                $vCreaCategoria->setErroreValidazione($e->getCode(), $e->getMessage());
+                                $vCreaCategoria->setCampiObbligatoriMancanti(false);
+                                $vCreaCategoria->showCreaCategoria();
+                            }
+                        } else {
+
+                            $vCreaCategoria->setCampiObbligatoriMancanti(true);
+                            $vCreaCategoria->setErroreValidazione(null, null);
+                            $vCreaCategoria->showCreaCategoria();
+
+                        }
                     }
                 }
             } else {
@@ -399,8 +412,8 @@ class CGestioneAdmin
             $pm = FPersistentManager::getInstance();
 
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
-                $numeroUtenti = $pm->contaEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null);
-                $numeroCategorie = $pm->contaEntities(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, null);
+                $numeroUtenti = $pm->contaEntities(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, null, null);
+                $numeroCategorie = $pm->contaEntities(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, null, null);
                 try {
                     $categorie = $pm->loadAllCategorie();
                 } catch (ValidationException $e) {
@@ -409,37 +422,41 @@ class CGestioneAdmin
 
                 if (isset($numeroUtenti) && isset($numeroCategorie) && isset($categorie)) {
 
-                    if (CImpostaPagina::impostaModuli($user)) {
-                        /*
-                        $vPage = new VPage();
-                        $vPage->setMenuUtente($user, true);
-                        $vPage->setMenuLeft($categorie);
-                        $vPage->setBottoneFiltra($categorie);
-                        */
 
-                        $vAmministrazione = new VAmministrazione();
-                        $vAmministrazione->setPaginazioneUtenti($numeroUtenti);
-                        $vAmministrazione->setPaginazioneCategorie($numeroCategorie);
-                        $vAmministrazione->setBottoneAggiungiRimuoviModeratore($categorie);
 
-                        if (func_num_args() == 1) {
-                            if (func_get_arg(0) == "conferma") {
-                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(true);
-                            } else if (func_get_arg(0) == "errore") {
-                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(false);
-                            } else {
-                                $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
-                            }
+                    $vAmministrazione = new VAmministrazione();
+                    $vAmministrazione->setPaginazioneUtenti($numeroUtenti);
+                    $vAmministrazione->setPaginazioneCategorie($numeroCategorie);
+                    $vAmministrazione->setBottoneAggiungiRimuoviModeratore($categorie);
+
+
+                    $vPage = new VPage($vAmministrazione->getSmarty());
+                    $vPage->setMenuUtente($user, true);
+                    $vPage->setMenuLeft($categorie);
+                    $vPage->setBottoneFiltra($categorie);
+
+
+                    if (func_num_args() == 1) {
+                        if (func_get_arg(0) == "conferma") {
+                            $vAmministrazione->setMessaggiConfermaErroreOperazioni(true);
+                            $vAmministrazione->setAvviso(false);
+                        } else if (func_get_arg(0) == "errore") {
+                            $vAmministrazione->setMessaggiConfermaErroreOperazioni(false);
+                            $vAmministrazione->setAvviso(false);
+                        } else if(func_get_arg(0) == "avviso") {
+                            $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
+                            $vAmministrazione->setAvviso(true);
                         } else {
                             $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
+                            $vAmministrazione->setAvviso(false);
                         }
-
-                        $vAmministrazione->showPannelloDiControllo();
                     } else {
-                        $view = new VError();
-                        $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
-                        $view->showError();
+                        $vAmministrazione->setMessaggiConfermaErroreOperazioni(null);
+                        $vAmministrazione->setAvviso(false);
                     }
+
+                    $vAmministrazione->showPannelloDiControllo();
+
                 } else {
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );

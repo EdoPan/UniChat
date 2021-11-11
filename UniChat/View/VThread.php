@@ -29,13 +29,18 @@ class VThread
         $this->smarty = VSmarty::start();
     }
 
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
+    }
+
     /**
      * @param EThread $thread
      * Metodo responsabile dell'assegnazione delle variabili richiamate in thread.tpl per la gestione della barra
      * contenente l'URL del thread specifico /Home/NomeCategoriaThread/NomeThreadSpecifico.
      */
     public function setURLNavigazione(EThread $thread): void {
-        $this->smarty->assign('categoriaThread', $thread->getCategoriaThread());
+        $this->smarty->assign('categoriaThread', $thread->getCategoriaThread()->getNome());
         $this->smarty->assign('idCategoria', $thread->getCategoriaThread()->getId());
         $this->smarty->assign('titoloT', $thread->getTitolo());
     }
@@ -50,11 +55,12 @@ class VThread
         $this->smarty->assign('testoThread', $thread->getTesto());
         $this->smarty->assign('dataThread', $thread->getData());
         $this->smarty->assign('allegatiThread', $thread->getAllegati());
+        $this->smarty->assign('idAutoreThread', $thread->getAutoreThread()->getId());
         $this->smarty->assign('nomeAutoreThread', $thread->getAutoreThread()->getNome());
         $this->smarty->assign('cognomeAutoreThread', $thread->getAutoreThread()->getCognome());
         $this->smarty->assign('tipo', $thread->getAutoreThread()->getFotoProfilo()['tipo']);
         $this->smarty->assign('immagine', $thread->getAutoreThread()->getFotoProfilo()['immagine']);
-        $this->smarty->assign('valutazioneThread', $thread->getValutazione());
+        $this->smarty->assign('valutazioneThread', $thread->getValutazione()->getTotale());
         $this->smarty->assign('risposteThread', $thread->getRisposte());
         $this->smarty->assign('idThread', $thread->getId());
     }
@@ -96,8 +102,10 @@ class VThread
      * con un messaggio di conferma o errore (questo metodo viene richiamato solo per l'eliminazione del thread
      * o di una risposta).
      */
-    public function setMessaggiErroreConferma(string $tipologiaMessaggio): void {
-        $this->smarty->assign('messaggio', $tipologiaMessaggio);
+    public function setMessaggio(bool $messaggio, string $tipologiaMessaggio, ?string $colore): void {
+        $this->smarty->assign('testo', $tipologiaMessaggio);
+        $this->smarty->assign('messaggio', $messaggio);
+        $this->smarty->assign('colore', $colore);
     }
 
     /**

@@ -18,7 +18,8 @@ class USession
      * @param string $key Chiave associata al valore da recuperare.
      * @return string|null Valore restituito
      */
-    public function getValue(string $key): ?string {
+    public function getValue(string $key): ?string
+    {
 
         if (isset($_SESSION[$key])) {
             return $result = $_SESSION[$key];
@@ -35,7 +36,8 @@ class USession
      * @param string $key Chiave da assegnare al valore.
      * @param string $value Valore da salvare nella sessione.
      */
-    public function setValue(string $key, string $value): void {
+    public function setValue(string $key, string $value): void
+    {
 
         $_SESSION[$key] = $value;
 
@@ -47,7 +49,8 @@ class USession
      * @param string $key Chiave associata al valore da rimuovere.
      * @return bool Esito operazione.
      */
-    public function removeValue(string $key): bool {
+    public function removeValue(string $key): bool
+    {
 
         if (isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
@@ -66,7 +69,8 @@ class USession
      * @param string $value Nuovo valore.
      * @return bool Esito operazione.
      */
-    public function updateValue(string $key, string $value): bool {
+    public function updateValue(string $key, string $value): bool
+    {
 
        if (isset($_SESSION[$key])) {
            $_SESSION[$key] = $value;

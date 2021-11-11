@@ -11,11 +11,6 @@ class EThread
 
 
     /**
-     * Constante che riporta il formato di data ed ora utlizzato per tenere traccia di quando è stato creato il thread.
-     */
-    const FORMATO_DATA = "Y-m-d H:i:s";
-
-    /**
      * Identificativo del thread.
      * @var int
      */
@@ -48,6 +43,11 @@ class EThread
     private array $allegati;
 
     /**
+     * Constante che riporta il formato di data ed ora utlizzato per tenere traccia di quando è stato creato il thread.
+     */
+    private static string  $formatoData = "Y-m-d H:i:s";
+
+    /**
      * Autore del thread.
      * @var EUser
      */
@@ -64,6 +64,7 @@ class EThread
      * @var EValutazione
      */
     private EValutazione $valutazione;
+
 
     /**
      * Risposte al thread. Si tratta un array di ERisposta.
@@ -102,14 +103,14 @@ class EThread
         if(isset($data)){
             $this->data = $data;
         } else {
-            $this->data = date(self::FORMATO_DATA);
+            $this->data = date(self::$formatoData);
         }
         if(isset($allegati)){
 
             $validazione = Validazione::getInstance();
             foreach ($allegati as $allegato) {
                 try {
-                    $validazione->validaAllegato($allegato['tipo'], $allegato['dimensione']);
+                    $validazione->validaAllegato($allegato['tipo'], (int)$allegato['dimensione']);
                 } catch (ValidationException $e) {
                     throw new ValidationException($e->getMessage(), $e->getCode());
                 }
@@ -242,7 +243,7 @@ class EThread
      */
     public function setData(): void
     {
-        $this->data = date(self::FORMATO_DATA);
+        $this->data = date(self::$formatoData);
     }
 
     /**

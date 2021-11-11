@@ -221,6 +221,7 @@ class FThread
     public function loadThreadsPiuRisposte(int $numeroThreads): ?array
     {
         $threads = array();
+        $ids = array();
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
@@ -231,11 +232,27 @@ class FThread
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($rows as $row) {
                 $threadID = (int)$row["threadID"];
+                $ids[] = $threadID;
                 $thread = $this->load($threadID);
                 if (isset($thread)) {
                     $threads[] = $thread;
                 } else {
                     return null;
+                }
+            }
+            if (count($threads) < $numeroThreads) {
+                $quantita = $numeroThreads - count($threads);
+                $ids = join("','", $ids);
+                $stmt = $pdo->query("SELECT threadID FROM threads WHERE threadID NOT IN ('$ids') ORDER BY threadID DESC LIMIT ". $quantita);
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($rows as $row) {
+                    $threadID = (int)$row["threadID"];
+                    $thread = $this->load($threadID);
+                    if (isset($thread)) {
+                        $threads[] = $thread;
+                    } else {
+                        return null;
+                    }
                 }
             }
             return $threads;
@@ -487,6 +504,30 @@ class FThread
             }
         }
 
+    public function loadAll(int $rigaPartenza, int $numeroRighe): ?array
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT threadID FROM threads ORDER BY threadID DESC LIMIT " . $rigaPartenza . ", " . $numeroRighe);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $threads = array();
+            foreach ($rows as $record){
+                $threadID = (int)$record["threadID"];
+                $thread = $this->load($threadID);
+                if (isset($thread)) {
+                    $threads[] = $thread;
+                } else {
+                    return null;
+                }
+            }
+            return $threads;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
     /**
      * Permette di ottenere un certo numero di EThread di una determinata categoria di appartenenza, specificando da
      * quale riga dell tabella della base dati partire (riga di partenza esclusa) e il numero di righe da visualizzare.
@@ -575,13 +616,13 @@ class FThread
      * ingresso.
      * Viene restituito un array di threads, eventualmente vuoto, se l'operazione va a buon fine, null altrimenti.
      * @param string $titolo Titolo che deve avere il thread da cercare nella base dati
-     * @param array $categorieID Elenco degli identificativi delle categorie a cui i thread recuperati devono appartenere
+     * @param int $categoriaID Elenco degli identificativi delle categorie a cui i thread recuperati devono appartenere
      * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
      * @param int $numeroRighe Valore che indica quanti record recuperare
      * @return array|null Elenco contenente i threads cercati
      * @throws ValidationException Eccezione lanciata nel caso in cui ci fossero problemi con la validazione dei dati
      */
-    public function ricercaPerTitoloECategorie(string $titolo, array $categorieID, int $rigaPartenza, int $numeroRighe): ?array
+    public function ricercaPerTitoloECategoria(string $titolo, int $categoriaID, int $rigaPartenza, int $numeroRighe): ?array
         {
             $threads = array();
 
@@ -589,10 +630,10 @@ class FThread
                 $dbConnection = FConnection::getInstance();
                 $pdo = $dbConnection->connect();
 
-                $ids = join("','", $categorieID);
+                //$ids = join("','", $categorieID);
                 //$stmt = $pdo->query("SELECT threadID FROM threads WHERE MATCH (titolo) AGAINST (" . $titolo . ")
                 //                    AND catThreadID IN ('$ids') LIMIT " . $rigaPartenza . ", " . $numeroRighe);
-                $sql = ("SELECT threadID FROM threads WHERE MATCH (titolo) AGAINST (:titolo) AND catThreadID IN ('$ids') LIMIT " . $rigaPartenza . ", " . $numeroRighe);
+                $sql = ("SELECT threadID FROM threads WHERE MATCH (titolo) AGAINST (:titolo) AND catThreadID = $categoriaID LIMIT " . $rigaPartenza . ", " . $numeroRighe);
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute(array(
                     ':titolo' => $titolo
@@ -612,6 +653,69 @@ class FThread
                 return null;
             }
         }
+
+    public function conta(): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $stmt = $pdo->query("SELECT count(*) AS numeroThreads FROM threads");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return (int)$rows[0]['numeroThreads'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function contaThreadsRicercaPerTitolo(string $titolo): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ("SELECT count(*) AS numeroThreads FROM threads WHERE MATCH (titolo) AGAINST (:titolo)");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':titolo' => $titolo
+            ));
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return (int)$rows[0]['numeroThreads'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function contaThreadsRicercaPerTitoloECategoria(string $titolo, int $categoriaID): ?int
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ("SELECT count(*) AS numeroThreads FROM threads WHERE catThreadID = :categoriaID AND MATCH (titolo) AGAINST (:titolo)");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':categoriaID' => $categoriaID,
+                ':titolo' => $titolo
+            ));
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return (int)$rows[0]['numeroThreads'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
 
     /**
      * Conta il numero di threads appartenenti ad una categoria, della quale viene fornito in ingresso il suo

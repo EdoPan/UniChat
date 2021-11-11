@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
 <head>
 
@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <!-- Titolo tab del browser -->
-    <title>UniChat - {$titoloThread} </title>
+    <title>UniChat - {$titoloThread}</title>
 
     <!-- Custom fonts for this template-->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -21,18 +21,19 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body id="page-top" onload="recuperaColori()">
-
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/showHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/home/visualizzaHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -50,15 +51,16 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
+
                 </div>
             </div>
         </li>
@@ -94,7 +96,7 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -106,7 +108,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -146,7 +148,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -171,7 +173,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -204,9 +206,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -241,8 +243,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -250,14 +251,14 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="/UniChat/utenti/login">
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -274,10 +275,26 @@
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
 
+
+                <!-- Messaggio -->
+
+                {if $messaggio == true}
+                    <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
+                        {$testo}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                {/if}
+
+                <!-- Fine messaggio -->
+
+
                 <!-- Barra di navigazione -->
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/UniChat/home/showHome">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/UniChat/home/visualizzaHome">Home</a></li>
                         <li class="breadcrumb-item"><a href="/UniChat/categorie/visualizzaCategoria/{$idCategoria}/1">{$categoriaThread}</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{$titoloT}</li>
                     </ol>
@@ -293,7 +310,7 @@
 
                                 <img src="data:{$tipo};base64,{$immagine}" alt="" style="max-width: 80px"> <br>
 
-                                <h6 class="m-0 font-weight-normal text-dark">{$nomeAutoreThread} {$cognomeAutoreThread}</h6>
+                                <h6 class="m-0 font-weight-normal text-dark"><a href="/UniChat/utenti/showProfile/{$idAutoreThread}">{$nomeAutoreThread} {$cognomeAutoreThread}</a></h6>
                             </div>
 
                             <div class="col-sm">
@@ -344,9 +361,9 @@
 
 
                                         <!-- Pulsante eliminazione thread -->
-                                        <a href="/UniChat/threads/rimuoviThread/{$idThread}" class="btn btn-danger btn-icon-split float-lg-right" onclick="presentaAlert()">
+                                        <a href="/UniChat/threads/rimuoviThread/{$idThread}" class="btn btn-danger btn-icon-split float-lg-right" >
                                           <span class="icon text-white-50">
-                                              <i class="fas fa-trash"></i>
+                                              <i class="fas fa-trash text-white"></i>
                                           </span>
                                         </a>
                                     </div>
@@ -370,17 +387,20 @@
 
                         <h5 class="m-0 font-weight-bold text-primary" style="padding-top:10px; margin-bottom: 5px">Scarica Allegati</h5><br>
 
-                        <div class="row" style="background-color: #c0c1c8">
+                        {$i=1}
+                        {foreach from=$allegatiThread item=allegato}
+                            <div class="row" {if $i is odd}style="background-color: #c0c1c8"{/if}>
 
-                            {foreach from=$allegatiThread item=allegato}
-                            <div>
-                                <i class="fa fa-paperclip" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; padding-bottom: 15px" aria-hidden="true"> {$allegato['nome']}</i>
-                                <a class="btn btn-danger btn-sm" href="/UniChat/threads/scaricaAllegato/{$allegato['id']}"> Download </a>
-                            </div> <br>
-                            {/foreach}
 
-                        </div>
+                                <div>
+                                    <i class="fa fa-paperclip" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; padding-bottom: 15px" aria-hidden="true"> {$allegato['nome']}</i>
+                                    <a class="btn btn-danger btn-sm" href="/UniChat/threads/scaricaAllegato/{$allegato['id']}"> Download </a>
+                                </div> <br>
 
+
+                            </div>
+                            {$i = $i + 1}
+                        {/foreach}
                     </div>
 
 
@@ -396,11 +416,11 @@
 
                         {if $loggato1 eq true}
                         <!-- Form invio messaggio -->
-                        <form action="/UniChat/threads/rispondiThread" class="row mb-2 py-3">
+                        <form method="post" action="/UniChat/threads/rispondiThread" class="row mb-2 py-3">
 
                             <!-- Inserimento testo -->
                             <div class="col-sm-9 mb-3 mb-sm-0">
-                                <input type="text" name="testo" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
+                                <input type="text" autocomplete="off" name="testo" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
                                 <input type="text" name="threadID" hidden value="{$idThread}">
                             </div>
 
@@ -427,12 +447,12 @@
 
                                 <!-- Utente -->
                                 <div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">{$risposta->getAutoreRisposta()->getNome()}
-                                        {$risposta->getAutoreRisposta()->getCognome()}</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary"><a href="/UniChat/utenti/showProfile/{$risposta->getAutoreRisposta()->getId()}">{$risposta->getAutoreRisposta()->getNome()}
+                                            {$risposta->getAutoreRisposta()->getCognome()}</a></h6>
 
                                     {if $moderatoreAdmin eq true}
                                     <!-- Pulsante eliminazione risposta -->
-                                    <a href="/UniChat/threads/rimuoviRisposta/{$risposta->getId()}/{$idThread}" class="btn btn-danger btn-circle btn-sm" onclick="presentaAlert()">
+                                    <a href="/UniChat/threads/rimuoviRisposta/{$risposta->getId()}/{$idThread}" class="btn btn-danger btn-circle btn-sm">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                     {/if}
@@ -511,16 +531,6 @@
 
 
 
-
-
-
-<!-- Script per la visualizzazione messaggio conferma/errore -->
-<script>
-    function presentaAlert() {
-        alert({$messaggio});
-    }
-</script>
-
 <!-- Script per il recupero dei colori dei bottoni valutazione in base al voto precedentemente inserito -->
 <script>
     function recuperaColori() {
@@ -529,7 +539,7 @@
         document.getElementById('bottoneInSu').classList.add('btn-primary');
         document.getElementById('bottoneInSu').classList.remove('btn-success');
 
-        {elseif $giudizio == -1}
+        {elseif $giudizio == 4}
 
         document.getElementById('bottoneInGiu').classList.add('btn-primary');
         document.getElementById('bottoneInGiu').classList.remove('btn-danger');
@@ -569,9 +579,36 @@
     }
 </script>
 
+<script type="text/javascript">
 
+    /**
+     * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
+     * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
+     * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
+     * categoria precedentemente scelta, viene deselezionata.
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
+     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * risulterà evidenziato.
+     * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
+     * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
+     * passare la richiesta la server.
+     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     */
+    function seleziona(elemento) {
+        var categoriaID = parseInt(elemento.id);
+        var elementiSelezione = document.getElementsByClassName('filtro-categorie dropdown-item active');
+        if (elementiSelezione.length === 1){
+            elementiSelezione[0].className = 'filtro-categorie dropdown-item'
+        }
 
+        document.getElementById('dropdownMenuButton').innerHTML = elemento.innerHTML;
+        document.getElementById('ricerca').innerHTML = elemento.innerHTML;
+        document.getElementById('categoria-id').value = categoriaID;
+        document.getElementById('categoria-id2').value = categoriaID;
+        elemento.className = 'filtro-categorie dropdown-item active';
 
+    }
+</script>
 
 
 <!-- Bootstrap core JavaScript-->
@@ -583,6 +620,12 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 </body>
 

@@ -1,84 +1,71 @@
 <?php
-
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 /**
  * Classe responsabile della Gestione della pagina iniziale.
  */
 class CGestioneHome
 {
 
-
-    /**
-     * Metodo responsabile della visualizzazione della Home in base al tipo di utente connesso.
-     */
     public function visualizzaHome(): void
     {
-
-        $pm = FPersistentManager::getInstance();
-        $view = new VHome();
         $session = new USession();
-        $cthread = new CGestioneThreads();
+        $user = $session->getValue('user');
+        $pm = FPersistentManager::getInstance();
+        $vHome = new VHome();
+        $vPage = new VPage($vHome->getSmarty());
 
-        $utente = $session->getValue('user');
+        try {
+            $threadsPiuDiscussi = $pm->loadThreadsPiuDiscussi(VHome::NUMERO_MAX_THREADS);
+            $threadsValutazionePiuAlta = $pm->loadThreadsValutazionePiuAlta(VHome::NUMERO_MAX_THREADS);
+            $categorie = $pm->loadAllCategorie();
+        } catch (ValidationException $e) {
+            $threadsPiuDiscussi = null;
+            $threadsValutazionePiuAlta = null;
+            $categorie = null;
+        }
+        if (isset($threadsPiuDiscussi) && isset($threadsValutazionePiuAlta) && isset($categorie)) {
+            $vHome->setBoxThread($threadsPiuDiscussi, $threadsValutazionePiuAlta);
+            $vPage->setBottoneFiltra($categorie);
+            $vPage->setMenuLeft($categorie);
+            $vPage->setMenuUtente(null, false);
+            $vHome->setBottoneElimina(false);
+            $vHome->setInterazioneChat(false);
 
-        if (isset($utente)) {
-
-            $user = unserialize($utente);
-
-            /*
-             * Condizione per utente User.
-             * Visualizzeremo il box contenete i thread più discussi e maggiormente valutati e la chat con la possibilità
-             * d'interazione con gli altri utenti.
-             */
-            if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == false or $pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == false) {
-
-                $view->setBottoneElimina(false);
-
-            } else {
-
-                /*
-                 * Condizione per utente Moderatore/Admin.
-                 * Visualizzeremo il box contenete i thread più discussi e maggiormente valutati, la chat con la possibilità
-                 * d'interazione con gli altri utenti, e i cestini per l'eliminazione dei messaggi.
-                 */
-                $view->setBottoneElimina(true);
-
+            if (isset($user)) {
+                $user = unserialize($user);
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) || $pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getId())) {
+                    $vHome->setBottoneElimina(true);
+                    if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
+                        $vPage->setMenuUtente($user, true);
+                    } else {
+                        $vPage->setMenuUtente($user, false);
+                    }
+                } else {
+                    $vHome->setBottoneElimina(false);
+                    $vPage->setMenuUtente($user, false);
+                }
+                $vHome->setInterazioneChat(true);
             }
 
-            $view->setInterazioneChat(true);
+            if (func_num_args() == 1) {
+                if (func_get_arg(0) == "conferma") {
+                    $vHome->setMessaggio(true, VCategoria::SUCCESS, 'success');
+                } else if (func_get_arg(0) == "errore") {
+                    $vHome->setMessaggio(true, VCategoria::ERROR, 'danger');
+                } else {
+                    $vHome->setMessaggio(false, VCategoria::NULLA, null);
+                }
+            } else {
+                $vHome->setMessaggio(false, VCategoria::NULLA, null);
+            }
 
-
+            $vHome->showHome();
         } else {
-
-            /*
-             * Condizione per utente Guest.
-             * Visualizzeremo il box contenete i thread più discussi e maggiormente valutati e la chat senza la possibilità
-             * d'interazione con gli altri utenti.
-             */
-            $view->setBottoneElimina(false);
-            $view->setInterazioneChat(false);
-
+            $vError = new VError();
+            $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+            $vError->showError();
         }
-
-        $view->setBoxThread($cthread->threadsPiuDiscussi(6), $cthread->threadsValutazionePiuAlta(6));
-        $view->showHome();
-
-
-        /*
-         * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
-         * con l'eventuale messaggio di conferma o errore.
-         */
-        if (func_num_args() == 1) {
-            if (func_get_arg(0) == "conferma") {
-                $view->setMessaggiErroreConferma(VHome::SUCCESS);
-            } else if (func_get_arg(0) == "errore") {
-                $view->setMessaggiErroreConferma(VHome::ERROR);
-            } else {
-                $view->setMessaggiErroreConferma(VHome::NULLA);
-            }
-
-        }
-
-
     }
 
 }

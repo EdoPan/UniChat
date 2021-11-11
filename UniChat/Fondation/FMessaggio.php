@@ -192,39 +192,6 @@ class FMessaggio
     }
 
     /**
-     * Restituisce un array contenente un numero di messaggi pari a $numeroRighe a partire da un determinato messaggio ($rigaPartenza).
-     * Se il recupero fallisce il metodo restituisce null.
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array|null
-     */
-    public function loadAll(int $rigaPartenza, int $numeroRighe): ?array
-    {
-        $messaggi = array();
-
-        try {
-            $dbConnection = FConnection::getInstance();
-            $pdo = $dbConnection->connect();
-
-            $stmt = $pdo->query("SELECT messID FROM messaggi ORDER BY messID LIMIT " . $rigaPartenza . ", " . $numeroRighe);
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($rows as $row) {
-                $messID = (int)$row['messID'];
-                $messaggio = self::load($messID);
-                if (isset($messaggio)) {
-                    $messaggi[] = $messaggio;
-                } else {
-                    return null;
-                }
-            }
-            return $messaggi;
-        } catch (PDOException $e) {
-            return null;
-        }
-    }
-
-    /**
      * Permette di ottenere l'elenco dei messaggi che sono stati pubblicati nelle ultime 24 ore.
      * In caso di errori viene restituito null.
      * @return array|null Elenco dei messaggi pubblicati nelle ultime 24 ore.
@@ -237,7 +204,7 @@ class FMessaggio
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            $stmt = $pdo->query("SELECT messID FROM messaggi WHERE data > DATE_SUB(CURDATE(), INTERVAL 1 DAY)");
+            $stmt = $pdo->query("SELECT messID FROM messaggi WHERE data > DATE_SUB(NOW(), INTERVAL 1 DAY)");
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($rows as $row) {
@@ -307,6 +274,8 @@ class FMessaggio
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($rows) == 1) {
                 return (int)$rows[0]['messID'];
+            } else if (count($rows) == 0) {
+                return 0;
             } else {
                 return null;
             }

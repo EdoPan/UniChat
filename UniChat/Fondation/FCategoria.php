@@ -282,7 +282,7 @@ class FCategoria
                 $stmt = $pdo->prepare($sql);
                 $result = $stmt->execute(array(
                     ':nome' => $nome,
-                    ':icona' => $icona,
+                    ':iconaID' => $iconaCategoriaID,
                     ':descrizione' => $descrizione
                 ));
 

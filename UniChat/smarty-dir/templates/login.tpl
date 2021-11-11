@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body class="bg-gradient-primary">
@@ -43,7 +45,31 @@
                                 <!-- Form di Login -->
                                 <form class="user" method="post" action="/UniChat/utenti/login">
 
+
+                                    <!-- Messaggio credenziali errate -->
+                                    {if $credenzialiErrate == true}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Errore. </strong>{$messaggioCredenzialiErrate}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {/if}
+                                    <!-- Fine messaggio errore -->
+
+                                    <!-- Messaggio dati obbligatori mancanti -->
+                                    {if $erroreDatiObbligatori == true}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <strong>Errore. </strong>{$messaggioErroreDatiObbligatori}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {/if}
+                                    <!-- Fine messaggio errore -->
+
                                     <!-- Inserimento email -->
+
                                     <!-- Messaggio errore validazione email -->
                                     {if $erroreEmail == true}
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -75,16 +101,9 @@
 
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user"
-                                               id="password" name="password" placeholder="Password" pattern="^[a-zA-z0-9@.\-_]{8,}$" title="Sono ammessi solo i caratteri alfanumerici e i simboli speciali: . \ - _ . La password deve essere lunga almeno 8 caratteri." required>
+                                               id="password" name="password" placeholder="Password" title="Sono ammessi solo i caratteri alfanumerici e i simboli speciali: . \ - _ . La password deve essere lunga almeno 8 caratteri." required>
                                     </div>
-
-                                    <!-- Box salvataggio credenziali -->
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck">
-                                            <label class="custom-control-label" for="customCheck">Ricordami</label>
-                                        </div>
-                                    </div>
+                                    
 
                                     <!-- Pulsante Login -->
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -105,6 +124,13 @@
                                 <div class="text-center">
                                     <a class="small" href="/UniChat/utenti/registrazione">Crea un Account!</a>
                                 </div>
+
+                                <br>
+
+                                <!-- Link torna alla home  -->
+                                <div class="text-center">
+                                    <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -124,6 +150,12 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+<script>
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 </body>
 

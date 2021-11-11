@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UniChat - Inserisci nuova Categoria</title>
+    <!-- Titolo tab del browser -->
+    <title>UniChat - Crea una categoria</title>
 
     <!-- Custom fonts for this template-->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -21,25 +21,27 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+
 </head>
 
 <body id="page-top">
 
-<!-- Page Wrapper -->
+<!-- Inizio del Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="home.html">
+        <!-- Logo sito e Sidebar -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/Home/visualizzaHome">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
             <div class="sidebar-brand-text mx-3">UniChat <sup>1.0</sup></div>
         </a>
 
-        <!-- Divider -->
+        <!-- Divisore -->
         <hr class="sidebar-divider my-0">
 
 
@@ -50,13 +52,13 @@
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-                    {foreach $categorie as $categoria}
+                    {foreach from=$cate item=c}
 
-                        <a class="collapse-item" href="/UniChat/Categorie/visualizzaCategoria/{$categoria->getID()}/1">{$categoria->getNome()}</a>
+                        <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
                 </div>
@@ -64,21 +66,21 @@
         </li>
 
 
-        <!-- Divider -->
+        <!-- Divisore -->
         <hr class="sidebar-divider d-none d-md-block">
 
-        <!-- Sidebar Toggler (Sidebar) -->
+        <!-- Bottone per restringere la Sidebar -->
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
 
     </ul>
-    <!-- End of Sidebar -->
+    <!-- Fine della Sidebar -->
 
-    <!-- Content Wrapper -->
+    <!-- Inizio del Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
+        <!-- Inizio del Main Content -->
         <div id="content">
 
             <!-- Topbar -->
@@ -89,10 +91,12 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
+
+
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <form method="post" action="/UniChat/threads/ricerca"
+                    <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
 
@@ -104,7 +108,7 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
-                                    {foreach $categorie as $categoria}
+                                    {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -144,7 +148,7 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
-                                {foreach $categorie as $categoria}
+                                {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
@@ -169,7 +173,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <form method="post" action="/UniChat/threads/ricerca" class="form-inline mr-auto w-100 navbar-search">
+                            <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
                                     <input type="text" name="categoriaID" id="categoria-id2" hidden>
@@ -202,9 +206,9 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome + " " + $cognome }</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
                                 <img class="img-profile rounded-circle"
-                                     src="data:image/jpeg;base64,{$icona}">
+                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
                             </a>
 
 
@@ -239,8 +243,7 @@
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">"Entra"</span>
-                                {html_image file="../Immagini/icona_autore.png"}
+                                <button class="btn btn-primary">Entra</button>
                             </a>
 
                             <!-- Tendina -->
@@ -248,14 +251,14 @@
                                  aria-labelledby="userDropdown">
 
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="/UniChat/utenti/login">
+                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/Utenti/logout">
-                                    <i class="fas fa-sign-out  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Registrazione
                                 </a>
 
 
@@ -265,91 +268,116 @@
                         </li>
                     </ul>
                 </ul>
-
             </nav>
-            <!-- End of Topbar -->
+            <!-- Fine della Topbar -->
 
-            <!-- Begin Page Content -->
+            <!-- Inizio del Page Content -->
             <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800">Inserisci nuova categoria thread</h1>
-
-
-                <h4 class="h4 mb-4 text-gray-800 text-lg-center">Compila il form proposto.</h4>
-
-
-                <form enctype="multipart/form-data" method="post" action="/UniChat/categorie/aggiungiCategoria" style="text-align: center">
-                    <!-- Messaggio errore campi obbligatori -->
-
-                    <!-- Fine messaggio errore -->
-                    {if $erroreDatiObbligatori}
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Errore. </strong>{$messaggioErroreDatiObbligatori}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {/if}
-                    <!-- Messaggio errore validazione nome -->
-                    {if $erroreDenominazione == true}
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Errore. </strong>{$messaggioErroreDenominazione}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {/if}
-                    <!-- Fine messaggio errore -->
-
-                    <div class="row" style="justify-content: center">
-
-                        <label for="name" style="margin-right: 10px">Nome Categoria</label>
-                        <input type="text" id="name" name="nome" required></div>
-
-                    <br>
-
-
-                    <!--<label for="cname">Descrizione Categoria</label><!-->
-                    <textarea id="descrizione" name="descrizione" placeholder="Inserisci descrizione Categoria"
-                              style="width: 60%" required></textarea><br><br>
-
-                    <!-- Messaggio errore validazione icona -->
-                    {if $erroreImmagine == true}
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Errore. </strong>{$messaggioErroreImmagine}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {/if}
-                    <!-- Fine messaggio di errore -->
-
-                    <label for="icona">Aggiungi icona categoria:</label>
-                    <input type="file" id="icona" name="icona">
-
-                    <br><br>
+                <!-- Intestazione della pagina -->
+                <h1 class="h3 mb-4 text-gray-800">Crea una categoria</h1>
 
 
 
-                    <input class="btn btn-primary" type="submit" value="Invia">
-                    <a href="/UniChat/admin/visualizzaPannelloDiControllo" class="btn btn-danger" role="button" aria-pressed="true">Annulla</a>
+                <!-- Box creazione thread -->
+                <div class="card shadow mb-4 mr-5 ml-5">
 
-                </form>
 
-                <br>
 
-                <p style="text-align: center">Clicca il tasto invia per creare la nuova categoria. Sarai reindirizzato sulla pagina inserita nel campo action. Altrimenti annulla l'operazione.</p>
+                    <div class="card-body">
+
+                        <form enctype="multipart/form-data" method="post" action="/UniChat/admin/aggiungiCategoria" style="text-align: center">
+                            <!-- Messaggio errore campi obbligatori -->
+
+                            <!-- Fine messaggio errore -->
+                            {if $erroreDatiObbligatori}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong>{$messaggioErroreDatiObbligatori}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {/if}
+                            <!-- Messaggio errore validazione nome -->
+                            {if $erroreDenominazione == true}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Errore. </strong>{$messaggioErroreDenominazione}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {/if}
+                            <!-- Fine messaggio errore -->
+
+                            <div class="row" style="justify-content: center">
+
+                                <!-- Inserimento nome categoria -->
+                                <input type="text" class="form-control mb-4 mt-4 mr-4 ml-4" autocomplete="off" id="name" name="nome" placeholder="Nome Categoria" required>
 
 
 
 
+                                <!-- Inserimento descrizione categoria -->
+                                <textarea class="mb-4 form-control mr-4 ml-4" autocomplete="off" id="descrizione" name="descrizione" placeholder="Inserisci descrizione Categoria"
+                                          style="width: 100%" required></textarea>
+
+                                <!-- Messaggio errore validazione icona -->
+                                {if $erroreImmagine == true}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Errore. </strong>{$messaggioErroreImmagine}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {/if}
+                                <!-- Fine messaggio di errore -->
+
+
+
+                                <div>
+
+
+                                    <div>
+
+                                        <!--p class="mb-2 mt-4">Inserisci l'icona della nuova categoria</p-->
+                                        <!--input type="file" id="icona" name="icona" class="btn btn-secondary btn-user btn-block mt-3 "-->
+
+                                        <!-- <input type="file" id="icona" name="icona" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
+                                       <label for="icona" style="display: block; position: relative; width: 100%; height: 40px; border-radius: 5px; background: linear-gradient(40deg, #777777, #a9a9a9); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                           Inserisci icona
+                                       </label> -->
+
+                                        <input type="file" id="icona" name="icona" hidden="hidden" />
+                                        <button class="btn btn-secondary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Carica un'icona</button>
+                                        <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna icona caricata</span>
+
+
+                                   </div>
+
+
+
+                                   <div class="mb-4 mt-4">
+                                       <a><input class="btn btn-primary mb-2" type="submit" value="Crea"></a>
+                                       <a href="/UniChat/admin/visualizzaPannelloDiControllo" class="btn btn-danger mb-2" role="button" aria-pressed="true">Annulla</a>
+                                   </div>
+
+                               </div>
+
+
+                       </form>
+
+
+
+                   </div>
+
+               </div>
+               <!-- Fine box creazione Thread -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- Fine del Page Content -->
 
         </div>
-        <!-- End of Main Content -->
+        <!-- Fine del Main Content -->
 
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
@@ -359,15 +387,15 @@
                 </div>
             </div>
         </footer>
-        <!-- End of Footer -->
+        <!-- Fine del Footer -->
 
     </div>
     <!-- End of Content Wrapper -->
 
 </div>
-<!-- End of Page Wrapper -->
+<!-- Fine del Page Wrapper -->
 
-<!-- Scroll to Top Button-->
+<!-- Bottone Scroll to Top -->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
@@ -403,6 +431,12 @@
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
 <script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
+
+<script type="text/javascript">
 
     /**
      * Funzione che permette di gestire la selezione della categoria con cui filtrare la ricerca.
@@ -431,6 +465,26 @@
         elemento.className = 'filtro-categorie dropdown-item active';
 
     }
+</script>
+
+<script type="text/javascript">
+    const realFileBtn = document.getElementById("icona");
+    const customBtn = document.getElementById("custom-button");
+    const customTxt = document.getElementById("custom-text");
+
+    customBtn.addEventListener("click", function() {
+        realFileBtn.click();
+    });
+
+    realFileBtn.addEventListener("change", function() {
+        if (realFileBtn.value) {
+            customTxt.innerHTML = realFileBtn.value.match(
+                /[\/\\]([\w\d\s\.\-\(\)]+)$/
+            )[1];
+        } else {
+            customTxt.innerHTML = "Nessuna icona caricata.";
+        }
+    });
 </script>
 
 </body>
