@@ -1,0 +1,32 @@
+.utente {
+    width: 100%;
+}
+
+/* Pagination links */
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+/* Style the active/current link */
+.pagination a.active {
+    background-color: #2e59d9;
+    color: white;
+}
+
+
+.card-header-actions .card-header {
+    height: 3.5625rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
+
+}
+
+/* Add a grey background color on mouse-over */
+.pagination a:hover:not(.active) {background-color: #ddd;}
