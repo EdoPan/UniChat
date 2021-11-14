@@ -3,6 +3,11 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
+/**
+ * Classe che gestisce attributi e metodi delle risposte,
+ * commenti inseriti dagli utenti loggati nelle pagine dei thread.
+ */
+
     class ERisposta
     {
 

@@ -21,6 +21,7 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Controllo JS disattivato.-->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -45,7 +46,7 @@
         <hr class="sidebar-divider my-0">
 
 
-        <!-- Menu laterale categorie -->
+        <!-- Inizio Menu laterale categorie -->
         <li class="nav-item active">
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
@@ -56,6 +57,8 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
+
+                    <!-- Voce di menù corrispondente ad ogni categoria -->
                     {foreach from=$cate item=c}
 
                         <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
@@ -64,6 +67,7 @@
                 </div>
             </div>
         </li>
+        <!-- Fine Menu laterale categorie -->
 
 
         <!-- Divisore -->
@@ -96,10 +100,11 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
+                    <!-- Inizio Form Ricerca -->
                     <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-
+                            <!-- Bottone Filtra ricerca -->
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
                                     Filtra
@@ -130,7 +135,7 @@
                             </div>
                         </div>
                     </form>
-
+                    <!-- Fine Form Ricerca -->
                 </div>
 
 
@@ -138,6 +143,7 @@
                 <ul class="navbar-nav ml-auto">
 
 
+                    <!-- Filtra ricerca mod. XS -->
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
@@ -156,23 +162,19 @@
 
                             </div>
                         </div>
-
                     </div>
 
 
-
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <!-- Dropdown - Cerca -->
-
-
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
+                            <!-- Inizio Form Ricerca XS -->
                             <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
@@ -188,8 +190,8 @@
                                     </div>
                                 </div>
                             </form>
+                            <!-- Fine Form Ricerca XS -->
                         </div>
-
 
                     </li>
 
@@ -199,10 +201,12 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Informazioni profilo loggato e relativa tendina -->
+                        <!-- Menù utente -->
                         <li class="nav-item dropdown no-arrow">
 
+
                             {if $loggato}
+                            <!-- Se l'utente è loggato, mostrare nome cognome e icona dell'img di profilo -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -216,7 +220,7 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-
+                                <!-- Visualizzazione voce di menù "Profilo" per accedere alle info personali -->
                                 <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
@@ -224,6 +228,7 @@
 
                                 {if $controlpanel}
 
+                                    <!-- Se l'utente è l'Admin, visualizzare il Pannello di Controllo -->
                                     <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
@@ -232,7 +237,7 @@
                                 {/if}
 
 
-
+                                <!-- Voce di menù per effettuare il Logout-->
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
@@ -240,6 +245,8 @@
                             </div>
 
                             {else}
+
+                            <!-- Vista del top menù nel caso non l'utente non fosse loggato -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -250,22 +257,21 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-
-                                <a class="dropdown-item" href="/UniChat/utenti/login">
+                                <!-- Voce di menù per effettuare il Login -->
+                                <a class="dropdown-item" href="/UniChat/Utenti/login">
                                     <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                <!-- Voce di menù per effettuare la Registrazione -->
+                                <a class="dropdown-item" href="/UniChat/Utenti/registrazione">
                                     <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Registrazione
                                 </a>
-
-
                                 {/if}
 
-
                         </li>
+                        <!-- Fine menù utente -->
                     </ul>
                 </ul>
             </nav>
@@ -277,12 +283,8 @@
                 <!-- Intestazione della pagina -->
                 <h1 class="h3 mb-4 text-gray-800">Crea un thread</h1>
 
-
-
                 <!-- Box creazione thread -->
                 <div class="card shadow mb-4">
-
-
 
                     <div class="card-body">
 
@@ -303,7 +305,6 @@
 
                             </div>
 
-                            <!-- Bottone allegati -->
                             <!-- Messaggio errore validazione allegato -->
                             {if $erroreAllegato == true}
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -315,26 +316,17 @@
                             {/if}
                             <!-- Fine messaggio errore -->
 
+                            <!-- Bottone allegati -->
                             <div>
-
-                                <!--p align="center" class="mt-4 mb-2">Allega documenti</p-->
-                                <!--input type="file" id="allegati" name="allegati[]" class="btn btn-secondary btn-user btn-block mt-3 " multiple-->
-
-
-                                <!-- <input type="file" id="allegati" name="allegati[]" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;" multiple>
-                                <label for="allegati" style="display: block; position: relative; width: 100%; height: 40px; border-radius: 5px; background: linear-gradient(40deg, #777777, #a9a9a9); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
-                                    Allega documenti
-                                </label> -->
 
                                 <input type="file" id="allegati" name="allegati[]" multiple hidden="hidden"/>
                                 <button class="btn btn-secondary btn-user btn-block"
                                         type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>
                                     Inserisci allegati</button>
+
                                 <span style="display: block; position: relative; text-align: center;" id="custom-text">Nessun allegato caricato</span><br><br>
 
                             </div>
-
-
 
                             <!-- Divisore -->
                             <hr>
@@ -350,11 +342,7 @@
                             <!-- Bottone annulla -->
                             <a class="btn btn-danger btn-user btn-block" href="/UniChat/categorie/visualizzaCategoria/{$categoriaID}/1" role="button">Annulla</a>
 
-
-
                         </form>
-
-
                     </div>
                 </div>
                 <!-- Fine box creazione Thread -->
@@ -416,6 +404,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Controllo Cookie disabilitati. -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -453,7 +442,7 @@
     }
 </script>
 
-
+<!-- Caricamento allegati multipli e visualizzazione dei nomi dei file. -->
 <script type="text/javascript">
     const nofile=document.getElementById("allegati");
     var realFileBtn = document.getElementById("allegati").files;
@@ -478,7 +467,7 @@
 
 </script>
 
-
+<!-- Reset del campo nome file allegati. -->
 <script>
     function funReset(){
         document.getElementById("custom-text").innerHTML="Nessun allegato caricato";

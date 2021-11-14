@@ -85,11 +85,11 @@ class CGestioneUtenti
      * visitatore (nome, cognome, email, password, foto profilo, corso  di studio) in modo da creare
      * un nuovo oggetto di tipo EUser e procedere al salvataggio in DB.
      * Al termine della registrazione l'utente è indirizzato sulla pagina di Login.
-     *
      */
 
     public function registrazione():void {
 
+        //Recupero dell'utente dalla sessione
         $session = new USession();
         $user = $session->getValue('user');
 
@@ -98,7 +98,7 @@ class CGestioneUtenti
         $vRegistrazione = new VRegistrazione();
 
 
-        //se si è già loggati si viene reindirizzati verso il proprio profilo
+        //se si è loggati si viene reindirizzati verso il proprio profilo
 
         if (isset($user)) {
 
@@ -106,12 +106,16 @@ class CGestioneUtenti
 
         } else {
 
+            // Se si effettua una richiesta di tipo GET si visualizza la form di Registrazione.
+
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $vRegistrazione->setErroreValidazione(null, null);
                 $vRegistrazione->setOperazioneFallita(false);
                 $vRegistrazione->setCampiObbligatoriMancanti(false);
                 $vRegistrazione->showRegistrazione();
+
+                // Se la richiesta è di tipo POST si recuperano i valori inseriti dall'utente.
 
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -182,8 +186,6 @@ class CGestioneUtenti
                     $vRegistrazione->setCampiObbligatoriMancanti(true);
                     $vRegistrazione->showRegistrazione();
 
-                    //$viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
-                    //$viewError->showError();
                 }
 
             }
@@ -199,12 +201,13 @@ class CGestioneUtenti
      * Se Richiesta POST, dall'email inserita nella form, recupero
      * l'oggetto EUser relativo, genero una nuova password, la
      * imposto, salvando il nuovo oggetto in DB e invio una email
-     * all'utente di conferma. Al termine, l'utente verrà
+     * all'utente con la nuova password. Al termine, l'utente verrà
      * reindirizzato verso la pagina di login.
      */
 
     public function recuperoPassword():void {
 
+        //Recupero dell'utente dalla sessione
         $session=new USession();
         $user=$session->getValue('user');
 
@@ -212,10 +215,11 @@ class CGestioneUtenti
         $pm = FPersistentManager::getInstance();
 
         $vRecuperaPassword = new VRecuperaPassword();
-        $viewError = new VError();
 
+        //Se l'utente non è già loggato: (se lo fosse non potrebbe accedere a tale pagina)
         if (! isset($user)) {
 
+            //Se la Richiesta è di tipo GET visualizzo la FORM (senza alcun avviso)
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $vRecuperaPassword->setMessaggio(false, VRecuperaPassword::NULLA, null);
@@ -224,6 +228,7 @@ class CGestioneUtenti
                 $vRecuperaPassword->setErroreValidazione(null, null);
                 $vRecuperaPassword->showRecuperaPassword();
 
+                //Se la richiesta è di tipo post recupero i dati inseriti e invio email con la nuova password
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $valori = $vRecuperaPassword->getValori();
@@ -231,17 +236,21 @@ class CGestioneUtenti
                     $email = $valori['email'];
 
                     try {
-
+                        //Verifico che l'email inserita corrisponda ad un utente iscritto
                         if ($pm->existsUserByEmail($email) == true) {
 
+                            //Recupero utente dal DB tramite email
                             $utente = $pm->loadUserByEmail($email);
 
                             if (isset($utente)) {
 
+                                //Genero una nuova password
                                 $nuovaPassword=$utente->generaPassword();
 
+                                //Salvo le modifiche in DB
                                 if($pm->update(FPersistentManager::ENTITY_USER, $utente)) {
 
+                                    //Invio email con la nuova password
                                     $esito=self::invioEmail($email, $nuovaPassword);
 
                                     if ($esito) {
@@ -259,6 +268,8 @@ class CGestioneUtenti
                                     $vRecuperaPassword->showRecuperaPassword();
 
 
+                                    //Caso in cui il salvataggio in DB non è andato a buon fine: viene mostrato messaggio di
+                                    // errore.
                                 } else {
                                     $vRecuperaPassword->setErroreValidazione(null, null);
                                     $vRecuperaPassword->setMessaggio(true,VRecuperaPassword::ERROR, 'danger');
@@ -267,6 +278,7 @@ class CGestioneUtenti
                                     $vRecuperaPassword->showRecuperaPassword();
                                 }
 
+                                //Caso in cui non è stato possibile caricare l'utente da DB: messaggio di errore
                             } else {
                                 $vRecuperaPassword->setErroreValidazione(null, null);
                                 $vRecuperaPassword->setMessaggio(true,VRecuperaPassword::ERROR, 'danger');
@@ -275,6 +287,7 @@ class CGestioneUtenti
                                 $vRecuperaPassword->showRecuperaPassword();
                             }
 
+                            //Caso in cui è stata inserita un'email non corrispondente a nessun utente iscritto.
                         } else {
                             $vRecuperaPassword->setCredenzialiErrate(true);
                             $vRecuperaPassword->setMessaggio(false,VRecuperaPassword::NULLA, null);
@@ -293,9 +306,8 @@ class CGestioneUtenti
                         $vRecuperaPassword->showRecuperaPassword();
 
                     }
-                }
-
-                else {
+                    //Caso in cui non è stata inserita l'email (campo vuoto).
+                } else {
                     $vRecuperaPassword->setErroreValidazione(null, null);
                     $vRecuperaPassword->setMessaggio(false, VRecuperaPassword::NULLA, null);
                     $vRecuperaPassword->setCredenzialiErrate(false);
@@ -304,7 +316,7 @@ class CGestioneUtenti
 
                 }
             }
-
+            //Se già loggato, l'utente viene reindirizzato verso la home
         } else {
             header('/UniChat/');
         }
@@ -323,6 +335,7 @@ class CGestioneUtenti
 
     public function login():void {
 
+        //Recupero dell'utente dalla sessione
         $session = new USession();
         $user = $session->getValue('user');
 
@@ -342,6 +355,8 @@ class CGestioneUtenti
              * Se non si è loggati allora si può aver contattato questo metodo per visualizare la form da compilare
              * o per voler elaborare i dati sottomessi alla form di login.
              */
+
+            //Se richiesta GET visualizzo la form
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 /**
@@ -352,6 +367,8 @@ class CGestioneUtenti
                 $vLogin->setCredenzialiErrate(false);
                 $vLogin->showLogin();
 
+                //Se richiesta POST recupero i dati inseriti, verifico che le credenziali siano corrette e
+                // apro una nuova sessione per l'utente.
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 /**
@@ -380,7 +397,6 @@ class CGestioneUtenti
                                     if ($userLoggato->verificaPassword($password)) {
 
                                         //avvio sessione
-
                                         $userLoggato = serialize($userLoggato);
                                         $session = new USession();
                                         $session->setValue('user', $userLoggato);
@@ -401,9 +417,8 @@ class CGestioneUtenti
                                 } else {
 
                                     /**
-                                     * Se si Se si è ottenuto un null allora vuol dire che il database è offline, anche
-                                     * se è possibile ottenere tale valore anche per una email sbagliata, arrivati a
-                                     * questo punto non può essere.
+                                     * Caso in cui non sia stato possibile caricare l'utente da DB. Viene visualizzata
+                                     * una pagina di errore (500)
                                      */
                                     $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
                                     $viewError->showError();
@@ -466,9 +481,11 @@ class CGestioneUtenti
 
     public function logout():void {
 
+        //Recupero dell'utente dalla sessione
         $session = new USession();
         $user = $session->getValue('user');
 
+        //Se la sessione esiste, la elimino.
         if(isset($user)) {
             $session->deleteSession();
         }
@@ -489,7 +506,7 @@ class CGestioneUtenti
 
     public function editShowPersonalProfile(): void {
 
-
+        //Recupero dell'utente dalla sessione
         $session = new USession();
         $user = $session->getValue('user');
 
@@ -500,7 +517,6 @@ class CGestioneUtenti
         $viewError = new VError();
 
         //se non si è già loggati si viene reindirizzati verso la pagina di login
-
         if (! isset($user)) {
 
             header("Location: /UniChat/Utenti/login");
@@ -510,7 +526,10 @@ class CGestioneUtenti
 
             $user=unserialize($user);
 
+            //Se la richiesta è di tipo GET visualizzo la FORM
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+                //Gestione degli avvisi recuperando i parametri dalla URL.
 
                 if (func_num_args() == 1) {
                     if (func_get_arg(0) == "conferma") {
@@ -537,6 +556,7 @@ class CGestioneUtenti
                 } catch (ValidationException $e) {
                     $categorie = null;
                 }
+                //Impostazione dei menù e del filtro ricerca tramite VPage.
                 if (isset($categorie)) {
                     $vPage->setMenuUtente($user, false);
                     $vPage->setMenuLeft($categorie);
@@ -552,10 +572,14 @@ class CGestioneUtenti
                     $viewError->showError();
                 }
 
+
+                //Se richiesta è di tipo Post, recupero i dati inseriti e procedo al salvataggio in DB.
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-
                 $valori = $vProfilo->getValori();
+
+                //I dati modificabili sono: Foto Profilo, corso di studio e password. Nessuno di questi è un
+                // campo obbligatorio.
 
                 if (count($valori)!=0) {
 
@@ -586,7 +610,6 @@ class CGestioneUtenti
 
                     try {
 
-
                         if (isset($password)) {
                             $user->setPassword($password);
                         }
@@ -599,26 +622,28 @@ class CGestioneUtenti
                             $user->setCorsoStudio($corsoStudio);
                         }
 
+                        //Aggiorno l'utente in DB con le eventuali nuove informazioni inserite
                         $updUtente=$pm->update(FPersistentManager::ENTITY_USER, $user);
 
                         if ($updUtente) {
 
+                            //Aggiorno la sessione dell'utente
                             $user=serialize($user);
-
                             $session->updateValue('user', $user);
 
+                            //Mostro avviso di conferma modifiche
                             header("Location: /UniChat/utenti/editShowPersonalProfile/conferma");
 
-
-
                         } else {
-
+                            //Se il salvataggio in DB non è avvenuto con successo mostro il messaggio di errore.
                             header("Location: /UniChat/utenti/editShowPersonalProfile/errore");
 
                         }
 
 
                     } catch (ValidationException $e) {
+
+                        //Nel caso in cui siano inseriti dati non validi, mostro messaggio di errore.
 
                         $vProfilo->setMessaggioConfermaErroreModificaProfilo(null);
                         try {
@@ -644,13 +669,11 @@ class CGestioneUtenti
 
                     }
 
+                    // Nel caso in cui non siano stati inseriti dati nella form viene visualizzato il relativo
+                    // avviso.
                 } else {
-
-
                     header("Location: /UniChat/utenti/editShowPersonalProfile/avviso");
-
                 }
-
             }
         }
     }
@@ -658,17 +681,20 @@ class CGestioneUtenti
 
     /**
      * Metodo responsabile della visualizzazione delle info personali
-     * di un altro utente iscritto su UniChat
+     * di un utente iscritto su UniChat.
      * Recupero id utente dall'url.
      */
 
     public function showProfile($idUtente): void {
 
+        //Recupero utente dalla sessione
         $session = new USession();
         $vProfile = new VProfile();
+
         $vPage = new VPage($vProfile->getSmarty());
         $pm = FPersistentManager::getInstance();
 
+        //Recupero dell'utente di cui visualizzarne il profilo da DB tramite il suo id (parametro della URL)
         try {
             $utente = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $idUtente);
         } catch (ValidationException $e) {
@@ -681,6 +707,7 @@ class CGestioneUtenti
             $categorie = null;
         }
 
+        //Impostazione dei menù e della pagina.
         if (isset($utente) && isset($categorie)) {
             $vProfile->setUtente($utente);
 

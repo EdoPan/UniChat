@@ -3,6 +3,12 @@
     declare(strict_types = 1);
     require_once __DIR__ . "\..\utility.php";
 
+/**
+ * Classe che gestisce attributi e metodi degli ogg. EModeratore.
+ * Il moderatore è un tipo di utente a cui è assegnata una categoria e
+ * che ha la possibilità di rimuovere thread di questa o risposte inappropriate.
+ */
+
     class EModeratore extends EUser implements JsonSerializable
     {
         // Attributi

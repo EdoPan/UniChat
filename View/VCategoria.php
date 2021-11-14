@@ -3,6 +3,9 @@ require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 //require_once "VPage.php";
 
+/**
+ * Classe che gestisce la visualizzazione della pagina di Categoria dei Thread.
+ */
 class VCategoria 
 
 {
@@ -50,7 +53,6 @@ class VCategoria
 	}
 
 
-
 	/**
 	 * Imposta la visualizzazione dell'icona della categoria, il suo nome, la sua 
 	 * descrizione.
@@ -65,7 +67,7 @@ class VCategoria
 	}
 
 	/**
-	 * Imposta la visualizzazione dei threads appartenenti a quella categoria e il 
+	 * Imposta la lista dei threads da visualizzare appartenenti a quella categoria e il
 	 * collegamento alla pagina di visualizzazione dei singoli thread.
 	 */
 	public function setThreads(array $threads): void {
@@ -78,8 +80,9 @@ class VCategoria
 	}
 
 	/**
-	 * Imposta la visualizzazione della sezione contenente i numeri di pagina per 
-	 * richiamare di volta in volta gli altri threads.
+	 * Imposta la paginazione dei threads di una categoria. Sapendo che ogni poagina mostra al massimo
+     * un numero pre stabilito di threads, recuperando il numero totale dei threads da visualizzare,
+     * calcolo il numero di pagine necessarie.
 	 */
 	public function setPaginazione(int $numeroThread): void {
 
@@ -98,19 +101,16 @@ class VCategoria
 	 * 
 	*/
 
-
 	public function setActivePage(int $numeroPagina): void {
 
-
 		$this->smarty->assign('activePage', $numeroPagina);
-
 
 	}
 
 
 	/**
-	 * Imposta la visualizzazione del bottone per creare un nuovo thread da pubblicare nella medesima sezione delle
-	 * categorie. Il bottone deve essere visualizzato solo se l'utente è loggato (true).
+	 * Imposta la visualizzazione del bottone per creare un nuovo thread da pubblicare nella medesima categoria.
+     * Il bottone deve essere visualizzato solo se l'utente è loggato (true).
 	 * La categoria viene fornita solo se loggato vale true e serve a specificare dove dovrà essere pubblicato
 	 * il thread (serve per generare la url autodescrittiva). Se loggato vale false allora categoria vale null.
 	 */

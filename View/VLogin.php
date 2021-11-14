@@ -2,6 +2,9 @@
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe a cui è affidata la gestione della visualizzazione della form di login.
+ */
 class VLogin
 {
     private Smarty $smarty;
@@ -11,6 +14,12 @@ class VLogin
         $this->smarty = VSmarty::start();
 
     }
+
+    /**
+     * Impostazione del messaggio di errore nel caso venissero inseriti dati non validi (email e/o password).
+     * @param int|null $codiceErrore
+     * @param string|null $messaggioErrore
+     */
 
     public function setErroreValidazione(?int $codiceErrore, ?string $messaggioErrore): void
     {
@@ -30,6 +39,11 @@ class VLogin
         }
     }
 
+    /**
+     * Impostazione del messaggio di errore nel caso venissero inserite credenziali errate (email e/o password).
+     * @param bool $visualizza
+     */
+
     public function setCredenzialiErrate(bool $visualizza): void
     {
         $this->smarty->assign('credenzialiErrate', false);
@@ -40,6 +54,12 @@ class VLogin
         }
     }
 
+    /**
+     * Impostazione del messaggio di errore nel caso venisse inviata la form senza
+     * aver compilato i campi obbligatori.
+     * @param bool $visualizza
+     */
+
     public function setCampiObbligatoriMancanti(bool $visualizza): void
     {
         $this->smarty->assign('erroreDatiObbligatori', false);
@@ -49,6 +69,14 @@ class VLogin
             $this->smarty->assign('messaggioErroreDatiObbligatori', "Dati obbligatori mancanti.");
         }
     }
+
+    /**
+     * Recupero dei dati inseriti nella Form.
+     * I dati da recuperare sono:
+     * - email (obbligatorio)
+     * - password (obbligatorio)
+     * @return array|null
+     */
 
     public function getValori(): ?array
     {
@@ -61,6 +89,10 @@ class VLogin
         }
         return $result;
     }
+
+    /**
+     * Display del template della pagina di Login.
+     */
 
     public function showLogin(): void
     {

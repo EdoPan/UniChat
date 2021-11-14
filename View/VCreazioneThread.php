@@ -2,6 +2,9 @@
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe a cui è affidata la gestione della visualizzazione della form di creazione thread.
+ */
 class VCreazioneThread
 {
 
@@ -18,6 +21,12 @@ class VCreazioneThread
         return $this->smarty;
     }
 
+    /**
+     * Impostazione dell'errore da visualizzare in caso di invio della form senza aver inserito
+     * dati nei campi obbligatori.
+     * @param bool $campiMancanti
+     */
+
     public function setCampiObbligatoriMancanti(bool $campiMancanti): void
     {
         if ($campiMancanti) {
@@ -29,6 +38,12 @@ class VCreazioneThread
         }
     }
 
+    /**
+     * Impostazione dell'id e del nome della Categoria necessari all'invio e alla
+     * visualizzazione della form di creazione thread.
+     * @param ECategoria $categoria
+     */
+
     public function setCategoriaCreazioneThread(ECategoria $categoria): void {
         $categoriaID = $categoria->getId();
         $categoriaNome = $categoria->getNome();
@@ -36,6 +51,13 @@ class VCreazioneThread
         $this->smarty->assign('categoriaID', $categoriaID);
         $this->smarty->assign('categoriaNome', $categoriaNome);
     }
+
+    /**
+     * Impostazione del messaggio di errore da visualizzare in caso di caricamento di allegati
+     * non validi.
+     * @param int|null $codiceErrore
+     * @param string|null $messaggioErrore
+     */
 
     public function setErroreValidazione(?int $codiceErrore, ?string $messaggioErrore): void {
 
@@ -49,6 +71,14 @@ class VCreazioneThread
 
     }
 
+    /**
+     * Recupero dei valori inseriti nella form di creazione thread.
+     * I dati da recuperare sono
+     * - titolo del thread (campo obbligatorio)
+     * - descrizione del thread (campo obbligatorio)
+     * - allegati (non obbligatorio)
+     * @return array|null
+     */
 
     public function getValori(): ?array {
 
@@ -68,13 +98,6 @@ class VCreazioneThread
                     $allegato['tipo'] = $_FILES['allegati']['type'][$i];
                     $allegato['file'] = base64_encode(file_get_contents($_FILES['allegati']['tmp_name'][$i]));
                     $allegati[] = $allegato;
-                    /*
-                    $indice = 'allegato' . $i;
-                    $result[$indice."Nome"] = $_FILES['allegati']['name'][$i];
-                    $result[$indice."Dimensione"] = $_FILES['allegati']['size'][$i];
-                    $result[$indice."Tipo"] = $_FILES['allegati']['type'][$i];
-                    $result[$indice."File"] = base64_encode(file_get_contents($_FILES['allegati']['tmp_name'][$i]));
-                    */
                 }
                 $result['allegati'] = $allegati;
             }
@@ -89,6 +112,9 @@ class VCreazioneThread
     }
 
 
+    /**
+     * Impostazione della visualizzazione del template della pagina di Creazione di un nuovo Thread.
+     */
     public function showCreaThread(): void {
 
         $this->smarty->display('pagina-creazione-thread.tpl');

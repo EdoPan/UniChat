@@ -2,6 +2,9 @@
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe a cui è affidata la gestione della visualizzazione della form di recuro password.
+ */
 class VRecuperaPassword
 {
 
@@ -27,6 +30,7 @@ class VRecuperaPassword
     }
 
     /**
+     * Recupero da Richieste POST dei dati inseriti nella form.
      * I dati da recuperare dalla form sono:
      * - email (obbligatoria).
      */
@@ -42,6 +46,12 @@ class VRecuperaPassword
         return $result;
     }
 
+    /**
+     * Impostazione dell'errore da visualizzare in caso di inserimento di una password non valida.
+     * @param int|null $codiceErrore
+     * @param string|null $messaggioErrore
+     */
+
     public function setErroreValidazione(?int $codiceErrore, ?string $messaggioErrore) {
 
         $this->smarty->assign('erroreEmail', false);
@@ -56,6 +66,12 @@ class VRecuperaPassword
 
     }
 
+    /**
+     * Impostazione dell'errore da visualizzare in caso di invio della form senza aver inserito
+     * dati nei campi obbligatori.
+     * @param bool $visualizza
+     */
+
     public function setCampiObbligatoriMancanti(bool $visualizza) {
         $this->smarty->assign('erroreDatiObbligatori', false);
         $this->smarty->assign('messaggioErroreDatiObbligatori', "");
@@ -64,6 +80,12 @@ class VRecuperaPassword
             $this->smarty->assign('messaggioErroreDatiObbligatori', "Inserisci Email.");
         }
     }
+
+    /**
+     * Impostazione dell'errore da visualizzare in caso di inserimento di un'email non
+     * corrispondente a nessun utente iscritto.
+     * @param bool $visualizza
+     */
 
     public function setCredenzialiErrate(bool $visualizza): void
     {
@@ -88,6 +110,10 @@ class VRecuperaPassword
         $this->smarty->assign('colore', $colore);
 
     }
+
+    /**
+     * Display del template della pagina per il recupero della password.
+     */
 
     public function showRecuperaPassword () {
 

@@ -22,7 +22,7 @@ class FConnection
      * Password dell'utente con cui effettuare la connessione al DBMS.
      * @var string
      */
-    private static string $password = "pippo";
+    private static string $password = "";
 
     /**
      * Nome del database che si vuole utilizzare

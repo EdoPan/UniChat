@@ -22,6 +22,8 @@
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/UniChat/Template/css/pannello_di_controllo.css" rel="stylesheet">
 
+
+    <!-- Controllo JS disabilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -42,11 +44,11 @@
             <div class="sidebar-brand-text mx-3">UniChat <sup>1.0</sup></div>
         </a>
 
-
         <!-- Divisore -->
         <hr class="sidebar-divider my-0">
 
-        <!-- Menu laterale categorie -->
+
+        <!-- Inizio Menu laterale categorie -->
         <li class="nav-item active">
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
@@ -57,6 +59,8 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
+
+                    <!-- Voce di menù corrispondente ad ogni categoria -->
                     {foreach from=$cate item=c}
 
                         <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
@@ -65,6 +69,8 @@
                 </div>
             </div>
         </li>
+        <!-- Fine Menu laterale categorie -->
+
 
         <!-- Divisore -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -77,11 +83,10 @@
     </ul>
     <!-- Fine della Sidebar -->
 
-
     <!-- Inizio del Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Contenuto principale -->
+        <!-- Inizio del Main Content -->
         <div id="content">
 
             <!-- Topbar -->
@@ -97,10 +102,11 @@
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
+                    <!-- Inizio Form Ricerca -->
                     <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-
+                            <!-- Bottone Filtra ricerca -->
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
                                     Filtra
@@ -131,7 +137,7 @@
                             </div>
                         </div>
                     </form>
-
+                    <!-- Fine Form Ricerca -->
                 </div>
 
 
@@ -139,6 +145,7 @@
                 <ul class="navbar-nav ml-auto">
 
 
+                    <!-- Filtra ricerca mod. XS -->
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
@@ -157,23 +164,19 @@
 
                             </div>
                         </div>
-
                     </div>
 
 
-
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <!-- Dropdown - Cerca -->
-
-
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
+                            <!-- Inizio Form Ricerca XS -->
                             <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
@@ -189,8 +192,8 @@
                                     </div>
                                 </div>
                             </form>
+                            <!-- Fine Form Ricerca XS -->
                         </div>
-
 
                     </li>
 
@@ -200,10 +203,12 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Informazioni profilo loggato e relativa tendina -->
+                        <!-- Menù utente -->
                         <li class="nav-item dropdown no-arrow">
 
+
                             {if $loggato}
+                            <!-- Se l'utente è loggato, mostrare nome cognome e icona dell'img di profilo -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -217,7 +222,7 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-
+                                <!-- Visualizzazione voce di menù "Profilo" per accedere alle info personali -->
                                 <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
@@ -225,6 +230,7 @@
 
                                 {if $controlpanel}
 
+                                    <!-- Se l'utente è l'Admin, visualizzare il Pannello di Controllo -->
                                     <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
@@ -233,7 +239,7 @@
                                 {/if}
 
 
-
+                                <!-- Voce di menù per effettuare il Logout-->
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
@@ -241,6 +247,8 @@
                             </div>
 
                             {else}
+
+                            <!-- Vista del top menù nel caso non l'utente non fosse loggato -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -251,27 +259,25 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-
+                                <!-- Voce di menù per effettuare il Login -->
                                 <a class="dropdown-item" href="/UniChat/Utenti/login">
                                     <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
+                                <!-- Voce di menù per effettuare la Registrazione -->
                                 <a class="dropdown-item" href="/UniChat/Utenti/registrazione">
                                     <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Registrazione
                                 </a>
-
-
                                 {/if}
 
-
                         </li>
+                        <!-- Fine menù utente -->
                     </ul>
                 </ul>
             </nav>
             <!-- Fine della Topbar -->
-
 
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
@@ -281,6 +287,7 @@
                     <h1 class="h3 mb-0 text-gray-800">Risultato Ricerca</h1>
                 </div>
 
+                <!-- Dati della ricerca -->
                 <div class="container-fluid">
                     <h6>Hai cercato:
                         {$titoloCercato}
@@ -301,6 +308,7 @@
 
                             <div class="row">
 
+                                <!-- 1° thread della riga -->
                                 <div class="col">
 
                                     <!-- Contenitore Thread  -->
@@ -311,7 +319,7 @@
 
                                             <div class="row">
 
-
+                                                <!-- Nome, valutazione e autore del thread -->
                                                 <div class="col mr-4">
                                                     <h5 class="m-0 font-weight-bold text-primary">{$listathread[$j]->getTitolo()}<sup>{$listathread[$j]->getValutazione()->getTotale()} <i class="fas fa-star"></i></sup></h5><br>
                                                     <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b><a href="/UniChat/utenti/showProfile/{$listathread[$j]->getAutoreThread()->getID()}">{$listathread[$j]->getAutoreThread()->getNome()} {$listathread[$j]->getAutoreThread()->getCognome()}</a></b></h6>
@@ -324,17 +332,14 @@
 
                                                 <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
 
-                                                    <!-- Pulsante thread specifico -->
+                                                    <!-- Pulsante thread leggi tutto -->
                                                     <a href="\UniChat\Threads\visualizzaThread\{$listathread[$j]->getID()}" class="btn btn-info btn-icon-split">
-                                                    <span class="icon text-white-600">
-                                                        <i class="fas fa-arrow-right"></i>
-                                                    </span>
+                                                        <span class="icon text-white-600">
+                                                            <i class="fas fa-arrow-right"></i>
+                                                        </span>
                                                     </a>
                                                 </div>
-
-
                                             </div>
-
                                         </div>
 
                                         <!-- Descrizione Thread -->
@@ -356,6 +361,7 @@
 
                                 {if $j+1 < $posizioneMax}
 
+                                    <!-- 2° thread della riga -->
                                     <div class="col">
 
                                         <!-- Contenitore Thread  -->
@@ -366,7 +372,7 @@
 
                                                 <div class="row">
 
-
+                                                    <!-- Titolo, valutazione e autore del thread -->
                                                     <div class="col mr-4">
                                                         <h5 class="m-0 font-weight-bold text-primary">{$listathread[$j+1]->getTitolo()}<sup>{$listathread[$j+1]->getValutazione()->getTotale()} <i class="fas fa-star"></i></sup></h5><br>
                                                         <h6 class="m-0 font-weight-normal text-dark">Pubblicato da: <b><a href="/UniChat/utenti/showProfile/{$listathread[$j+1]->getAutoreThread()->getId()}">{$listathread[$j+1]->getAutoreThread()->getNome()} {$listathread[$j+1]->getAutoreThread()->getCognome()}</a></b></h6>
@@ -386,10 +392,7 @@
                                                                             </span>
                                                         </a>
                                                     </div>
-
-
                                                 </div>
-
                                             </div>
 
                                             <!-- Descrizione Thread -->
@@ -408,11 +411,13 @@
                                         <!-- Fine Thread -->
 
                                     </div>
+                                    <!-- Fine 2° thread della riga -->
 
                                 {/if}
 
                             </div>
 
+                            <!-- Contatore per unaa nuova riga -->
                             {$j=$j+2}
 
                         {/for}
@@ -425,21 +430,22 @@
                         <div class="pagination mt-3 mb-3" style="justify-content: center">
 
                             {if $activePage!=1}
-
+                                <!-- Bottone vai a pagina precedente -->
                                 <a href="\UniChat\threads\ricerca\{$activePage -1}?categoriaID={$categoriaIdRicerca}&testoricerca={$testoRicerca}">&laquo;</a>
 
                             {/if}
-
 
 
                             {for $pagThread=1 to $numeroPagine}
 
                                 {if $pagThread==$activePage}
 
+                                    <!-- La pagina che si sta visualizzando viene evidenziata -->
                                     <a href="\UniChat\threads\ricerca\{$pagThread}?categoriaID={$categoriaIdRicerca}&testoricerca={$testoRicerca}" class="active">{$pagThread}</a>
 
                                 {else}
 
+                                    <!-- Le altre pagine presenti -->
                                     <a href="\UniChat\threads\ricerca\{$pagThread}?categoriaID={$categoriaIdRicerca}&testoricerca={$testoRicerca}">{$pagThread}</a>
 
                                 {/if}
@@ -448,16 +454,17 @@
 
                             {if $activePage!=$numeroPagine}
 
+                                <!-- Bottone vai a pagina successiva -->
                                 <a href="\UniChat\threads\ricerca\{$activePage +1}?categoriaID={$categoriaIdRicerca}&testoricerca={$testoRicerca}">&raquo;</a>
 
                             {/if}
-
 
                         </div>
 
                         <!--fine paginazione-->
 
 
+                        <!-- Caso: nessun risultato prodotto dalla ricerca -->
                     {else}
 
                         <h5 class="h5 mb-0 text-gray-800 mt-0">Nessun Thread presente in questa Categoria.</h5>
@@ -531,6 +538,7 @@
 <script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
 <script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
 
+<!-- Controllo cookie disabilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

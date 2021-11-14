@@ -3,6 +3,10 @@
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe che imposta la visualizzazione degli elementi comuni delle pagine.
+ * In particolare, Il menù delle categorie, il menù utente e il bottone per filtrare la ricerca.
+ */
 class VPage {
 	
 	private Smarty $smarty;

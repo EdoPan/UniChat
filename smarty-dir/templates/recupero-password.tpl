@@ -21,6 +21,8 @@
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+
+    <!-- Controllo JS disattivato.-->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -47,6 +49,7 @@
                                 <!-- Form di recupero account -->
                                 <form class="user" method="post" action="/UniChat/utenti/recuperoPassword">
 
+                                    <!-- Visualizzazione messaggio di conferma o errore -->
                                     {if $messaggio == true}
                                         <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
                                             {$testo}
@@ -89,6 +92,7 @@
                                     {/if}
                                     <!-- Fine messaggio errore -->
 
+                                    <!-- Inserisci email -->
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
@@ -141,6 +145,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Controllo cookie disabilitati -->
 <script>
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
