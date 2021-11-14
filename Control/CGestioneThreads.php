@@ -472,7 +472,21 @@ class CGestioneThreads
 
     /**
      * @param int $numeroPagina
-     * IL COMMENTO DEVE ESSERE DI ANTONIO
+     * Metodo responsabile di gestire tutte le operazioni necessarie per effettuare una ricerca di threads e per
+     * visualizzarli.
+     * I possibili scenari gestiti sono:
+     * - l'utente effettua una ricerca basata solo sul titolo, in questo caso la ricerca viene effettuata in tutte le
+     * categorie;
+     * - l'utente effettua una ricerca basata sul titolo e specifica una categoria, in tal caso la ricerca viene
+     * effettuata solo nella categoria scelta;
+     * - l'utente effettua una ricerca specificando solo la categoria, in tal caso si viene rimandati alla pagina
+     * della categoria scelta.
+     * - l'utente effettua una ricerca senza specificare titolo e categoria, in tal caso vengono visualizzati tutti i
+     * threads presenti nella base dati.
+     * Il numero di threads recuperati dipende dalla view responsabile della loro visualizzazione nella pagina di ricerca.
+     * Il numero di pagina fornito in ingresso stabilisce quali threads visualizzare tra quelli che rispettano i criteri
+     * di ricerca.
+     * Se ci sono problemi con il recupero dei dati allora si visualizza una pagina di errore con il codice HTTP 500.
      */
     public function ricerca(int $numeroPagina): void {
 
@@ -524,7 +538,7 @@ class CGestioneThreads
                         /*
                          * Ricerca in base al titolo e rispetto ad una categoria.
                          */
-                        $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloCercato, $categoriaID, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
+                        $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIA, $titoloCercato, $categoriaID, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
                         $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_SEARCH, $categoriaID, $titoloCercato);
                     } else {
 
@@ -566,7 +580,7 @@ class CGestioneThreads
 
                         /*
                          * Se l'utente effettua una ricerca senza testo, ma selezionando una categoria allora si viene
-                         * riamdanti alla pagina della categoria selezionata.
+                         * rimandati alla pagina della categoria selezionata.
                          */
                         $categoriaID = $valori['categoriaID'];
                         header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1");
@@ -600,9 +614,8 @@ class CGestioneThreads
             } catch (ValidationException $e) {
 
                 /*
-                 * Se si hannno problemi con la validazione dei dati presenti nella base dati vuol dire che i dati in
-                 * essa presenti sono stati manomessi o che il codice di validazione è stato modificato ed i dati presenti
-                 * nella base dati non sono più validi.
+                 * Se si hanno problemi con la validazione dei dati presenti nella base dati vuol dire che i dati in
+                 * essa presenti sono stati cambiati manualmente e presentano degli errori.
                  * L'utente riceverà una pagina di errore.
                  */
                 $vError = new VError();

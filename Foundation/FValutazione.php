@@ -1,7 +1,6 @@
 <?php
-
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 /**
  * Classe Foundation di Valutazione.
@@ -22,7 +21,7 @@ class FValutazione
 
     /**
      * Restituisce l'istanza di FValutazione. Se già esistente restituisce quella esistente, altrimenti la crea.
-     * @return FValutazione
+     * @return FValutazione Istanza di FValutazione.
      */
     public static function getInstance(): FValutazione
     {
@@ -38,15 +37,16 @@ class FValutazione
      * EValutazione è necessario anche recuperare gli oggetti EUser, ovvero gli utenti, che hanno espresso il proprio
      * giudizio. Se tali oggetti non fossero recuperabili o vi fossero problemi di varia natura allora viene restituito
      * null.
-     * @param int $valutazioneID Identificativo della valutazione da recuperare dalla base dari
-     * @return EValutazione|null Valutazione recuperata dalla base dati
-     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati
+     * @param int $valutazioneID Identificativo della valutazione da recuperare dalla base dati.
+     * @return EValutazione|null Valutazione recuperata dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati.
      */
     public function load(int $valutazioneID): ?EValutazione
     {
         try {
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
+
             /*
              * Recupero del totale della valutazione.
              */
@@ -122,9 +122,9 @@ class FValutazione
     /**
      * Permette di recuperare la valutazione associata ad un thread a partire dall'identificativo di quest'ultimo.
      * Se l'operazione va a buon fine viene restituito un oggetto EValutazione, null altrimenti.
-     * @param int $threadID Identificativo del thread a cui la valutazione da reucperare dalla base dati è associata
-     * @return EValutazione|null Valutazione recuperata dalla base dati
-     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi con la validazione dei dati
+     * @param int $threadID Identificativo del thread a cui la valutazione da reucperare dalla base dati è associata.
+     * @return EValutazione|null Valutazione recuperata dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi con la validazione dei dati.
      */
     public function loadValutazioneThread(int $threadID): ?EValutazione
     {
@@ -156,17 +156,15 @@ class FValutazione
      * Aggiorna nella base dati il valore della valutazione e si occupa di aggiornare anche la tabella contenente gli
      * utenti votanti.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-     * @param EValutazione $valutazione Valutazione da aggiornare con il nuovo giudizio
-     * @param int $tipologiaVoto Tipo di giudizio espresso
-     * @param EUser $userVotante Utente che ha espresso il giudizio
-     * @return bool Esito dell'operazione
+     * @param EValutazione $valutazione Valutazione da aggiornare con il nuovo giudizio.
+     * @param int $tipologiaVoto Tipo di giudizio espresso.
+     * @param EUser $userVotante Utente che ha espresso il giudizio.
+     * @return bool Esito dell'operazione.
      */
     public function update(EValutazione $valutazione, int $tipologiaVoto, EUser $userVotante): bool
     {
         $valutazioneID = $valutazione->getId();
         $totale = $valutazione->getTotale();
-        $utentiPositivi = $valutazione->getUtentiPositivi();
-        $utentiNegativi = $valutazione->getUtentiNegativi();
 
         try {
             /*
@@ -192,7 +190,6 @@ class FValutazione
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            //$pdo->beginTransaction();
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES valutazioni WRITE, votipositivi WRITE, votinegativi WRITE");
 
@@ -225,12 +222,10 @@ class FValutazione
             ));
 
             if ($resultStoreVotiPositivi == true && $resultDeleteVotiPositivi == true && $resultStoreVotiNegativi == true && $resultDeleteVotiNegativi == true && $resultUpdateValutazioni == true) {
-                //$pdo->commit();
                 $pdo->query("COMMIT");
                 $pdo->query("UNLOCK TABLES");
                 return true;
             } else {
-                //$pdo->rollBack();
                 $pdo->query("ROLLBACK");
                 $pdo->query("UNLOCK TABLES");
                 return false;
@@ -243,9 +238,9 @@ class FValutazione
     /**
      * Permette di memorizzare nella base dati un oggetto EValutazione.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param PDO $pdo Connessione al database
-     * @param EValutazione $valutazione Valutazione da memorizzare nella base dati
-     * @return int Identificativo della valutazione assegnato dalla base dati
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param EValutazione $valutazione Valutazione da memorizzare nella base dati.
+     * @return int Identificativo della valutazione assegnato dalla base dati.
      */
     public function store(PDO $pdo, EValutazione $valutazione): ?int
     {
@@ -268,10 +263,10 @@ class FValutazione
      * Permette di memorizzare nella base dati l'identificativo dell'utente che ha espresso un giudizio positivo per una
      * determinata valutazione.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param PDO $pdo Connessione al database
-     * @param int $valutazioneID Identificativo della valutazione a cui è stato espresso il giudizio
-     * @param int $userID Identificativo dell'utente che ha espresso il giudizio
-     * @return bool Esito dell'operazione
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param int $valutazioneID Identificativo della valutazione a cui è stato espresso il giudizio.
+     * @param int $userID Identificativo dell'utente che ha espresso il giudizio.
+     * @return bool Esito dell'operazione.
      */
     private function storeVotiPositivi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
@@ -292,10 +287,10 @@ class FValutazione
      * Permette di memorizzare nella base dati l'identificativo dell'utente che ha espresso un giudizio negativo per una
      * determinata valutazione.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param PDO $pdo Connessione al database
-     * @param int $valutazioneID Identificativo della valutazione a cui è stato espresso il giudizio
-     * @param int $userID Identificativo dell'utente che ha espresso il giudizio
-     * @return bool Esito dell'operazione
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param int $valutazioneID Identificativo della valutazione a cui è stato espresso il giudizio.
+     * @param int $userID Identificativo dell'utente che ha espresso il giudizio.
+     * @return bool Esito dell'operazione.
      */
     private function storeVotiNegativi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
@@ -316,9 +311,9 @@ class FValutazione
      * Permette di rimuovere una valutazione dalla base dati. Quando viene eliminata una valutazione allora vengono
      * rimossi anche tutti gli utenti legati a quella valutazione dall'elenco dei voti positivi e negativi.
      * Se l'operazione va buon fine viene restituito true, false altrimenti.
-     * @param PDO $pdo Connessione al databse
-     * @param int $valutazioneID Identificativo della valutazione da rimuovere dalla base dati
-     * @return bool Esito dell'operazione
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param int $valutazioneID Identificativo della valutazione da rimuovere dalla base dati.
+     * @return bool Esito dell'operazione.
      */
     public function delete(PDO $pdo, int $valutazioneID): bool
     {
@@ -334,15 +329,12 @@ class FValutazione
         }
     }
 
-
-
-
     /**
-     * Permette di rimuovere dalla base dati il voto positivo associato ad un utente che ha cambiato la propria valutazione
-     * @param PDO $pdo Connessione al database
-     * @param int $valutazioneID Identificativo della valutazione a cui l'utente ha espresso il proprio giudizio
-     * @param int $userID Identificativo dell'utente che ha espresso giudizio
-     * @return bool Esito dell'operazione
+     * Permette di rimuovere dalla base dati il voto positivo associato ad un utente che ha cambiato la propria valutazione.
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param int $valutazioneID Identificativo della valutazione a cui l'utente ha espresso il proprio giudizio.
+     * @param int $userID Identificativo dell'utente che ha espresso giudizio.
+     * @return bool Esito dell'operazione.
      */
     private function deleteVotiPositivi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
@@ -361,10 +353,10 @@ class FValutazione
 
     /**
      * Permette di rimuovere dalla base dati il voto negativo associato ad un utente che ha cambiato la propria valutazione
-     * @param PDO $pdo Connessione al database
-     * @param int $valutazioneID Identificativo della valutazione a cui l'utente ha espresso il proprio giudizio
-     * @param int $userID Identificativo dell'utente che ha espresso giudizio
-     * @return bool Esito dell'operazione
+     * @param PDO $pdo Connessione al DBMS e alla base dati.
+     * @param int $valutazioneID Identificativo della valutazione a cui l'utente ha espresso il proprio giudizio.
+     * @param int $userID Identificativo dell'utente che ha espresso giudizio.
+     * @return bool Esito dell'operazione.
      */
     private function deleteVotiNegativi(PDO $pdo, int $valutazioneID, int $userID): bool
     {

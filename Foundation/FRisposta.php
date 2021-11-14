@@ -1,11 +1,12 @@
 <?php
-
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 
 /**
  * Classe Foundation FRisposta.
+ * Gestisce tutte le operazioni CRUD e presenta anche dei metodi di ausilio per il corretto funzionamento di alcuni
+ * casi d'uso in cui risultano coinvolte le Risposte.
  */
 
 class FRisposta
@@ -17,7 +18,7 @@ class FRisposta
      private static $instance = null;
 
      /**
-      * Costruttore di default
+      * Costruttore di default.
       */
      private function __construct()
      {
@@ -25,7 +26,7 @@ class FRisposta
 
      /**
       * Restituisce l'istanza di FRisposta. Se già esistente restituisce quella esistente, altrimenti la crea.
-      * @return FRisposta
+      * @return FRisposta Istanza di FRisposta.
       */
      public static function getInstance(): FRisposta
      {
@@ -39,10 +40,12 @@ class FRisposta
     /**
      * Restituisce l'oggetto ERisposta, memorizzato nel database, avente come id quello passato come parametro.
      * Per ottenere un oggetto ERisposta è necessario recuperare prima l'autore della risposta (utilizzo il metodo load di FUser).
-     * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
-     * @param int $rispostaID
-     * @return Erisposta|null
-     * @throws ValidationException
+     * Nel caso non fosse possibile recuperare l'autore, la risposta non fosse presente nella base dati o vi fossero
+     * altri errori di varia natura allora viene restituito null.
+     * @param int $rispostaID Identificativo della risposta da recuperare dalla base dati.
+     * @return Erisposta|null Risposta recuperata dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel momento in cui vi sono problemi nella validazione dei dati nel
+     * momento in cui viene creata l'istanza di EUser (autore del messaggio).
      */
      public function load(int $rispostaID): ?ERisposta
      {
@@ -87,9 +90,9 @@ class FRisposta
       * risulta essere l'utente di default. Il metodo viene richiamato nel momento in cui l'utente che aveva scritto
       * le risposte viene eliminato dalla base dati.
       * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-      * @param PDO $pdo
-      * @param int $userID
-      * @return bool
+      * @param PDO $pdo Connessione al DBMS e alla base dati.
+      * @param int $userID Identificativo dell'autore dei messaggi da modificare.
+      * @return bool Esito dell'operazione.
       */
      public function updateUserID(PDO $pdo, int $userID): bool
      {
@@ -106,10 +109,11 @@ class FRisposta
      }
 
      /**
-      * Scrittura in Db di un oggetto di tipo ERisposta.
-      * @param ERisposta $risposta
-      * @param int $threadID
-      * @return bool
+      * Permette di memorizzare una Risposta di un thread nella base dati.
+      * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
+      * @param ERisposta $risposta Risposta da memorizzare nella base dati.
+      * @param int $threadID Identificativo del thread a cui la risposta è associata.
+      * @return bool Esito dell'operazione.
       */
      public function store(ERisposta $risposta, int $threadID): bool
      {
@@ -136,10 +140,10 @@ class FRisposta
      }
 
      /**
-      * Permette di rimuovere una risposta dal db.
-      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-      * @param int $rispostaID
-      * @return bool
+      * Permette di eliminare un Messaggio dalla base dati.
+      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
+      * @param int $rispostaID Identificativo della risposta da eliminare.
+      * @return bool Esito dell'operazione.
       */
      public function delete(int $rispostaID): bool
      {
@@ -173,6 +177,13 @@ class FRisposta
          }
      }
 
+    /**
+     * Verifica la presenza nella base dati di una risposta di cui viene fornito l'identificativo.
+     * Se la risposta è presente allora viene restituito true, altrimenti false.
+     * Viene restituito false anche se ci sono problemi.
+     * @param int $rispostaID Identificativo della risposta di cui si deve verificare l'esistenza nella base dati.
+     * @return bool Esito della ricerca.
+     */
     private function exists(int $rispostaID): bool
     {
         try {
@@ -196,10 +207,12 @@ class FRisposta
     }
 
     /**
-     * Recupero delle risposte di un thread che ha per id quello passato come parametro.
-     * @param int $threadID
-     * @return array
-     * @throws ValidationException
+     * Recupero dalla base dati di tutte le risposte associate ad un thread, del quale viene fornito l'identificativo.
+     * Se ci sono problemi allora viene restituito null.
+     * @param int $threadID Identificativo del thread di cui si vogliono recuperare le Risposte.
+     * @return array Elenco di risposte recuperate dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel momento in cui vi sono problemi nella validazione dei dati nel
+     * momento in cui viene creata l'istanza di EUser (autore del messaggio).
      */
     public function loadRisposteThread(int $threadID): ?array
     {

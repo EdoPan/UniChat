@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * Classe di tipo Foundation utilizzata per la connessione alla base dati.
+ * Classe utilizzata per gestire la connessione alla base dati.
  */
 class FConnection
 {
@@ -25,13 +25,13 @@ class FConnection
     private static string $password = "";
 
     /**
-     * Nome del database che si vuole utilizzare
+     * Nome del database che si vuole utilizzare.
      * @var string
      */
     private static string $database = "unichat";
 
     /**
-     * Instanza della classe FConnection, si utilizza per il singleton
+     * Istanza della classe FConnection, si utilizza per il singleton.
      * @var null|FConnection
      */
     private static $instance = null;
@@ -43,7 +43,7 @@ class FConnection
 
 
     /**
-     * Restituisce l'instanza di FConnection. Se già esistente restituisce quella esistente, altrimenti la crea.
+     * Restituisce l'istanza di FConnection. Se già esistente restituisce quella esistente, altrimenti la crea.
      * @return FConnection Istanza di FConnection.
      */
     public static function getInstance(): FConnection
@@ -57,7 +57,7 @@ class FConnection
 
     /**
      * Restituisce la connessione con il DBMS dopo aver impostato la gestione degli errori mediante eccezioni.
-     * @return PDO Istanza di PDO.
+     * @return PDO Connessione al DBMS e alla base dati.
      */
     public function connect(): PDO
     {

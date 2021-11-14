@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Classe di utility responsabile della gestione delle sessioni. Attraverso di essa è possibile creare o rimuovere una
+ * sessione e aggiungere o rimuovere dati da essa.
+ */
 class USession
 {
 
@@ -11,11 +15,11 @@ class USession
     }
 
     /**
-     * Restituisce il valore presente nella sessione e associato alla chiave fornita in ingresso.
+     * Restituisce il valore della variabile di sessione avente come nome la chiave fornita in ingresso.
      * Se la chiave non esiste allora viene restituito null.
      * Prestare attenzione, il valore restituito è in formato stringa e quindi è necessario eseguire opportunamente un
      * casting o un serialize prima di poter usare il valore ottenuto.
-     * @param string $key Chiave associata al valore da recuperare.
+     * @param string $key Nome della variabile di sessione da recuperare.
      * @return string|null Valore restituito
      */
     public function getValue(string $key): ?string
@@ -30,11 +34,11 @@ class USession
     }
 
     /**
-     * Aggiunge un valore alla sessione e vi attribuisce la chiave fornita in ingresso.
+     * Aggiunge una variabile di sessione con nome uguale alla chiave e valore uguale al valore forniti in ingresso.
      * Prestare attenzione, si accettano solo valori di tipo stringa e quindi è necessario eseguire opportunamente un
      * casting o un serialize prima di fornire il valore in ingresso.
-     * @param string $key Chiave da assegnare al valore.
-     * @param string $value Valore da salvare nella sessione.
+     * @param string $key Nome da assegnare alla variabile di sessione.
+     * @param string $value Valore da salvare nella variabile di sessione.
      */
     public function setValue(string $key, string $value): void
     {
@@ -44,9 +48,10 @@ class USession
     }
 
     /**
-     * Rimuove dalla sessione, il valore a cui è associata la chiave fornita in ingresso.
-     * Se la chiave è inesistente allora viene restituito false, altrimenti true.
-     * @param string $key Chiave associata al valore da rimuovere.
+     * Rimuove la variabile di sessione avente come nome la chiave fornita in ingresso.
+     * Se la chiave è inesistente allora viene restituito false, altrimenti true in quanto l'operazione è andata a buon
+     * fine.
+     * @param string $key Nome della variabile di sessione da rimuovere.
      * @return bool Esito operazione.
      */
     public function removeValue(string $key): bool
@@ -62,11 +67,12 @@ class USession
     }
 
     /**
-     * Aggiorna il valore, se presente nella sessione, con il nuovo fornito in ingresso.
-     * E' necessario anche fornire la chiave per sapere quale valore aggiornare.
-     * Se la chiave fornita non esiste allora viene restituito false, altrimenti true.
-     * @param string $key Chiave associata al valore da aggiornare.
-     * @param string $value Nuovo valore.
+     * Aggiorna una variabile di sessione, se presente, con il nuovo valore fornito in ingresso.
+     * E' necessario anche fornire la chiave per sapere quale variabile aggiornare.
+     * Se la variabile non esiste allora viene restituito false, altrimenti true in quanto l'operazione è andata a buon
+     * fine.
+     * @param string $key Nome della variabile di sessione da aggiornare.
+     * @param string $value Nuovo valore da dare alla variabile di sessione.
      * @return bool Esito operazione.
      */
     public function updateValue(string $key, string $value): bool
@@ -82,7 +88,11 @@ class USession
     }
 
     /**
-     * Elimina in modo completo la sessione.
+     * Elimina in modo completo la sessione:
+     * - aggiorna il cookie di sessione e vi assegna un valore nullo, così facendo non è più possibile accedere al file
+     * di sessione;
+     * - rimuove tutte le variabili di sessione;
+     * - rimuove tutti i dati associati alla sessione corrente.
      */
     public function deleteSession(): void {
 

@@ -11,16 +11,18 @@
 
     <title>UniChat - Registrazione</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts -->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
@@ -157,22 +159,13 @@
                             <!-- Fine messaggio di errore -->
 
                             <!-- Pulsante caricamento foto profilo -->
-
-
                             <input type="file" id="fotoProfilo" name="fotoProfilo" hidden="hidden" />
                             <button class="btn btn-secondary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Carica Foto Profilo</button>
                             <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna foto caricata</span><br><br>
 
 
-                            <!--<label for="fotoProfilo" style="display: block; position: relative; border-radius: 25px; background: linear-gradient(40deg, #ff2525, #e33535); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
-                                Carica foto profilo
-                            </label>
 
-                            <label for="fotoProfilo" style="display: block; position: relative; width: 100%; height: 45px; border-radius: 25px; background: linear-gradient(40deg, #ff2525, #e33535); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
-                                 Carica foto profilo
-                             </label>
-                             <input class="btn btn-google" type="file" id="fotoProfilo" name="fotoProfilo">  -->
-                              <!-- Pulsante registrazione account -->
+                            <!-- Pulsante registrazione account -->
                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                 Registra Account
                             </button>
@@ -217,6 +210,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per la verifica dei cookie abilitati -->
 <script>
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -224,6 +218,10 @@
 </script>
 
 <script type="text/javascript">
+    /**
+     * Funzione che verifica che l'utente abbia riproposto la stessa password nel campo 'Ripeti password'.
+     * Se le password non sono uguali allora viene visualizzato un messaggio di errore.
+     */
     function verificaPassword() {
         var password;
         var ripetiPassword;
@@ -242,6 +240,7 @@
     }
 </script>
 
+<!-- Script per la gestione del bottone personalizzato per l'upload della foto profilo -->
 <script type="text/javascript">
         const realFileBtn = document.getElementById("fotoProfilo");
         const customBtn = document.getElementById("custom-button");
@@ -261,8 +260,5 @@
             }
         });
 </script>
-
-
 </body>
-
 </html>

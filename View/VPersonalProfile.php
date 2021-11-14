@@ -1,10 +1,11 @@
 <?php
-
 declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
-
+/**
+ * Classe per la gestione dell'input/output della pagina del profilo personale.
+ */
 class VPersonalProfile
 {
 
@@ -22,11 +23,29 @@ class VPersonalProfile
 
     }
 
+    /**
+     * @return Smarty
+     */
     public function getSmarty(): Smarty
     {
         return $this->smarty;
     }
 
+    /**
+     * Restituisce i valori forniti dall'utente al momento della compilazione della form per la modifica del profilo
+     * personale.
+     * I dati vengono forniti tramite una richiesta ti tipo POST.
+     * I dati vengono restituiti in un array associativo contente i seguenti campi (in base a cosa è stato modificato
+     * dall'utente):
+     * - nomeNuovaFotoProfilo;
+     * - dimensioneNuovaFotoProfilo;
+     * - tipoNuovaFotoProfilo;
+     * - immagineNuovaFotoProfilo;
+     * - nuovaPassword;
+     * - nuovoCorsoStudio.
+     * Se l'utente sottomette la form senza aver compilato almeno un campo allora viene restituito un array vuoto.
+     * @return array Dati forniti dall'utente.
+     */
     public function getValori(): array
     {
         $result = array();
@@ -69,6 +88,14 @@ class VPersonalProfile
 
     }
 
+    /**
+     * Imposta o meno la visualizzazione del messaggio di errore relativo alla presenza di dati che, in seguito ad un
+     * controllo di validazione, risultano essere non corretti nel formato.
+     * Il metodo richiede di fornire in ingresso il code ed il message forniti dall'eccezione ValidationException o valori
+     * null se non si vuole visualizzare l'errore.
+     * @param int|null $codiceErrore Codice errore fornito dall'eccezione ValidationException.
+     * @param string|null $messaggioErrore Messaggio errore fornito dall'eccezione ValidationException.
+     */
     public function setErroreValidazione(?int $codiceErrore, ?string $messaggioErrore): void
     {
         $this->smarty->assign('errorePassword', false);
@@ -86,6 +113,10 @@ class VPersonalProfile
         }
     }
 
+    /**
+     * Imposta o meno la visualizzazione di un avviso che comunica che è stata sottomessa una form vuota.
+     * @param bool $visualizza Valore che indica se visualizzare o meno l'avviso.
+     */
     public function setAvvisoCampiVuoti(bool $visualizza): void
     {
         $this->smarty->assign('avvisoCampiVuoti', false);

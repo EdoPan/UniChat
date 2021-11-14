@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:06:21
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 17:56:27
          compiled from "smarty-dir\templates\inserisci-categoria.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:20579440526189329c5d8657-32719891%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '33bd4ecd37d645d1ed5d4f8b734df671423f069a' => 
     array (
       0 => 'smarty-dir\\templates\\inserisci-categoria.tpl',
-      1 => 1636894606,
+      1 => 1636627400,
       2 => 'file',
     ),
   ),
@@ -61,7 +61,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
-    <!-- Controllo JS disattivato.-->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -86,7 +85,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
         <hr class="sidebar-divider my-0">
 
 
-        <!-- Inizio Menu laterale categorie -->
+        <!-- Menu laterale categorie -->
         <li class="nav-item active">
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
@@ -97,8 +96,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-
-                    <!-- Voce di menù corrispondente ad ogni categoria -->
                     <?php  $_smarty_tpl->tpl_vars['c'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['c']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['cate']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['c']->key => $_smarty_tpl->tpl_vars['c']->value){
@@ -113,7 +110,6 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
                 </div>
             </div>
         </li>
-        <!-- Fine Menu laterale categorie -->
 
 
         <!-- Divisore -->
@@ -146,11 +142,10 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <!-- Inizio Form Ricerca -->
                     <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <!-- Bottone Filtra ricerca -->
+
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
                                     Filtra
@@ -187,7 +182,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                             </div>
                         </div>
                     </form>
-                    <!-- Fine Form Ricerca -->
+
                 </div>
 
 
@@ -195,7 +190,6 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                 <ul class="navbar-nav ml-auto">
 
 
-                    <!-- Filtra ricerca mod. XS -->
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
@@ -220,19 +214,23 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                             </div>
                         </div>
+
                     </div>
 
 
+
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <!-- Dropdown - Cerca -->
+
+
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <!-- Inizio Form Ricerca XS -->
                             <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
@@ -248,8 +246,8 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     </div>
                                 </div>
                             </form>
-                            <!-- Fine Form Ricerca XS -->
                         </div>
+
 
                     </li>
 
@@ -259,12 +257,10 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Menù utente -->
+                        <!-- Informazioni profilo loggato e relativa tendina -->
                         <li class="nav-item dropdown no-arrow">
 
-
                             <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
-                            <!-- Se l'utente è loggato, mostrare nome cognome e icona dell'img di profilo -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -282,7 +278,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-                                <!-- Visualizzazione voce di menù "Profilo" per accedere alle info personali -->
+
                                 <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
@@ -290,7 +286,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                                 <?php if ($_smarty_tpl->tpl_vars['controlpanel']->value){?>
 
-                                    <!-- Se l'utente è l'Admin, visualizzare il Pannello di Controllo -->
                                     <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
@@ -299,7 +294,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <?php }?>
 
 
-                                <!-- Voce di menù per effettuare il Logout-->
+
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
@@ -307,8 +302,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             </div>
 
                             <?php }else{ ?>
-
-                            <!-- Vista del top menù nel caso non l'utente non fosse loggato -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -319,21 +312,22 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-                                <!-- Voce di menù per effettuare il Login -->
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
+
+                                <a class="dropdown-item" href="/UniChat/utenti/login">
                                     <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <!-- Voce di menù per effettuare la Registrazione -->
-                                <a class="dropdown-item" href="/UniChat/Utenti/registrazione">
+                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
                                     <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Registrazione
                                 </a>
+
+
                                 <?php }?>
 
+
                         </li>
-                        <!-- Fine menù utente -->
                     </ul>
                 </ul>
             </nav>
@@ -346,8 +340,10 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                 <h1 class="h3 mb-4 text-gray-800">Crea una categoria</h1>
 
 
-                <!-- Box creazione Categoria -->
+
+                <!-- Box creazione thread -->
                 <div class="card shadow mb-4 mr-5 ml-5">
+
 
 
                     <div class="card-body">
@@ -355,6 +351,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                         <form enctype="multipart/form-data" method="post" action="/UniChat/admin/aggiungiCategoria" style="text-align: center">
                             <!-- Messaggio errore campi obbligatori -->
 
+                            <!-- Fine messaggio errore -->
                             <?php if ($_smarty_tpl->tpl_vars['erroreDatiObbligatori']->value){?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     <strong>Errore. </strong><?php echo $_smarty_tpl->tpl_vars['messaggioErroreDatiObbligatori']->value;?>
@@ -364,9 +361,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     </button>
                                 </div>
                             <?php }?>
-
-                            <!-- Fine messaggio errore -->
-
                             <!-- Messaggio errore validazione nome -->
                             <?php if ($_smarty_tpl->tpl_vars['erroreDenominazione']->value==true){?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -385,6 +379,8 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <input type="text" class="form-control mb-4 mt-4 mr-4 ml-4" autocomplete="off" id="name" name="nome" placeholder="Nome Categoria" required>
 
 
+
+
                                 <!-- Inserimento descrizione categoria -->
                                 <textarea class="mb-4 form-control mr-4 ml-4" autocomplete="off" id="descrizione" name="descrizione" placeholder="Inserisci descrizione Categoria"
                                           style="width: 100%" required></textarea>
@@ -401,29 +397,44 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <?php }?>
                                 <!-- Fine messaggio di errore -->
 
-                                <!-- Caricamento icona e bottoni invio e annula -->
+
+
                                 <div>
 
-                                    <!-- Caricamento icona categoria -->
+
                                     <div>
+
+                                        <!--p class="mb-2 mt-4">Inserisci l'icona della nuova categoria</p-->
+                                        <!--input type="file" id="icona" name="icona" class="btn btn-secondary btn-user btn-block mt-3 "-->
+
+                                        <!-- <input type="file" id="icona" name="icona" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
+                                       <label for="icona" style="display: block; position: relative; width: 100%; height: 40px; border-radius: 5px; background: linear-gradient(40deg, #777777, #a9a9a9); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
+                                           Inserisci icona
+                                       </label> -->
 
                                         <input type="file" id="icona" name="icona" hidden="hidden" />
                                         <button class="btn btn-secondary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Carica un'icona</button>
-                                        <span style="display: block; position: relative; text-align: center" id="custom-text">Nessuna icona caricata</span>
+                                        <span style="display: block; position: relative; text-align: center"; id="custom-text">Nessuna icona caricata</span>
+
 
                                    </div>
 
 
+
                                    <div class="mb-4 mt-4">
-                                       <!-- Invio dati form -->
                                        <a><input class="btn btn-primary mb-2" type="submit" value="Crea"></a>
-                                       <!-- Annulla creazione categoria e ritorno a pannello di controllo -->
                                        <a href="/UniChat/admin/visualizzaPannelloDiControllo" class="btn btn-danger mb-2" role="button" aria-pressed="true">Annulla</a>
                                    </div>
 
                                </div>
+
+
                        </form>
+
+
+
                    </div>
+
                </div>
                <!-- Fine box creazione Thread -->
 
@@ -484,7 +495,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
-<!-- Controllo Cookie disabilitati. -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

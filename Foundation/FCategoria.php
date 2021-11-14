@@ -1,10 +1,12 @@
 <?php
 
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 /**
  * Classe Foundation di Categoria.
+ * Gestisce tutte le operazioni CRUD e presenta anche dei metodi di ausilio per il corretto funzionamento di alcuni
+ * casi d'uso in cui risultano coinvolte le Categorie.
  */
 class FCategoria
 {
@@ -15,13 +17,13 @@ class FCategoria
     private static $instance = null;
 
     /**
-     * Costruttore di default
+     * Costruttore di default.
      */
     private function __construct() {}
 
     /**
      * Restituisce l'istanza di FCategoria. Se già esistente restituisce quella esistente, altrimenti la crea.
-     * @return FCategoria
+     * @return FCategoria Istanza di FCategoria.
      */
     public static function getInstance(): FCategoria
     {
@@ -35,10 +37,12 @@ class FCategoria
     /**
      * Restituisce l'oggetto ECategoria, memorizzato nel database, avente come id quello passato come parametro.
      * Per ottenere un oggetto ECategoria è necessario recuperare prima l'icona (utilizzo il metodo loadIcona).
-     * Nel caso non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
-     * @param int $categoriaID
-     * @return ECategoria|null
-     * @throws ValidationException
+     * Nel caso non fosse possibile recuperare l'icona, non vi sia una categoria associata all'identificativo o vi
+     * fossero altri errori di varia natura allora viene restituito null.
+     * @param int $categoriaID Identificativo della categoria da recuperare.
+     * @return ECategoria|null Istanza di ECategoria recuperata dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel momento in cui vi sono problemi nella validazione dei dati nel
+     * momento in cui viene creata l'istanza di ECategoria.
      */
     public function load(int $categoriaID): ?ECategoria
     {
@@ -85,9 +89,10 @@ class FCategoria
      * - dimensione icona
      * - tipo file icona
      * - immagine
-     * In caso contrario il metodo restituisce null.
-     * @param int $iconaID
-     * @return array|null
+     * Se all'identificativo fornito in ingresso non è associata una icona o vi sono problemi di varia natura, allora
+     * viene restituito null.
+     * @param int $iconaID Identificativo dell'icona da recuperare dalla base dati.
+     * @return array|null Icona recuperata dalla base dati.
      */
     private function loadIcona (int $iconaID): ?array
     {
@@ -119,12 +124,12 @@ class FCategoria
     }
 
     /**
-     * Restituisce l'oggetto ECategoria, memorizzato nel database, a partire dal thread avente come id quello passato come parametro.
-     * Per il recupero dell'oggetto ECategoria faccio uso del metodo load.
+     * Restituisce la Categoria a cui appartiene un Thread, del quale viene fornito in ingresso il suo identificativo.
      * Se ciò non fosse possibile o vi fossero altri errori di varia natura allora viene restituito null.
-     * @param int $threadID
-     * @return ECategoria|null
-     * @throws ValidationException
+     * @param int $threadID Identificativo del thread di cui si vuole recuperare la Categoria.
+     * @return ECategoria|null Istanza di ECategoria recuperata dalla base dati.
+     * @throws ValidationException Eccezione lanciata nel momento in cui vi sono problemi nella validazione dei dati nel
+     * momento in cui viene creata l'istanza di ECategoria.
      */
     public function loadCategoriaThread(int $threadID): ?ECategoria
     {
@@ -152,13 +157,20 @@ class FCategoria
     }
 
     /**
-     * Assegnazione di un moderatore ad una categoria.
-     * L'operazione segue diversi passi che consistono nel verificare che il moderatore da assegnare non sia già stato
-     * assegnato ad un'altra categoria, in tal caso viene prima rimosso da quest'ultima, e nel verificare che la
-     * categoria da moderare non sia già moderata, in tal caso il moderatore ad essa assegnato viene prima rimosso.
-     * @param ECategoria $categoria
-     * @param EModeratore $user
-     * @return bool
+     * Permette di aggiornare la Categoria presente nella base dati.
+     * L'unico campo modificabile è quello relativo al moderatore che gestisce la categoria.
+     * L'operazione segue diversi passi:
+     * - verificare che il moderatore da assegnare non sia già stato assegnato ad un'altra categoria, in tal caso viene
+     * prima rimosso da quest'ultima;
+     * - verificare che la categoria da moderare non sia già moderata, in tal caso il moderatore ad essa assegnato viene
+     * prima rimosso.
+     * Se si cerca di rendere moderatore l'utente di default o l'admin, l'operazione viene annullata e viene restituito
+     * false.
+     * Se tutte le operazioni vengono completate con successo viene restituito true, false altrimenti e anche se ci sono
+     * problemi di varia natura.
+     * @param ECategoria $categoria Categoria da aggiornare.
+     * @param EModeratore $user Moderatore da assegnare alla categoria.
+     * @return bool Esito dell'operazione.
      */
     public function update(ECategoria $categoria, EModeratore $user): bool
     {
@@ -180,19 +192,21 @@ class FCategoria
              * Tali operazioni sono:
              * - verifica che la categoria designata non sia già moderata, in tal caso viene reso user il suo moderatore
              * (metodo updateToUser di FUser);
-             * - l'oggetto di tipo user assume il ruolo di moderatore (metodo updateToModeratore di FUser);
+             * - l'oggetto moderatore fornito in ingresso assume il ruolo di moderatore (metodo updateToModeratore di FUser);
              * - rimuovere il moderatore passato, dalla categoria a cui era precedentemente assegnato;
              * - il moderatore viene assegnato ad una categoria (quella passata come parametro).
              * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
              * operazioni sopra descritte vengono eseguite in mutua esclusione.
              */
 
-            //$pdo->beginTransaction();
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES categorie WRITE, users WRITE");
 
             $fUser = FUser::getInstance();
 
+            /*
+             * Rimozione del vecchio moderatore dalla categoria fornita in ingresso.
+             */
             $resultUpdateToUser = true;
 
             $query1 = ("SELECT moderatoreID FROM categorie WHERE categoriaID = :categoriaID");
@@ -210,14 +224,23 @@ class FCategoria
                 $resultUpdateToUser = false;
             }
 
+            /*
+             * Aggiornamento del nuovo moderatore nella base dati
+             */
             $resultUpdateUserToModeratore = $fUser->updateToModeratore($pdo, $moderatoreID);
 
+            /*
+             * Rimozione del nuovo moderatore dalla categoria da lui precedentemente gestita.
+             */
             $query2 = ("UPDATE categorie SET moderatoreID = NULL WHERE moderatoreID = :moderatoreID");
             $stmt2 = $pdo->prepare($query2);
             $resultResetModeratoreCategoria = $stmt2->execute(array(
                 ':moderatoreID' => $moderatoreID
             ));
 
+            /*
+             * Assegnazione del nuovo moderatore alla categoria fornita in ingresso.
+             */
             $query3 = ("UPDATE categorie SET moderatoreID = :moderatoreID WHERE categoriaID = :categoriaID");
             $stmt3 = $pdo->prepare($query3);
             $resultUpdateModeratoreCategoria = $stmt3->execute(array(
@@ -226,12 +249,10 @@ class FCategoria
             ));
 
             if($resultUpdateToUser == true && $resultUpdateUserToModeratore == true && $resultResetModeratoreCategoria == true && $resultUpdateModeratoreCategoria == true) {
-                //$pdo->commit();
                 $pdo->query("COMMIT");
                 $pdo->query("UNLOCK TABLES");
                 return true;
             } else {
-                //$pdo->rollBack();
                 $pdo->query("ROLLBACK");
                 $pdo->query("UNLOCK TABLES");
                 return false;
@@ -242,10 +263,10 @@ class FCategoria
     }
 
     /**
-     * Scrittura in DB di un oggetto di tipo ECategoria.
+     * Permette di memorizzare una Categoria nella base dati.
      * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
-     * @param ECategoria $categoria
-     * @return bool
+     * @param ECategoria $categoria Categoria da memorizzare nella base dati.
+     * @return bool Esito dell'operazione.
      */
     public function store(ECategoria $categoria): bool
     {
@@ -312,12 +333,13 @@ class FCategoria
     }
 
     /**
-     * Permette di memorizzare nella base dati una nuova icona della categoria.
+     * Permette di memorizzare una nuova icona, ovvero l'array associativo che la rappresenta, della categoria nella
+     * base dati.
      * Se l'operazione va a buon fine viene restituito l'id assegnato all'icona nella base dati, altrimenti
      * viene restituito null.
-     * @param PDO $pdo
-     * @param array $icona
-     * @return int|null
+     * @param PDO $pdo Connessione alla DBMS e al database.
+     * @param array $icona Icona della categoria da memorizzare.
+     * @return int|null Identificativo assegnato all'icona.
      */
     private function storeIcona(PDO $pdo, array $icona): ?int{
         $nome = $icona["nome"];
@@ -335,12 +357,15 @@ class FCategoria
     }
 
     /**
-     * Eliminazione di una categoria da DB.
-     * Quando una categoria viene eliminata dall'Admin, tutti i thread ad essa associati "passano" ad una categoria di default.
-     * Inoltre il moderatore viene rimosso dalla sua carica e torna ad essere un "semplice" User.
+     * Permette di eliminare una Categoria dalla base dati.
+     * Quando una categoria viene eliminata dall'Admin, tutti i thread ad essa associati vengnono assegnati ad una
+     * categoria di default.
+     * Inoltre il moderatore che gestiva la categoria viene rimosso dalla sua carica.
      * Restituisce true se l'operazione va a buon fine, false altrimenti.
-     * @param int $categoriaID
-     * @return bool
+     * Viene restituito false anche se si tenta di rimuovere la categoria di default o se l'identificativo della
+     * categoria non esiste.
+     * @param int $categoriaID Identificativo della categoria da rimuovere.
+     * @return bool Esito dell'operazione.
      */
     public function delete(int $categoriaID): bool
     {
@@ -369,7 +394,7 @@ class FCategoria
 
             /*
              * La rimozione della categoria richiede una serie di operazioni che devono essere eseguite una di seguito
-             * all'altra e con mutua esclusione sulle tabelle della base dati che ne sono coinvolte. Le operazioni
+             * all'altra. Le operazioni
              * avranno effetto sulla base dati solo se tutte avranno esito positivo.
              * Tali operazioni sono:
              * - rimozione dell'icona (solo se questa non è quella di default);
@@ -382,17 +407,29 @@ class FCategoria
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES categorie WRITE, threads WRITE, users WRITE, icone WRITE");
 
+            /*
+             * Rimozione dell'icona.
+             */
             $resultDeleteIconaCategoria=true;
             if($iconaCategoriaID !=1) {
                 $resultDeleteIconaCategoria=$this-> deleteIconaCategoria($pdo, $iconaCategoriaID);
             }
 
+            /*
+             * Aggiornamento dei thread, i quali vengono assegnati alla categoria di default.
+             */
             $fThread=FThread::getInstance();
             $resultUpdateCategoriaThread =$fThread->updateCategoriaID($pdo, $categoriaID);
 
+            /*
+             * Aggiornamento del moderatore ad utente normale.
+             */
             $fUser = FUser::getInstance();
             $resultUpdateModeratoreToUser = $fUser->updateToUser($pdo, $moderatoreID);
 
+            /*
+             * Rimozione della categoria.
+             */
             $query = "DELETE FROM categorie WHERE categoriaID = :categoriaID";
             $stmt =  $pdo->prepare($query);
             $resultDeleteCategoria=$stmt->execute(array(
@@ -416,9 +453,9 @@ class FCategoria
     /**
      * Permette di rimuovere l'icona di una categoria dalla base dati.
      * Restituisce true se l'operazione va buon fine, false altrimenti.
-     * @param PDO $pdo
-     * @param int $iconaID
-     * @return bool
+     * @param PDO $pdo Connessione al DBMS e al database.
+     * @param int $iconaID Identificativo dell'icona da rimuovere dalla base dati
+     * @return bool Esito dell'operazione.
      */
     private function deleteIconaCategoria(PDO $pdo, int $iconaID): bool
     {
@@ -435,10 +472,12 @@ class FCategoria
     }
 
     /**
-     * Rimozione di un moderatore dalla categoria e rimozione dell'utente dal ruolo di moderatore.
-     * @param int $categoriaID
-     * @param EModeratore $moderatore
-     * @return bool
+     * Aggiorna la Categoria memorizzata nella base dati, in particolare rimuove il moderatore che la gestisce.
+     * Inoltre viene aggiornato il Moderatore che viene reso un utente normale.
+     * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
+     * @param int $categoriaID Identificativo della categoria da aggiornare.
+     * @param EModeratore $moderatore Moderatore da rimuovere dal suo ruolo.
+     * @return bool Esito dell'operazione.
      */
     public function rimuoviModeratore(int $categoriaID, EModeratore $moderatore): bool
     {
@@ -446,13 +485,27 @@ class FCategoria
             $dbConnection = FConnection::getInstance();
             $pdo=$dbConnection->connect();
 
-            //$pdo->beginTransaction();
+            /*
+             * La rimozione del moderatore dalla categoria richiede una serie di operazioni che devono essere eseguite
+             * una di seguito all'altra. Le operazioni avranno effetto sulla base dati solo se tutte avranno esito positivo.
+             * Tali operazioni sono:
+             * - aggiornamento del moderatore;
+             * - aggiornamento della categoria;
+             * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+             * operazioni sopra descritte vengono eseguite in mutua esclusione.
+             */
             $pdo->query("SET autocommit = 0");
             $pdo->query("LOCK TABLES categorie WRITE, users WRITE");
 
+            /*
+             * Aggiornamento del moderatore
+             */
             $fUser = FUser::getInstance();
             $resultUpdateModeratoreToUser = $fUser->updateToUser($pdo, $moderatore->getId());
 
+            /*
+             * Aggiornamento della Categoria.
+             */
             $sql = ("UPDATE categorie SET moderatoreID = NULL WHERE categoriaID = :categoriaID");
             $stmt = $pdo->prepare($sql);
             $resultUpdateModeratore = $stmt->execute(array(
@@ -460,12 +513,10 @@ class FCategoria
             ));
 
             if ($resultUpdateModeratoreToUser== true && $resultUpdateModeratore == true) {
-                //$pdo->commit();
                 $pdo->query("COMMIT");
                 $pdo->query("UNLOCK TABLES");
                 return true;
             } else {
-                //$pdo->rollBack();
                 $pdo->query("ROLLBACK");
                 $pdo->query("UNLOCK TABLES");
                 return false;
@@ -476,11 +527,15 @@ class FCategoria
     }
 
     /**
-     * Caricamento di un certo numero di categorie dal DB all'interno di un array.
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array
-     * @throws ValidationException
+     * Permette di ottenere un certo numero di Categorie specificando da quale riga dell tabella della base dati partire
+     * (riga di partenza esclusa) e il numero di righe da visualizzare.
+     * Viene restituito un array di categorie, eventualmente vuoto, se l'operazione va a buon fine,
+     * null altrimenti.
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero.
+     * @param int $numeroRighe Valore che indica quanti record recuperare.
+     * @return array|null Elenco contenente le categorie recuperate.
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati al momento
+     * della creazione delle istanze di ECategoria.
      */
     public function loadAll(int $rigaPartenza, int $numeroRighe): ?array
     {
@@ -508,11 +563,11 @@ class FCategoria
 
 
     /**
-     * Caricamento di tutte le categorie dal DB all'interno di un array.
-     * @param int $rigaPartenza
-     * @param int $numeroRighe
-     * @return array
-     * @throws ValidationException
+     * Permette di recuperare tutte le Categorie presenti nella base dati.
+     * Se ci sono dei problemi allora viene restituito null.
+     * @return array Elenco contenente le Categorie recuperate.
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati al momento
+     * della creazione delle istanze di ECategoria.
      */
     public function loadAllSenzaPaginazione(): ?array
     {
@@ -539,9 +594,9 @@ class FCategoria
     }
 
     /**
-     * Restituisce il numero di categorie attualmente presenti nella bse dati.
+     * Restituisce il numero di categorie attualmente presenti nella base dati.
      * In caso di errori viene restituito null.
-     * @return int|null Numero di categorie nella base dati.
+     * @return int|null Numero di categorie memorizzate nella base dati.
      */
     public function conta(): ?int
     {

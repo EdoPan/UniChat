@@ -1,13 +1,12 @@
 <?php
-
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe entity di Valutazione.
  */
 class EValutazione
-    {
+{
 
     /**
      * Identificativo della valutazione del thread.
@@ -44,7 +43,7 @@ class EValutazione
     const VOTO_POSITIVO = 1;
 
     /**
-     * Costante con cui si indica il fatto che il voto positivo, precendentemente espresso, è stato annullato.
+     * Costante con cui si indica il fatto che il voto positivo, precedentemente espresso, è stato annullato.
      */
     const VOTO_POSITIVO_ANNULlATO = 2;
 
@@ -75,10 +74,10 @@ class EValutazione
      * Quando la valutazione viene appena aggiunta ha valore 0, il totale viene passato come null.
      * Quando la valutazione viene appena aggiunta non ha ancora utenti che hanno espresso il proprio giudizio, viene
      * passato null e settati i due array come vuoti.
-     * @param int|null $id Identificativo della valutazione da creare, può non essere impostato
-     * @param int|null $totale Totale della valutazione da creare, può non essere impostato
-     * @param array|null $utentiPositivi Elenco utenti che hanno valutato positivamente, può non essere impostato
-     * @param array|null $utentiNegativi Elenco utenti che hanno valutato negativamente, può non essere impostato
+     * @param int|null $id Identificativo della valutazione da creare, può non essere impostato.
+     * @param int|null $totale Totale della valutazione da creare, può non essere impostato.
+     * @param array|null $utentiPositivi Elenco utenti che hanno valutato positivamente, può non essere impostato.
+     * @param array|null $utentiNegativi Elenco utenti che hanno valutato negativamente, può non essere impostato.
      */
     public function __construct(?int $id, ?int $totale, ?array $utentiPositivi, ?array $utentiNegativi)
     {
@@ -123,7 +122,7 @@ class EValutazione
     }
 
     /**
-     * Restituisce l'array contenente gli utenti che hanno espresso un giudzio positivo.
+     * Restituisce l'array contenente gli utenti che hanno espresso un giudizio positivo.
      * @return array Elenco degli utenti che hanno espresso un voto positivo, può essere vuoto.
      */
     public function getUtentiPositivi(): array
@@ -133,7 +132,7 @@ class EValutazione
 
     /**
      * Restituisce l'array contenente gli utenti che hanno espresso un giudizio negativo.
-     * @return array elenco degli utenti che hanno espresso un voto negativo, può essere vuoto.
+     * @return array Elenco degli utenti che hanno espresso un voto negativo, può essere vuoto.
      */
     public function getUtentiNegativi(): array
     {
@@ -182,11 +181,11 @@ class EValutazione
      * Sono previste le seguenti situazioni:
      * - l'utente esprime un giudizio positivo;
      * - l'utente esprime nuovamente un giudizio positivo e così facendo annulla il giudizio precedentemente espresso;
-     * - l'utente aveva espresso un giudizio negativo ma ha cambiato idea ed eprime un nuovo giudizio, quasta volta
+     * - l'utente aveva espresso un giudizio negativo ma ha cambiato idea ed esprime un nuovo giudizio, questa volta
      * positivo;
      * - l'utente esprime un giudizio negativo;
      * - l'utente esprime nuovamente un giudizio negativo e così facendo annulla il giudizio precedentemente espresso;
-     * - l'utente aveva espresso un giudizio positivo ma ha cambiato idea ed eprime un nuovo giudizio, quasta volta
+     * - l'utente aveva espresso un giudizio positivo ma ha cambiato idea ed esprime un nuovo giudizio, questa volta
      * negativo.
      * Viene restituito un valore rappresentante la situazione che si è verificata.
      * @param EUser $user Utente che esprime il giudizio.
@@ -198,16 +197,31 @@ class EValutazione
         $indicePositivi = array_search($user, $this->utentiPositivi);
         $indiceNegativi = array_search($user, $this->utentiNegativi);
         if($valore >= 0){
+            /*
+             * L'utente ha votato positivamente.
+             */
             if ($indicePositivi === false && $indiceNegativi === false) {
+
+                /*
+                 * L'utente è la prima volta che esprime un giudizio.
+                 */
                 $this->totale = $this->totale + 1;
                 $this->utentiPositivi[] = $user;
                 return self::VOTO_POSITIVO;
             } else if ($indicePositivi !== false && $indiceNegativi === false) {
+
+                /*
+                 * L'utente aveva espresso un giudizio positivo.
+                 */
                 $this->totale = $this->totale - 1;
                 unset($this->utentiPositivi[$indicePositivi]);
                 $this->utentiPositivi = array_values($this->utentiPositivi);
                 return self::VOTO_POSITIVO_ANNULlATO;
             } else if ($indicePositivi === false && $indiceNegativi !== false) {
+
+                /*
+                 * L'utente aveva espresso un giudizio negativo.
+                 */
                 $this->totale = $this->totale + 2;
                 unset($this->utentiNegativi[$indiceNegativi]);
                 $this->utentiNegativi = array_values($this->utentiNegativi);
@@ -217,16 +231,30 @@ class EValutazione
                 return self::ERRORE_VOTO;
             }
         } else if ($valore < 0){
+
+            /*
+             * L'utente ha votato negativamente.
+             */
             if ($indicePositivi === false && $indiceNegativi === false) {
+
+                /*
+                * L'utente è la prima volta che esprime un giudizio.
+                */
                 $this->totale = $this->totale - 1;
                 $this->utentiNegativi[] = $user;
                 return self::VOTO_NEGATIVO;
             } else if ($indicePositivi === false && $indiceNegativi !== false) {
+                /*
+                 * L'utente aveva espresso un giudizio negativo.
+                 */
                 $this->totale = $this->totale + 1;
                 unset($this->utentiNegativi[$indiceNegativi]);
                 $this->utentiNegativi = array_values($this->utentiNegativi);
                 return self::VOTO_NEGATIVO_ANNULLATO;
             } else if ($indicePositivi !== false && $indiceNegativi === false) {
+                /*
+                 * L'utente aveva espresso un giudizio positivo.
+                 */
                 $this->totale = $this->totale - 2;
                 unset($this->utentiPositivi[$indicePositivi]);
                 $this->utentiPositivi = array_values($this->utentiPositivi);
@@ -240,6 +268,14 @@ class EValutazione
         }
     }
 
+    /**
+     * Verifica che l'utente fornito in ingresso abbia espresso un giudizio.
+     * Se l'utente ha votato positivamente allora viene restituito VOTO_POSITIVO.
+     * Se l'utente ha votato negativamente allora viene restituito VOTO_NEGATIVO.
+     * Se l'utente non ha votato allora viene restituito null.
+     * @param $user
+     * @return int|null Esito del controllo.
+     */
     public function espressoGiudizio($user): ?int
     {
         if (array_search($user, $this->utentiPositivi) !== false) {
@@ -250,4 +286,4 @@ class EValutazione
             return null;
         }
     }
-    }
+}

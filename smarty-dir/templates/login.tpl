@@ -12,16 +12,18 @@
     <!-- Titolo tab del browser -->
     <title>UniChat - Login</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts -->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
@@ -68,8 +70,6 @@
                                     {/if}
                                     <!-- Fine messaggio errore -->
 
-                                    <!-- Inserimento email -->
-
                                     <!-- Messaggio errore validazione email -->
                                     {if $erroreEmail == true}
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -81,13 +81,13 @@
                                     {/if}
                                     <!-- Fine messaggio errore -->
 
+                                    <!-- Inserimento password -->
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
                                                placeholder="Email" pattern="[a-z.A-Z0-9]+@student.univaq.it$" title="Sono ammesse solo email del dominio student.univaq.it valide." required>
                                     </div>
 
-                                    <!-- Inserimento password -->
                                     <!-- Messaggio errore validazione password -->
                                     {if $errorePassword == true}
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -99,6 +99,7 @@
                                     {/if}
                                     <!-- Fine messaggio errore -->
 
+                                    <!-- Inserimento password -->
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user"
                                                id="password" name="password" placeholder="Password" title="Sono ammessi solo i caratteri alfanumerici e i simboli speciali: . \ - _ . La password deve essere lunga almeno 8 caratteri." required>
@@ -151,6 +152,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per la verifica dei cookie abilitati -->
 <script>
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

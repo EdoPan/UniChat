@@ -1,6 +1,11 @@
 <?php
 declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
+
+/**
+ * Classe responsabile dell'esecuzione dei casi d'uso in cui è necessaria l'interazione con la chat presente nella home
+ * page.
+ */
 class CGestioneChat
 {
 
@@ -49,12 +54,12 @@ class CGestioneChat
 
     /**
      * Metodo che gestisce tutte le operazioni per rimuovere un messaggio dalla chat.
-     * Tale operazione richiede che l'utente sia loggato e quindi prima di tutto si verifica che vi sia una sessione
-     * attiva con un utente memorizzato. Se così non fosse allora si viene rimandati alla pagina di login.
+     * Tale operazione richiede che l'utente sia loggato e quindi prima di tutto si verifica che sia presente l'apposita
+     * variabile di sessione. Se così non fosse allora si viene rimandati alla pagina di login.
      * L'operazione può essere eseguita solo da un moderatore o dall'admin, quindi recuperato l'utente dalla sessione si
      * procede a verificare che sia appartenente ad una di queste tipologie.
      * In caso affermativo si procede a rimuovere il messaggio dalla base dati, altrimenti si viene rimandati alla home
-     * page in quanto non autorizzati a compiere questa operazione.
+     * page con un messaggio di errore in quanto non autorizzati a compiere questa operazione.
      * Se l'eliminazione va buon fine allora si viene rimandati sulla home page e viene visualizzato un messaggio di
      * conferma, altrimenti viene visualizzato un messaggio di conferma.
      * @param int $messID Identificativo del messaggio da rimuovere.
@@ -76,17 +81,25 @@ class CGestioneChat
                 }
 
             } else {
-                header('Location: /UniChat/');
+                /*
+                 * Se non si è autorizzati a compiere l'operazione allora viene ricaricata la home page e viene visualizzato
+                 * un messaggio di errore.
+                 */
+                header('Location: /UniChat/home/visualizzaHome/errore');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
 
     /**
      * Metodo che si occupa di gestire tutte le operazioni necessarie per pubblicare un nuovo messaggio nella chat.
-     * Un messaggio può essere scritto solo da un utente loggato, quindi prima di procedere si verifica che nella
-     * sessione attiva sia presente un utente.
+     * Un messaggio può essere scritto solo da un utente loggato, quindi prima di procedere si verifica che sia presente
+     * la variabile di sessione corrispondente.
      * Se il controllo ha esito positivo allora si procede a recuperare il testo del messaggio dalla view responsabile
      * di gestire le form, altrimenti se il controllo ha esito negativo si viene rimandati alla pagina di login.
      * Se il testo viene correttamente recuperato dall view allora si procede a creare un messaggio e a memorizzarlo
@@ -106,6 +119,10 @@ class CGestioneChat
                 $pm->store(FPersistentManager::ENTITY_MESSAGGIO, $messaggio);
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
@@ -113,7 +130,8 @@ class CGestioneChat
     /**
      * Metodo che gestisce le operazioni necessarie a recuperare l'identificativo dell'ultimo messaggio presente nella
      * base dati.
-     * Se l'operazione va a buon fine allora viene inviato al client l'id in un array json.
+     * Se l'operazione va a buon fine allora viene inviato al client l'id in un array json altrimenti il codice lato
+     * client mostrerà un errore nel momento in cui non si vede ricevere una risposta.
      */
     public function ultimoIdMessaggio(): void
     {

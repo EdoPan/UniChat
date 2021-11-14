@@ -2,14 +2,39 @@
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe per la gestione dell'input/output della pagina di registrazione di un nuovo utente.
+ */
 class VRegistrazione
 {
+    /**
+     * @var Smarty
+     */
     private Smarty $smarty;
 
+    /**
+     * Costruttore, inizializza Smarty.
+     */
     public function __construct() {
         $this->smarty = VSmarty::start();
     }
 
+    /**
+     * Restituisce i valori forniti dall'utente al momento della compilazione della form per la registrazione.
+     * I dati vengono forniti tramite una richiesta ti tipo POST.
+     * I dati vengono restituiti in un array associativo contente i seguenti campi):
+     * - nome (obbligatorio);
+     * - cognome (obbligatorio);
+     * - email (obbligatorio);
+     * - password (obbligatorio);
+     * - corsoStudio;
+     * - nomeFotoProfilo;
+     * - dimensioneFotoProfilo;
+     * - tipoFotoProfilo;
+     * - immagineFotoProfilo;
+     * Se l'utente sottomette la form senza aver compilato tutti i campi obbligatori allora viene restituito null.
+     * @return array|null Dati forniti dall'utente.
+     */
     public function getValori(): ?array
     {
         $result = array();
@@ -33,6 +58,10 @@ class VRegistrazione
         return $result;
     }
 
+    /**
+     * Imposta o meno la visualizzazione di un messaggio di errore che comunica che la registrazione non è riuscita.
+     * @param bool $visualizza Valore che indica se visualizzare o meno il messaggio di errore.
+     */
     public function setOperazioneFallita(bool $visualizza): void
     {
         $this->smarty->assign('erroreOperazione', false);
@@ -44,6 +73,11 @@ class VRegistrazione
 
     }
 
+    /**
+     * Imposta o meno la visualizzazione di un messaggio di errore che comunica che l'utente ha sottomesso la form
+     * senza compilare tutti i campi obbligatori.
+     * @param bool $visualizza Valore che indica se visualizzare o meno il messaggio di errore.
+     */
     public function setCampiObbligatoriMancanti(bool $visualizza): void
     {
         $this->smarty->assign('erroreDatiObbligatori', false);
@@ -54,6 +88,14 @@ class VRegistrazione
         }
     }
 
+    /**
+     * Imposta o meno la visualizzazione del messaggio di errore relativo alla presenza di dati che, in seguito ad un
+     * controllo di validazione, risultano essere non corretti nel formato.
+     * Il metodo richiede di fornire in ingresso il code ed il message forniti dall'eccezione ValidationException o valori
+     * null se non si vuole visualizzare l'errore.
+     * @param int|null $codiceErrore Codice errore fornito dall'eccezione ValidationException.
+     * @param string|null $messaggioErrore Messaggio errore fornito dall'eccezione ValidationException.
+     */
     public function setErroreValidazione(?int $codiceErrore, ?string $messaggioErrore): void {
         $this->smarty->assign('erroreDenominazione', false);
         $this->smarty->assign('erroreEmail', false);
@@ -81,6 +123,9 @@ class VRegistrazione
         }
     }
 
+    /**
+     * Visualizza la pagina relativa alla registrazione di un nuovo utente.
+     */
     public function showRegistrazione(): void
     {
         $this->smarty->display('registrazione.tpl');

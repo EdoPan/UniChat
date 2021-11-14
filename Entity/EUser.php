@@ -1,10 +1,9 @@
 <?php
-
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe entity di User.
  */
 class EUser implements JsonSerializable
 {
@@ -39,9 +38,9 @@ class EUser implements JsonSerializable
     private string $password;
 
     /**
-     * Foto profilo dell'utente, viene rappresentata attraverso un array associativo dove vengono riporati, in questo
+     * Foto profilo dell'utente, viene rappresentata attraverso un array associativo dove vengono riportati, in questo
      * ordine, l'identificativo del file, il nome del file, la dimensione del file, tipo del file e l'immagine posta in
-     * formato stringa.
+     * formato stringa e codificata in BASE64.
      * @var array
      */
     private array $fotoProfilo = array(
@@ -70,14 +69,14 @@ class EUser implements JsonSerializable
      * che il nome ed il cognome dell'utente contengano solo lettere, che l'email sia istituzionale e che la password
      * sia di almeno 8 caratteri e che tra questi non ve ne siano alcuni particolari. Se la validazione non va a buon
      * fine allora viene lanciata una eccezione.
-     * @param int|null $id Identificativo dell'utente da creare, può non essere impostato
-     * @param string $nome Nome dell'utente da creare
-     * @param string $cognome Cognome dell'utente da creare
-     * @param string $email Email dell'utente da creare
-     * @param string $password Password dell'utente da creare, può essere in chiaro o cifrata
-     * @param array|null $fotoProfilo Foto profilo dell'utente da creare, può non essere impostata
-     * @param string|null $corsoStudio Corso di studio dell'utente da creare, può non essere impostato
-     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati
+     * @param int|null $id Identificativo dell'utente da creare, può non essere impostato.
+     * @param string $nome Nome dell'utente da creare.
+     * @param string $cognome Cognome dell'utente da creare.
+     * @param string $email Email dell'utente da creare.
+     * @param string $password Password dell'utente da creare, può essere in chiaro o cifrata.
+     * @param array|null $fotoProfilo Foto profilo dell'utente da creare, può non essere impostata.
+     * @param string|null $corsoStudio Corso di studio dell'utente da creare, può non essere impostato.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati.
      */
     public function __construct(?int $id, string $nome, string $cognome, string $email, string $password, ?array $fotoProfilo, ?string $corsoStudio)
     {
@@ -284,8 +283,9 @@ class EUser implements JsonSerializable
     }
 
     /**
-     * Imposta la foto profilo dell'utente.
-     * @param array $fotoProfilo
+     * Imposta la foto profilo dell'utente, dopo averla validata.
+     * @param array $fotoProfilo Array rappresentante la foto profilo da assegnare.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione.
      */
     public function setFotoProfilo(array $fotoProfilo): void
     {
@@ -312,8 +312,9 @@ class EUser implements JsonSerializable
 
     /**
      * Verifica che la password fornita dall'utente sia quella corretta.
-     * @param string $password
-     * @return bool
+     * Restituisce true se la password fornita è quella corretta, false altrimenti.
+     * @param string $password Password da verificare.
+     * @return bool Esito della verifica.
      */
     public function verificaPassword(string $password): bool
     {

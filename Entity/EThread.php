@@ -1,14 +1,12 @@
 <?php
-
-    declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . "\..\utility.php";
 
 /**
- *
+ * Classe entity di Thread.
  */
 class EThread
-    {
-
+{
 
     /**
      * Identificativo del thread.
@@ -37,7 +35,8 @@ class EThread
     /**
      * Allegati aggiuntivi del thread. Si tratta di un array contente array associativi che rappresentano il file
      * allegato al thread. Ogni array associativo presenta i seguenti campi: l'identificativo del file, il nome del
-     * file, la dimensione del file, il tipo del file e il file stesso rappresentato in formato stringa.
+     * file, la dimensione del file, il tipo del file e il file stesso rappresentato in formato stringa e codificato in
+     * BASE64.
      * @var array
      */
     private array $allegati;
@@ -76,19 +75,22 @@ class EThread
      * Costruttore di EThread
      * Se il thread è stato appena creato allora non ha un id e quindi viene passato come null e impostato a 0.
      * Se il thread è appena stato creato allora non ha la data e l'ora di creazione, quindi viene passato come null e
-     * vengono impostate la data e l'ora.
+     * vengono impostate la data e l'ora attuali.
      * Se l'autore non ha aggiunto allegati allora viene passato null e impostato un array vuoto.
      * Se il thread non ha ancora delle risposte allora viene passato null e impostato un array vuoto.
-     * @param int|null $id Identificativo del thread da creare, può non essere impostato
-     * @param string $titolo Titolo del thread da creare
-     * @param string $testo Testo del thread da creare
-     * @param string|null $data Data  di creazione del thread da creare, può non essere impostato
-     * @param array|null $allegati Allegati del thread da creare, possono non essere presenti
-     * @param EUser $autoreThread Autore del thread da creare
-     * @param ECategoria $categoriaThread Categoria di appartenenza del thread da creare
-     * @param EValutazione $valutazione Valutazione associata al thread da creare
-     * @param array|null $risposte Risposte associate al thread da creare, possono non essere presenti
-     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati
+     * Prima di procedere con la creazione dell'oggetto si esegue una validazione sui dati, in particolare si verifica
+     * che ciascun allegato abbia un formato adatto e non abbia dimensioni troppo elevati. Se la validazione non va a buon
+     * fine allora viene lanciata una eccezione.
+     * @param int|null $id Identificativo del thread da creare, può non essere impostato.
+     * @param string $titolo Titolo del thread da creare.
+     * @param string $testo Testo del thread da creare.
+     * @param string|null $data Data di creazione del thread da creare, può non essere impostato
+     * @param array|null $allegati Allegati del thread da creare, possono non essere presenti.
+     * @param EUser $autoreThread Autore del thread da creare.
+     * @param ECategoria $categoriaThread Categoria di appartenenza del thread da creare.
+     * @param EValutazione $valutazione Valutazione associata al thread da creare.
+     * @param array|null $risposte Risposte associate al thread da creare, possono non essere presenti.
+     * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati.
      */
     public function __construct(?int $id, string $titolo, string $testo, ?string $data, ?array $allegati, EUser $autoreThread,
                                 ECategoria $categoriaThread, EValutazione $valutazione, ?array $risposte)
@@ -122,7 +124,7 @@ class EThread
         }
         $this->autoreThread = $autoreThread;
         $this->categoriaThread = $categoriaThread;
-        $this->valutazione = clone $valutazione;
+        $this->valutazione = $valutazione;
         if(isset($risposte)){
             $this->risposte = $risposte;
         } else {
@@ -199,7 +201,7 @@ class EThread
      */
     public function getValutazione(): EValutazione
     {
-        return clone $this->valutazione;
+        return $this->valutazione;
     }
 
     /**
@@ -290,7 +292,7 @@ class EThread
      */
     public function setValutazione(EValutazione $valutazione): void
     {
-        $this->valutazione = clone $valutazione;
+        $this->valutazione = $valutazione;
     }
 
     /**
@@ -312,4 +314,4 @@ class EThread
         $numRisposte = count($this->risposte);
         return $numRisposte;
     }
-    }
+}

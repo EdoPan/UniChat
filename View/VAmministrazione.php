@@ -3,6 +3,9 @@ declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
 require_once "VSmarty.php";
 
+/**
+ * Classe per la gestione dell'input/output della pagina del pannello di controllo.
+ */
 class VAmministrazione
 {
     /**
@@ -27,6 +30,9 @@ class VAmministrazione
         $this->smarty = VSmarty::start();
     }
 
+    /**
+     * @return Smarty
+     */
     public function getSmarty(): Smarty
     {
         return $this->smarty;
@@ -95,6 +101,11 @@ class VAmministrazione
 
     }
 
+    /**
+     * Imposta o meno la visualizzazione di un messaggio di avviso ralativo al tentativo da parte dell'amministratore
+     * di rimuovere dal ruolo di moderatore un utente che di fatto non è un moderatore.
+     * @param bool $visualizza Valore che indica se visualizzare o meno il messaggio di avviso.
+     */
     public function setAvviso(bool $visualizza): void
     {
         $this->smarty->assign('avviso', false);
@@ -108,7 +119,7 @@ class VAmministrazione
     /**
      * Restituisce il numero di pagina della sezione utenti che è stato appena cliccato nel pannello di controllo.
      * Tale valore viene recuperato da una richiesta di tipo POST.
-     * Se nella richiesta non c'è un valore valido allora viene restituito null.
+     * Se nella richiesta non c'è un valore allora viene restituito null.
      * @return int|null Numero di pagina della sezione utenti che è stato appena cliccato.
      */
     public function getValorePaginaUtenti(): ?int {
@@ -122,7 +133,7 @@ class VAmministrazione
     /**
      * Restituisce il numero di pagina della sezione categorie, che è stato appena cliccato nel pannello di controllo.
      * Tale valore viene recuperato da una richiesta di tipo POST.
-     * Se nella richiesta non c'è un valore valido allora viene restituito null.
+     * Se nella richiesta non c'è un valore allora viene restituito null.
      * @return int|null Numero di pagina della sezione categorie che è stato appena cliccato.
      */
     public function getValorePaginaCategorie(): ?int {
@@ -137,7 +148,7 @@ class VAmministrazione
      * Restituisce il valore dell'identificativo della categoria di cui si vuole conoscere il moderatore, in modo tale
      * da poterlo settare nella sezione categorie del pannello di controllo.
      * Tale valore viene recuperato da una richiesta di tipo POST.
-     * Se nella richiesta non c'è un valore valido allora viene restituito null.
+     * Se nella richiesta non c'è un valore allora viene restituito null.
      * @return int|null Identificativo della categoria di cui si vuole conoscere il moderatore.
      */
     public function getValoreIdCategoriaModeratore(): ?int {
@@ -152,7 +163,7 @@ class VAmministrazione
      * Restituisce il valore dell'identificativo della categoria di cui si vuole conoscere il numero di threads, in modo
      * tale da poterlo settare nella sezione categorie del pannello di controllo.
      * Tale valore viene recuperato da una richiesta di tipo POST.
-     * Se nella richiesta non c'è un valore valido allora viene restituito null.
+     * Se nella richiesta non c'è un valore allora viene restituito null.
      * @return int|null Identificativo della categoria di cui si vuole conoscere il numero di thread.
      */
     public function getValoreIdCategoriaContaThreads(): ?int {

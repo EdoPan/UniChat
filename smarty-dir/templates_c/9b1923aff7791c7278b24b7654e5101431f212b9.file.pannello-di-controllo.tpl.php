@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 11:34:25
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:35:04
          compiled from "smarty-dir\templates\pannello-di-controllo.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:10305384806188064baca684-87516810%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '9b1923aff7791c7278b24b7654e5101431f212b9' => 
     array (
       0 => 'smarty-dir\\templates\\pannello-di-controllo.tpl',
-      1 => 1636626733,
+      1 => 1636900118,
       2 => 'file',
     ),
   ),
@@ -57,20 +57,24 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <!-- Titolo tab del browser -->
     <title>UniChat - Pannello di Controllo</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts -->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/UniChat/Template/css/pannello_di_controllo.css" rel="stylesheet">
 
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
+<!-- Al caricamento della pagina viene eseguito del codice JavaScript per la corretta visualizzazione degli elementi
+    paginati -->
 <body id="page-top" onload="loadElementiPaginati(1, 'utenti');loadElementiPaginati(1, 'categorie');contaThreads(1, 0)">
 
 <!-- Inizio del Page Wrapper -->
@@ -101,6 +105,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
+                    <!-- Elenco categorie -->
                     <?php  $_smarty_tpl->tpl_vars['c'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['c']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['cate']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['c']->key => $_smarty_tpl->tpl_vars['c']->value){
@@ -112,6 +117,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
 </a>
 
                     <?php } ?>
+                    <!-- Fine elenco categorie -->
                 </div>
             </div>
         </li>
@@ -158,6 +164,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
+                                    <!-- Elenco categorie filtro ricerca -->
                                     <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
@@ -169,6 +176,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
 </label>
 
                                     <?php } ?>
+                                    <!-- Fine elenco categorie filtro ricerca -->
 
 
                                 </div>
@@ -204,6 +212,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
+                                <!-- Elenco categorie filtro ricerca -->
                                 <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
@@ -215,6 +224,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 </label>
 
                                 <?php } ?>
+                                <!-- Fine elenco categorie filtro ricerca -->
 
                             </div>
                         </div>
@@ -265,7 +275,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                         <li class="nav-item dropdown no-arrow">
 
                             <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
-
+                            <!-- Menu utente loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
@@ -306,7 +316,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             </div>
 
                             <?php }else{ ?>
-
+                            <!-- Menu utente non loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <button class="btn btn-primary">Entra</button>
@@ -432,7 +442,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                             <br>
 
-                            <!-- paginazione-->
+                            <!-- Paginazione utenti -->
                             <?php if ($_smarty_tpl->tpl_vars['numeroPagineUtenti']->value>0){?>
                             <div class="pagination" style="justify-content: center">
 
@@ -469,6 +479,7 @@ $_smarty_tpl->tpl_vars['pagUtenti']->first = $_smarty_tpl->tpl_vars['pagUtenti']
 , 'utenti')">&raquo;</a>
                             </div>
                             <?php }?>
+                            <!-- Fine paginazione utenti -->
 
                         </div>
                     </div>
@@ -536,7 +547,7 @@ $_smarty_tpl->tpl_vars['pagUtenti']->first = $_smarty_tpl->tpl_vars['pagUtenti']
 
                             <br>
 
-                            <!-- paginazione-->
+                            <!-- Paginazione categorie-->
                             <?php if ($_smarty_tpl->tpl_vars['numeroPagineCategorie']->value>0){?>
                             <div class="pagination" style="justify-content: center">
 
@@ -572,6 +583,7 @@ $_smarty_tpl->tpl_vars['pagCategorie']->first = $_smarty_tpl->tpl_vars['pagCateg
 , 'categorie')">&raquo;</a>
                             </div>
                             <?php }?>
+                            <!-- Fine paginazione categorie -->
 
                         </div>
                     </div>
@@ -635,6 +647,7 @@ $_smarty_tpl->tpl_vars['pagCategorie']->first = $_smarty_tpl->tpl_vars['pagCateg
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per la verifica dei cookie abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -651,8 +664,8 @@ $_smarty_tpl->tpl_vars['pagCategorie']->first = $_smarty_tpl->tpl_vars['pagCateg
      * Il corpo della richiesta contiene il numero di pagina.
      * Se la richiesta va a buon fine allora viene ripulita la sezione utenti/categorie della pagina e vengono poi
      * disposti i nuovi utenti o le nuove categorie forniti dal server, altrimenti viene mostrato un alert di errore.
-     * @param pagina numero di pagina da fornire al server per indicare quali utenti o categorie fornire.
-     * @param tipologia permette di capire se si devono recuperare utenti (vale "utenti") o categorie (vale "categorie").
+     * @param pagina Numero di pagina da fornire al server per indicare quali utenti o categorie fornire.
+     * @param tipologia Permette di capire se si devono recuperare utenti (vale "utenti") o categorie (vale "categorie").
      */
     function loadElementiPaginati(pagina, tipologia) {
         if (tipologia === "utenti") {
@@ -746,7 +759,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
                                 '</div>' +
                                 '</div>' +
                                 '<!-- Fine Utente -->';
-                            /**
+                            /*
                              * Se l'utente caricato riveste il ruolo di admin o di moderatore, allora viene visualizzato il nome della categoria che gestiscono.
                              * Se l'utente non riveste uno di questi ruoli allora non gestisce nessuna categoria e quindi viene messo il valore "-".
                              */
@@ -776,7 +789,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
                 url: "/UniChat/admin/elencaCategoriePaginate",                 //  richiesta al server
                 cache: false,
                 type: "POST",                                       //  metodo utilizzato per la richiesta
-                data: "pagina=" + pagina,                           //  parametro passatto al server in formato chiave-valore
+                data: "pagina=" + pagina,                           //  parametro passato al server in formato chiave-valore
                 dataType: "json",                                   //  formato della risposta fornita dal server
                 success: function (result) {                        //  se la richiesta ajax va a buon fine allora...
                     var numCategorie = result.length;
@@ -812,12 +825,12 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
                                 '</div>' +
                                 '</div>';
 
-                            /**
+                            /*
                              * Recupero delle informazioni sul moderatore della categoria recuperata, se presente.
                              */
                             visualizzaNomeEmailModeratore(parseInt(result[posizione].id), posizione);
 
-                            /**
+                            /*
                              * Recupera il numero di thread presenti nella categoria recuperata.
                              */
                             contaThreads(parseInt(result[posizione].id), posizione);
@@ -840,8 +853,8 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
     /**
      * Recupera dal server le informazioni sul moderatore di una categoria di cui viene fornito in ingresso l'identificativo.
      * La funzione contatta il server all'URL: /UniChat/categorie/visualizzaModeratoreCategoria ed esegue una richiesta HTTP POST.
-     * @param categoriaID identificativo della categoria di cui si vuole conoscere il moderatore.
-     * @param posizione indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
+     * @param categoriaID Identificativo della categoria di cui si vuole conoscere il moderatore.
+     * @param posizione Indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
      */
     function visualizzaNomeEmailModeratore(categoriaID, posizione) {
         $.ajax({
@@ -863,21 +876,21 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
     /**
      * Recupera dal server il numero di threads presenti in una categoria di cui viene fornito in ingresso l'identificativo.
      * La funzione contatta il server all'URL: /UniChat/categorie/contaThreadsCategoria ed esegue una richiesta HTTP POST.
-     * @param categoriaID identificativo della categoria di cui si vuole conoscere il moderatore.
-     * @param posizione indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
+     * @param categoriaID Identificativo della categoria di cui si vuole conoscere il numero di threads.
+     * @param posizione Indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
      */
     function contaThreads(categoriaID, posizione) {
         $.ajax({
-            url: "/UniChat/categorie/contaThreadsCategoria",                 //  richiesta al server
+            url: "/UniChat/categorie/contaThreadsCategoria",                //  richiesta al server
             cache: false,
-            type: "POST",                                       //  metodo utilizzato per la richiesta
-            data: "categoriaID=" + categoriaID,                           //  parametro passatto al server in formato chiave-valore
-            dataType: "json",                                   //  formato della risposta fornita dal server
-            success: function (result) {                        //  se la richiesta ajax va a buon fine allora...
+            type: "POST",                                                   //  metodo utilizzato per la richiesta
+            data: "categoriaID=" + categoriaID,                             //  parametro passatto al server in formato chiave-valore
+            dataType: "json",                                               //  formato della risposta fornita dal server
+            success: function (result) {                                    //  se la richiesta ajax va a buon fine allora...
                 var id = "numero-threads-categoria-" + posizione;
                 document.getElementById(id).innerHTML = '<b>N° Thread: </b>' + result.numeroThreads;
             },
-            error: function (result) {                          //  se la richiesta ajax non va a buon fine allora...
+            error: function (result) {                                      //  se la richiesta ajax non va a buon fine allora...
                 alert("ERRORE! Caricamento numero threads fallito.");
             }
         });
@@ -891,8 +904,8 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
      * questa operazione, viene resettato l'attributo class dell'elemento che rappresenta la pagina corrente in modo
      * tale che il suo valore sia "navigazione-utenti" o "navigazione-categorie", così facendo non risulterà più
      * evidenziato.
-     * @param elemento del DOM di cui si deve cambiare l'attributo class.
-     * @param tipologia indica se si deve cambiare class della navigazione utenti (vale "utenti") o di quella delle
+     * @param elemento Del DOM di cui si deve cambiare l'attributo class.
+     * @param tipologia Indica se si deve cambiare class della navigazione utenti (vale "utenti") o di quella delle
      * categorie (vale "categorie").
      */
     function cambiaClass(elemento, tipologia){
@@ -910,15 +923,16 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
     /**
      *  Funzione che permette di visualizzare gli utenti o le categorie della pagina successiva rispetto a quella attuale.
      *  La funzione verifica il contenuto dell'elemento HTML avente come valore dell'attributo class la stringa
-     *  "navigazione active", questo è il numero della pagina corrente. Tale numero viene poi incrementato e si procede
+     *  "navigazione-utenti active" o "navigazione-categorie active" (in base alla tipologia fornita in ingresso),
+     *  questo è il numero della pagina corrente. Tale numero viene poi incrementato e si procede
      *  ad assegnare "navigazione active" all'attributo class dell'elemento avente come id il valore della pagina
      *  successiva (pagina corrente + 1), ad assegnare "navigazione" all'attributo class dell'elemento HTML della
      *  pagina corrente ed infine viene chiamata la funzione per il caricamento dei nuovi utenti.
-     *  La funzione richiede due parametri, uno è il numero dell'ultima pagina visualizzabile e viene utlizzato per
-     *  evitare che si vada avanti all'infinito. L'altro è la tipologia ed indica se ci si sta riferendo alla
+     *  La funzione richiede due parametri, uno è il numero dell'ultima pagina visualizzabile e viene utilizzato per
+     *  evitare che si vada avanti più del dovuto. L'altro è la tipologia ed indica se ci si sta riferendo alla
      *  navigazione degli utenti o delle categorie.
-     * @param ultimaPagina numero di pagina dell'ultima pagina.
-     * @param tipologia indica se si deve cambiare la pagina della navigazione utenti (vale "utenti") o di quella delle
+     * @param ultimaPagina Numero di pagina dell'ultima pagina.
+     * @param tipologia Indica se si deve cambiare la pagina della navigazione utenti (vale "utenti") o di quella delle
      * categorie (vale "categorie").
      */
     function avanti(ultimaPagina, tipologia) {
@@ -945,15 +959,16 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
     /**
      *  Funzione che permette di visualizzare gli utenti o le categorie della pagina precedente rispetto a quella attuale.
      *  La funzione verifica il contenuto dell'elemento HTML avente come valore dell'attributo class la stringa
-     *  "navigazione active", questo è il numero della pagina corrente. Tale numero viene poi decrementato e si procede
+     *  "navigazione-utenti active" o "navigazione-categorie active" (in base alla tipologia fornita in ingresso),
+     *  questo è il numero della pagina corrente. Tale numero viene poi decrementato e si procede
      *  ad assegnare "navigazione active" all'attributo class dell'elemento avente come id il valore della pagina
      *  precedente (pagina corrente - 1), ad assegnare "navigazione" all'attributo class dell'elemento HTML della
      *  pagina corrente ed infine viene chiamata la funzione per il caricamento dei nuovi utenti.
-     *  La funzione richiede due parametri, il primo è il numero della prima pagina visualizzabile e viene utlizzato per
-     *  evitare che si vada indietro all'infinito. Il secondo è la tipologia ed indica se ci si sta riferendo alla
+     *  La funzione richiede due parametri, il primo è il numero della prima pagina visualizzabile e viene utilizzato per
+     *  evitare che si vada indietro più del dovuto. Il secondo è la tipologia ed indica se ci si sta riferendo alla
      *  navigazione degli utenti o delle categorie.
-     * @param primaPagina numero di pagina della prima pagina.
-     * @param tipologia indica se si deve cambiare la pagina della navigazione utenti (vale "utenti") o di quella delle
+     * @param primaPagina Numero di pagina della prima pagina.
+     * @param tipologia Indica se si deve cambiare la pagina della navigazione utenti (vale "utenti") o di quella delle
      * categorie (vale "categorie").
      */
     function indietro(primaPagina, tipologia) {
@@ -990,7 +1005,7 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['indice']['last']       = ($_
      * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
      * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
      * passare la richiesta la server.
-     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     * @param elemento Elemento del DOM rappresentante la categoria scelta per la ricerca.
      */
     function seleziona(elemento) {
         var categoriaID = parseInt(elemento.id);

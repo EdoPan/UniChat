@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 16:06:43
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-13 14:35:55
          compiled from "smarty-dir\templates\mio-profilo.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:17333515276189612593d193-55536182%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0c7950ea6dac7aab3a3520e6e2d53a2cb31cbeab' => 
     array (
       0 => 'smarty-dir\\templates\\mio-profilo.tpl',
-      1 => 1636626733,
+      1 => 1636810542,
       2 => 'file',
     ),
   ),
@@ -60,16 +60,18 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <!-- Titolo tab del browser -->
     <title>UniChat - Mio Profilo</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts -->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
@@ -103,6 +105,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
+                    <!-- Elenco categorie -->
                     <?php  $_smarty_tpl->tpl_vars['c'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['c']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['cate']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['c']->key => $_smarty_tpl->tpl_vars['c']->value){
@@ -114,6 +117,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
 </a>
 
                     <?php } ?>
+                    <!-- Fine elenco categorie -->
                 </div>
             </div>
         </li>
@@ -160,6 +164,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
+                                    <!-- Elenco categorie filtro ricerca -->
                                     <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
@@ -171,6 +176,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
 </label>
 
                                     <?php } ?>
+                                    <!-- Fine elenco categorie filtro ricerca -->
 
 
                                 </div>
@@ -206,6 +212,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
+                                <!-- Elenco categorie filtro ricerca -->
                                 <?php  $_smarty_tpl->tpl_vars['categoria'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['categoria']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['categorie']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['categoria']->key => $_smarty_tpl->tpl_vars['categoria']->value){
@@ -217,6 +224,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 </label>
 
                                 <?php } ?>
+                                <!-- Fine elenco categorie filtro ricerca -->
 
                             </div>
                         </div>
@@ -267,7 +275,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                         <li class="nav-item dropdown no-arrow">
 
                             <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
-
+                            <!-- Menu utente loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
@@ -308,7 +316,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             </div>
 
                             <?php }else{ ?>
-
+                            <!-- Menu utente non loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <button class="btn btn-primary">Entra</button>
@@ -343,6 +351,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
             <div class="container-fluid">
 
                 <!-- Intestazione della pagina -->
+
                 <!-- Messaggio avviso campi vuoti -->
                 <?php if ($_smarty_tpl->tpl_vars['avvisoCampiVuoti']->value==true){?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -354,6 +363,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     </div>
                 <?php }?>
                 <!-- Fine messaggio avviso -->
+
                 <!-- Messaggi conferma errore -->
                 <?php if ($_smarty_tpl->tpl_vars['conferma']->value==true){?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -414,13 +424,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                                     <!-- Pulsante selezione foto profilo -->
                                     <div>
-                                        <!--p>Sostituisci immagine profilo</p-->
-                                        <!--input type="file" name="nuovaFotoProfilo" class="btn btn-primary"
-
-                                        <input type="file" id="file" name="nuovaFotoProfilo" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
-                                        <label for="file" style="display: block; position: relative; width: 100%; height: 50px; border-radius: 5px; background: linear-gradient(40deg, #4758ff, #3c67c4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
-                                            Sostituisci immagine profilo
-                                        </label> -->
 
                                         <input type="file" id="nuovaFotoProfilo" name="nuovaFotoProfilo" hidden="hidden" />
                                         <button class="btn btn-primary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Sostituisci immagine profilo</button>
@@ -442,8 +445,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <div class="card-body">
 
                                     <!-- Informazioni utente -->
-
-
                                     <h5 class="text-primary mb-1">Nome:</h5>
                                     <h6 class="text-dark mb-4"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
 </h6>
@@ -557,6 +558,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per la verifica dei cookie abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -594,6 +596,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
     }
 </script>
 
+<!-- Script per la gestione del bottone personalizzato per l'upload della foto profilo -->
 <script type="text/javascript">
     const realFileBtn = document.getElementById("nuovaFotoProfilo");
     const customBtn = document.getElementById("custom-button");

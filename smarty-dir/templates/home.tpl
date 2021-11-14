@@ -20,7 +20,10 @@
 
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
@@ -601,9 +604,9 @@
     $(document).ready(function () {
         /*
          * Al click sul bottone Invia viene eseguita la seguente funzione.
-         * Viene recuperato il contenuto del campo input e mandato con una POST all'url riportato, notare che l'url è autodescrittivo e ad esso è associato l'esecuzione di un metodo
-         * di una classe di controllo (CGestioneChat->creaMessaggio().
-         * Sempre al click del bottone viene anche richiesto l'aggiornamento della chat mediante la funzione loadLastMessages() presente in questo script JavaScript.
+         * Viene recuperato il contenuto del campo input contenente il testo del nuovo messaggio e mandato con il metodo
+         * HTTP POST alla URL riportata (/UniChat/chat/creaMessaggio).
+         * Sempre al click del bottone viene anche richiesto l'aggiornamento della chat mediante la funzione loadLastMessages().
          */
         $("#submitmsg").click(function () {
             var clientmsg = document.getElementById('usrmsg').value;
@@ -613,12 +616,14 @@
             return false;
         });
 
-        /*
+        /**
          * La funzione permette di aggiornare la chat riportando gli ultimi messaggi pubblicati e gestisce l'auto-scrolling.
-         * Per il funzionamento del tutto si utlizza ajax per eseguire una richiesta al server e poi elaborarne la risposta.
-         * Ajax contatta il server con l'url autodescrittiva, la quale richiama CGestioneChat->aggiornaChat(), ed utilizzando il metodo POST. Al server viene fornito l'id
-         * dell'ultimo messaggio presente nella chat e il server fornisce un array in JSON contenente i messaggi presenti nel database aventi identificativo successivo a quello fornito.
-         * La risposta del server viene ripresa e formattata per poi essere mostrata a schermo, inoltre viene aggiornato il campo input contenente l'id dell'ulitmo messaggio.
+         * Si utlizza ajax per eseguire una richiesta al server e poi elaborarne la risposta.
+         * Ajax contatta il server con l'url autodescrittiva /UniChat/chat/aggiornaChat utilizzando il metodo POST.
+         * Al server viene fornito l'id dell'ultimo messaggio presente nella chat e il server fornisce un array JSON
+         * contenente i messaggi presenti nel database aventi identificativo successivo a quello fornito.
+         * La risposta del server viene ripresa e formattata per poi essere mostrata a schermo, inoltre viene aggiornato
+         * il campo input contenente l'id dell'ulitmo messaggio.
          */
         function loadLastMessages() {
             var oldscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height before the request
@@ -654,7 +659,7 @@
                                 '<!-- Fine messaggio -->';
                             lastId = item.idMessaggio;
                         });
-                        document.getElementById('ultimoMessaggio').value = lastId                  //  aggiornamento campo input contenente l'id dell'ulitmo messaggio.
+                        document.getElementById('ultimoMessaggio').value = lastId   //  aggiornamento campo input contenente l'id dell'ulitmo messaggio.
 
                         //Auto-scroll
 
@@ -681,9 +686,10 @@
         setInterval (loadLastMessages, 2500);
     });
 
-    /*
+    /**
      * Funzione per effettuare il primo caricamento della chat.
-     * La funzione viene richiamata al caricamento della pagina o ad ogni suo refresh. Il funzionamento è molto analogo a quello di LoadLastMessages().
+     * La funzione viene richiamata al caricamento della pagina o ad ogni suo refresh. Il funzionamento è molto analogo
+     * a quello di LoadLastMessages().
      */
     function loadChat() {
         $.ajax({
@@ -734,7 +740,7 @@
     }
 
     /**
-     * Permette di recuperare l'id associato all'ultimo messaggio pesente nella base dati e risulata utile quando la
+     * Permette di recuperare l'id associato all'ultimo messaggio pesente nella base dati e risulta utile quando la
      * chat risulta essere vuota in quanto non ci sono messaggi nelle ultime 24 ore.
      * Nell'apposito input viene riportato l'ultimo id ottenuto dal server, altrimenti si ottiene un messaggio di errore.
      * La funzione contatta il server all'url /UniChat/chat/ultimoMessaggio con una HTTP POST.
@@ -769,13 +775,13 @@
      * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
      * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
      * categoria precedentemente scelta, viene deselezionata.
-     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
-     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e all'attributo class
+     * di questo elemento viene assegnato il valore 'filtro-categorie dropdown-item active' e così facendo
      * risulterà evidenziato.
      * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
      * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
      * passare la richiesta la server.
-     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     * @param elemento Elemento del DOM rappresentante la categoria scelta per la ricerca.
      */
     function seleziona(elemento) {
         var categoriaID = parseInt(elemento.id);

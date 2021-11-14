@@ -1,17 +1,21 @@
 <?php
 declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
+
+/**
+ * Classe responsabile dell'esecuzione dei casi d'uso in cui è necessaria l'interazione con un Admin.
+ */
 class CGestioneAdmin
 {
 
     /**
-     * Gestisce tutte le operazioni necessarie alla rimozione di una utente, notare che tale operazione non comporta
+     * Gestisce tutte le operazioni necessarie alla rimozione di un utente, notare che tale operazione non comporta
      * l'eliminazione dei contenuti da esso prodotti: vengono assegnati ad un utente di default.
      * Se l'utente era un moderatore, allora viene anche rimosso dalla categoria che gestiva.
      * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
-     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
+     * Quindi la prima operazione da fare è verificare che nella sessione vi sia la variabile utente, in caso contrario
      * si viene rimandati alla pagina di login.
-     * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
+     * Se la variabile è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
      * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
      * Se l'utente è un admin allora si procede ad eliminare l'utente dalla base dati.
      * Se l'operazione va a buon fine allora si viene rimandati alla pagina del pannello di controllo e viene
@@ -34,9 +38,17 @@ class CGestioneAdmin
                     header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
@@ -44,8 +56,8 @@ class CGestioneAdmin
     /**
      * Metodo incaricato di eseguire tutte le operazioni necessarie per rendere un utente un moderatore di una categoria.
      * L'esecuzione di tale metodo può essere richiesta solo dall'Admin, quindi prima di procedere viene recuperato
-     * l'utente associato alla sessione.
-     * Se l'utente è stato caricato in sessione allora viene eseguito un
+     * l'utente associato alla variabilie di sessione.
+     * Se l'utente è stato caricato nella variabile di sessione allora viene eseguito un
      * controllo per assicurarsi sia effettivamente un admin, altrimenti si viene rimandati alla schermata di login.
      * Se il controllo è positivo allora si recuperano dalla base dati l'utente da rendere moderatore e la categoria a
      * cui dovrà essere assegnato, altrimenti si viene rimandati alla home page in quanto non autorizzati a compiere
@@ -70,11 +82,17 @@ class CGestioneAdmin
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
 
                 try {
+                    /*
+                     * Recupero della categoria a cui si deve assegnare un moderatore.
+                     */
                     $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
                 } catch (ValidationException $e) {
                     $categoria = null;
                 }
                 try {
+                    /*
+                     * Recupero dell'utente da rendere moderatore.
+                     */
                     $nuovoModeratore = $pm->load(FPersistentManager::ENTITY_USER, FPersistentManager::PROPERTY_DEFAULT, $userID);
                 } catch (ValidationException $e) {
                     $nuovoModeratore = null;
@@ -89,14 +107,27 @@ class CGestioneAdmin
                         header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                     }
                 } else {
+                    /*
+                     * Se non si riesce a recuperare l'utente o la categoria dalla base dati, oppure queste presentano
+                     * problemi con la validazione dei dati allora vuol dire che ci sono dei problemi con la comunicazione
+                     * con la base dati o che i dati presenti in essa sono stati cambiati manualmente e presentano errori.
+                     */
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
                     $view->showError();
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
@@ -105,11 +136,14 @@ class CGestioneAdmin
      * Metodo che si occupa di gestire tutte le operazioni necessarie a rimuovere un moderatore dal suo ruolo e renderlo
      * pertanto un normale utente.
      * L'esecuzione di tale metodo può essere richiesta solo dall'Admin, quindi prima di procedere viene recuperato
-     * l'utente associato alla sessione.
-     * Se l'utente è stato caricato in sessione allora viene eseguito un
-     * controllo per assicurarsi sia effettivamente un admin, altrimenti si viene rimandati alla schermata di login.
+     * l'utente presente nella variabile di sessione.
+     * Se la variabile di sessione esiste allora viene eseguito un controllo per assicurarsi chr l'utente sia
+     * effettivamente un admin, altrimenti si viene rimandati alla schermata di login.
+     * Se l'utente è un admin allora si controlla che l'utente di cui si è ottenuto l'identificativo in ingresso sia un
+     * moderatore, altrimenti si viene rimandati alla home page in quanto non autorizzati a compiere tale operazione.
      * Se il controllo è positivo allora si recupera dalla base dati il moderatore da rendere semplice utente, altrimenti
-     * si viene rimandati alla home page in quanto non autorizzati a compiere tale operazione.
+     * viene ricaricata la pagina del pannello di controllo con un messaggio di avviso che comunica che l'utente non è
+     * un moderatore.
      * Se il moderatore viene correttamente recuperato dalla base dati allora viene rimosso dal suo ruolo e la basi dati
      * viene aggiornata, altrimenti viene visualizzato l'errore HTTP 500.
      * Se la base dati viene aggiornata correttamente allora viene caricato il pannello di controllo con un messaggio di
@@ -126,6 +160,9 @@ class CGestioneAdmin
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
                 if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $moderatoreID)) {
                     try {
+                        /*
+                         * Recupero dell'utente moderatore.
+                         */
                         $moderatore = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $moderatoreID);
                     } catch (ValidationException $e) {
                         $moderatore = null;
@@ -139,6 +176,11 @@ class CGestioneAdmin
                             header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                         }
                     } else {
+                        /*
+                         * Se non si riesce a recuperare il moderatore oppure questo presenta problemi con la validazione
+                         * dei dati allora vuol dire che ci sono dei problemi con la comunicazione con la base dati o
+                         * che i dati presenti in essa sono cambiati manualmente e presentano errori.
+                         */
                         $view = new VError();
                         $view->setValoriErrore(VError::CODE_500, VError::TYPE_500);
                         $view->showError();
@@ -147,9 +189,17 @@ class CGestioneAdmin
                     header('Location: /UniChat/admin/visualizzaPannelloDiControllo/avviso');
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/Login');
         }
     }
@@ -157,15 +207,16 @@ class CGestioneAdmin
     /**
      * Gestisce tutte le operazioni necessarie alla creazione di una nuova categoria.
      * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
-     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
-     * si viene rimandati alla pagina di login.
+     * Quindi la prima operazione da fare è verificare che nella sessione sia presente la variabile utente, in caso
+     * contrario si viene rimandati alla pagina di login.
      * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
      * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
      * Se l'utente è un admin allora si verifica che la richiesta del client sia una HTTP GET, in tal caso viene
-     * chiesto alla view responsabile, di mostrare la form. Se la richiesta del client, invece, è una HTTP POST allora
-     * si richiede alla view responsabile, di recuperare i dati immessi dall'utente nella form.
-     * In questo ultimo caso, se i valori sono stati correttamente immessi dall'utente, si procede a creare una nuova
-     * categoria, altrimenti si ottiene un errore HTTP 400.
+     * chiesto alla view responsabile, di mostrare la pagina contente la form di creazione di una nuova categoria.
+     * Se la richiesta del client, invece, è una HTTP POST allora si chiede alla view responsabile, di recuperare i
+     * dati immessi dall'utente nella form.
+     * In questo ultimo caso, se l'utente non ha fornito tutti i dati obbligatori, allora si ottiene un messaggio di
+     * errore e viene chiesto di fornire nuovamente i dati.
      * Se durante la creazione della categoria viene sollevata una eccezione dovuto ad un esito negativo della validazione
      * dei dati, questa viene gestita mostrando nuovamente la pagina contenente la form e un messaggio di errore.
      * Se la categoria viene creata correttamente allora viene memorizzata nella base dati e se l'operazione va a buon
@@ -183,6 +234,9 @@ class CGestioneAdmin
             if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
 
                 try {
+                    /*
+                     * Recupero delle categorie.
+                     */
                     $categorie = $pm->loadAllCategorie();
                 } catch (ValidationException $e) {
                     $categorie = null;
@@ -198,16 +252,21 @@ class CGestioneAdmin
 
                     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
+                        /*
+                         * Visualizza la pagina contenente la form per immettere i dati necessari a creare una nuova
+                         * categoria.
+                         */
                         $vCreaCategoria->setErroreValidazione(null, null);
                         $vCreaCategoria->setCampiObbligatoriMancanti(false);
-
                         $vCreaCategoria->showCreaCategoria();
 
 
                     } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+                        /*
+                         * Recupera e gestisce i dati forniti dall'utente allo scopo di creare una nuova categoria.
+                         */
                         $valori = $vCreaCategoria->getValori();
-
 
                         if (isset($valori)) {
                             $nome = $valori['nome'];
@@ -225,9 +284,6 @@ class CGestioneAdmin
 
                             try {
                                 $categoria = $user->creaCategoria(null, $nome, $icona, $descrizione);
-
-
-                                //$categoria = new ECategoria(null, $nome, $icona, $descrizione);
                                 $result = $pm->store(FPersistentManager::ENTITY_CATEGORIA, $categoria);
 
                                 if ($result) {
@@ -237,32 +293,59 @@ class CGestioneAdmin
                                 }
                             } catch (ValidationException $e) {
 
+                                /*
+                                 * Se l'utente ha fornito in ingresso dati che non rispettano il formato richiesto allora
+                                 * viene riproposta la pagina di creazione di una nuova categoria con un messaggio
+                                 * di errore.
+                                 */
                                 $vCreaCategoria->setErroreValidazione($e->getCode(), $e->getMessage());
                                 $vCreaCategoria->setCampiObbligatoriMancanti(false);
                                 $vCreaCategoria->showCreaCategoria();
                             }
                         } else {
-
+                            /*
+                             * Se non sono presenti valori allora vuol dire che l'utente non ha fornito tutti i dati
+                             * obbligatori.
+                             * In tal caso viene riproposta la pagina di creazione di una nuova categoria con un messaggio
+                             * di errore.
+                             */
                             $vCreaCategoria->setCampiObbligatoriMancanti(true);
                             $vCreaCategoria->setErroreValidazione(null, null);
                             $vCreaCategoria->showCreaCategoria();
 
                         }
                     }
+                } else {
+                    /*
+                     * Se non si riescono a recuperare le categorie oppure queste presentano problemi con la validazione
+                     * dei dati allora vuol dire che ci sono dei problemi con la comunicazione con la base dati o
+                     * che i dati presenti in essa sono stati cambiati manualmente e presentano errori.
+                     */
+                    $view = new VError();
+                    $view->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                    $view->showError();
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
 
     /**
      * Gestisce tutte le operazioni necessarie alla rimozione di una categoria, notare che tale operazione non comporta
-     * l'eliminazione dei thread in essa presenti; i threads vengono spostati nella categoria mista.
+     * l'eliminazione dei thread in essa presenti; i threads vengono spostati nella categoria di default.
      * Tale metodo può essere eseguito solo da un utente loggato e in particolare solo se quell'utente è l'admin.
-     * Quindi la prima operazione da fare è verificare che nella sessione sia presente un utente, in caso contrario
+     * Quindi la prima operazione da fare è verificare che nella sessione sia presente la variabile utente, in caso contrario
      * si viene rimandati alla pagina di login.
      * Se l'utente è presente nella sessione allora si procede a verificare che sia un admin, in caso contrario si
      * viene rimandati alla home page in quanto non si è autorizzati a procedere oltre.
@@ -287,9 +370,17 @@ class CGestioneAdmin
                     header('Location: /UniChat/admin/visualizzaPannelloDiControllo/errore');
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
@@ -301,12 +392,11 @@ class CGestioneAdmin
      * sempre da quest'ultima si recupera il numero di pagina necessario per sapere da quale riga interrogare la base
      * dati.
      * L'elenco di user può essere richiesto solo dall'Admin, quindi prima di procedere viene recuperato
-     * l'utente associato alla sessione.
-     * Se l'utente è stato caricato in sessione allora viene eseguito un
-     * controllo per assicurarsi sia effettivamente un admin, altrimenti si viene rimandati alla schermata di login.
-     * Se il controllo è positivo allora si recupera dalla view il numero di pagina, questo viene poi usato per
-     * recuperare un array di utenti dalla base dati, altrimenti si viene rimandati alla home page in quanto non
-     * autorizzati a compiere tale operazione.
+     * l'utente dalla variabile di sessione.
+     * Se l'utente è stato caricato in sessione allora viene eseguito un controllo per assicurarsi sia effettivamente un
+     * admin, altrimenti si viene rimandati alla schermata di login. Se il controllo è positivo allora si recupera dalla
+     * view il numero di pagina, questo viene poi usato per recuperare un array di utenti dalla base dati, altrimenti si
+     * viene rimandati alla home page in quanto non autorizzati a compiere tale operazione.
      * Se l'operazione va a buon fine allora viene visualizzato un elenco di utenti, altrimenti viene lasciato al codice
      * presente lato client la responsabilità di mostrare un errore.
      */
@@ -333,23 +423,31 @@ class CGestioneAdmin
                     }
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }
 
     /**
      * Metodo responsabile di gestire tutte le operazioni necessarie a recuperare un elenco di categorie presenti nella
-     * base dati, per visualizzarli nel pannello di controllo.
+     * base dati, per visualizzarle nel pannello di controllo.
      * Il numero di categorie da recuperare è stabilito dalla view responsabile di visualizzare il pannello di controllo e
      * sempre da quest'ultima si recupera il numero di pagina necessario per sapere da quale riga interrogare la base
      * dati.
      * L'elenco di categorie può essere richiesto solo dall'Admin, quindi prima di procedere viene recuperato
-     * l'utente associato alla sessione.
-     * Se l'utente è stato caricato in sessione allora viene eseguito un
-     * controllo per assicurarsi sia effettivamente un admin, altrimenti si viene rimandati alla schermata di login.
+     * l'utente dalla variabile di sessione.
+     * Se l'utente è stato caricato in sessione allora viene eseguito un controllo per assicurarsi sia effettivamente un
+     * admin, altrimenti si viene rimandati alla schermata di login.
      * Se il controllo è positivo allora si recupera dalla view il numero di pagina, questo viene poi usato per
      * recuperare un array di categorie dalla base dati, altrimenti si viene rimandati alla home page in quanto non
      * autorizzati a compiere tale operazione.
@@ -379,17 +477,25 @@ class CGestioneAdmin
                     }
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('/UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('/UniChat/utenti/login');
         }
     }
 
     /**
      * Metodo responsabile di gestire tutte le operazioni necessarie a visualizzare correttamente il pannello di controllo.
-     * L'esecuzione di tale metodo può essere rischiesta solo dall'Admin, quindi prima di procedere viene recuperato
-     * l'utente associato alla sessione.
+     * L'esecuzione di tale metodo può essere richiesta solo dall'Admin, quindi prima di procedere viene recuperato
+     * l'utente dalla variabile di sessione.
      * Se l'utente è stato caricato in sessione allora viene eseguito un controllo per assicurarsi sia effettivamente un
      * admin, altrimenti si viene rimandati alla schermata di login.
      * Se il controllo è positivo allora si recuperano dalla base dati il numero di utenti, il numero di categorie e tutte
@@ -399,8 +505,8 @@ class CGestioneAdmin
      * paginazione delle categorie ed i bottoni per rendere un utente moderatore.
      * In caso contrario allora viene visualizzato l'errore HTTP 500.
      * Il metodo può ricevere in ingresso un parametro e se questo vale 'conferma' allora viene anche settato un
-     * messaggio di conferma, se vale 'errore' viene settato un messaggio di errore, altrimenti non viene settato alcun
-     * errore.
+     * messaggio di conferma, se vale 'errore' viene settato un messaggio di errore, se vale 'avviso' viene settato un
+     * messaggio di avviso, altrimenti non viene settato alcun messaggio.
      */
     public function visualizzaPannelloDiControllo(): void
     {
@@ -437,6 +543,9 @@ class CGestioneAdmin
 
 
                     if (func_num_args() == 1) {
+                        /*
+                         * Gestisce se visualizza o meno messaggi di avviso, di errore o di conferma.
+                         */
                         if (func_get_arg(0) == "conferma") {
                             $vAmministrazione->setMessaggiConfermaErroreOperazioni(true);
                             $vAmministrazione->setAvviso(false);
@@ -458,14 +567,27 @@ class CGestioneAdmin
                     $vAmministrazione->showPannelloDiControllo();
 
                 } else {
+                    /*
+                     * Se non si riescono a recuperare i dati oppure questi presentano problemi con la validazione
+                     * dei dati allora vuol dire che ci sono dei problemi con la comunicazione con la base dati o
+                     * che i dati presenti in essa sono stati cambiati manualmente e presentano errori.
+                     */
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
                     $view->showError();
                 }
             } else {
+                /*
+                 * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
+                 * operazione e viene quindi riportato sulla home page.
+                 */
                 header('Location: /UniChat/');
             }
         } else {
+            /*
+             * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
+             * rimandati nella pagina di login per effettuare l'accesso.
+             */
             header('Location: /UniChat/utenti/login');
         }
     }

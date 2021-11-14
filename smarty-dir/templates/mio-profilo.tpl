@@ -12,16 +12,18 @@
     <!-- Titolo tab del browser -->
     <title>UniChat - Mio Profilo</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts -->
     <link href="/UniChat/Template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
             href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
             rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Inizio controllo JavaScript abilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
+    <!-- Fine controllo JavaScript abilitato -->
 
 </head>
 
@@ -55,11 +57,13 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
+                    <!-- Elenco categorie -->
                     {foreach from=$cate item=c}
 
                         <a class="collapse-item" href="/UniChat/categorie/visualizzaCategoria/{$c->getID()}/1">{$c->getNome()}</a>
 
                     {/foreach}
+                    <!-- Fine elenco categorie -->
                 </div>
             </div>
         </li>
@@ -106,11 +110,13 @@
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
 
+                                    <!-- Elenco categorie filtro ricerca -->
                                     {foreach from=$categorie item=categoria}
 
                                         <label class="filtro-categorie dropdown-item" id="{$categoria->getID()}-categoria" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
                                     {/foreach}
+                                    <!-- Fine elenco categorie filtro ricerca -->
 
 
                                 </div>
@@ -146,11 +152,13 @@
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
 
+                                <!-- Elenco categorie filtro ricerca -->
                                 {foreach from=$categorie item=categoria}
 
                                     <label class="dropdown-item" id="{$categoria->getID()}cat" onclick="seleziona(this)">{$categoria->getNome()}</label>
 
                                 {/foreach}
+                                <!-- Fine elenco categorie filtro ricerca -->
 
                             </div>
                         </div>
@@ -201,7 +209,7 @@
                         <li class="nav-item dropdown no-arrow">
 
                             {if $loggato}
-
+                            <!-- Menu utente loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
@@ -238,7 +246,7 @@
                             </div>
 
                             {else}
-
+                            <!-- Menu utente non loggato -->
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <button class="btn btn-primary">Entra</button>
@@ -273,6 +281,7 @@
             <div class="container-fluid">
 
                 <!-- Intestazione della pagina -->
+
                 <!-- Messaggio avviso campi vuoti -->
                 {if $avvisoCampiVuoti == true}
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -283,6 +292,7 @@
                     </div>
                 {/if}
                 <!-- Fine messaggio avviso -->
+
                 <!-- Messaggi conferma errore -->
                 {if $conferma == true}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -338,13 +348,6 @@
 
                                     <!-- Pulsante selezione foto profilo -->
                                     <div>
-                                        <!--p>Sostituisci immagine profilo</p-->
-                                        <!--input type="file" name="nuovaFotoProfilo" class="btn btn-primary"
-
-                                        <input type="file" id="file" name="nuovaFotoProfilo" style="opacity: 0; width: 0.1px; height: 0.1px; position: absolute;">
-                                        <label for="file" style="display: block; position: relative; width: 100%; height: 50px; border-radius: 5px; background: linear-gradient(40deg, #4758ff, #3c67c4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: normal; cursor: pointer; transition: transform .2s ease-out;">
-                                            Sostituisci immagine profilo
-                                        </label> -->
 
                                         <input type="file" id="nuovaFotoProfilo" name="nuovaFotoProfilo" hidden="hidden" />
                                         <button class="btn btn-primary btn-user btn-block" type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>Sostituisci immagine profilo</button>
@@ -366,8 +369,6 @@
                                 <div class="card-body">
 
                                     <!-- Informazioni utente -->
-
-
                                     <h5 class="text-primary mb-1">Nome:</h5>
                                     <h6 class="text-dark mb-4">{$nome}</h6>
 
@@ -476,6 +477,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per la verifica dei cookie abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -489,13 +491,13 @@
      * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
      * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
      * categoria precedentemente scelta, viene deselezionata.
-     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
-     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e all'attributo class
+     * di questo elemento viene assegnato il valore 'filtro-categorie dropdown-item active' e così facendo
      * risulterà evidenziato.
      * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
      * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
      * passare la richiesta la server.
-     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     * @param elemento Elemento del DOM rappresentante la categoria scelta per la ricerca.
      */
     function seleziona(elemento) {
         var categoriaID = parseInt(elemento.id);
@@ -513,6 +515,7 @@
     }
 </script>
 
+<!-- Script per la gestione del bottone personalizzato per l'upload della foto profilo -->
 <script type="text/javascript">
     const realFileBtn = document.getElementById("nuovaFotoProfilo");
     const customBtn = document.getElementById("custom-button");

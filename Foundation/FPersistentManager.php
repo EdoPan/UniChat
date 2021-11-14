@@ -4,7 +4,8 @@ declare(strict_types = 1);
 require_once __DIR__ . "\..\utility.php";
 
 /**
- * Classe Foundation Persistent Manager. Ha il compito di gestire la persistenza di tutti gli oggetti entity.
+ * Classe Foundation Persistent Manager.
+ * Ha il compito di gestire la persistenza di tutti gli oggetti entity.
  */
 class FPersistentManager
 {
@@ -75,7 +76,8 @@ class FPersistentManager
     const PROPERTY_BY_THREAD = 3;
 
     /**
-     * Costante che indica che si vuole lavorare con il thread che sia il più discusso di una determinata categoria.
+     * Costante che indica che per l'operazione richiesta è necessario usare le proprietà riguardanti la ricerca di
+     * threads all'interno della base dati.
      */
     const PROPERTY_BY_SEARCH = 4;
 
@@ -90,10 +92,10 @@ class FPersistentManager
     const SEARCH_TYPE_TITOLO = 1;
 
     /**
-     * Costante che indica che si vuole fare una ricerca di threads in base al titolo e appartenenti a determinate
-     * categorie.
+     * Costante che indica che si vuole fare una ricerca di threads in base al titolo e appartenenti ad una determinata
+     * categoria.
      */
-    const SEARCH_TYPE_TITOLO_CATEGORIE = 2;
+    const SEARCH_TYPE_TITOLO_CATEGORIA = 2;
 
     /**
      * Istanza della classe FPersistentManager, si usa per il singleton.
@@ -110,7 +112,7 @@ class FPersistentManager
 
     /**
      * Restituisce l'istanza di FPersistentManager. Se già esistente restituisce quella esistente, altrimenti la crea.
-     * @return FPersistentManager
+     * @return FPersistentManager Istanza di FPersistentManager.
      */
     public static function getInstance(): FPersistentManager
     {
@@ -125,7 +127,7 @@ class FPersistentManager
      * Permette di restituire un oggetto del sottosistema Entity.
      * L'oggetto restituito è una istanza della classe entity specificata dall'attributo entityType.
      * L'oggetto viene restituito dato un identificativo che può essere relativo alla classe entity di cui è istanza
-     * (PROPERTY_DEFAULT) oppiure relativo ad un'altra classe entity (es. PROPERTY_BY_DEFAULT).
+     * (PROPERTY_DEFAULT) oppure relativo ad un'altra classe entity (es. PROPERTY_BY_CATEGORIA).
      * Se la combinazione di input non è corretta o durante l'esecuzione dei metodi richiamati vi sono errori, allora
      * viene restituito null.
      * Gli entityType ammessi sono:
@@ -137,10 +139,10 @@ class FPersistentManager
      * - ENTITY_VALUTAZIONE;
      * - ENTITY_CATEGORIA;
      * - ENTITY_MESSAGGIO.
-     * @param int $entityType Valore che indica quale entity restituire
-     * @param int $property Valore che indica attraverso quale identificativo si ottiene l'entity
-     * @param int $id Identificativo dell'entity richiesta o attraverso la quale è possibile ottenere tale entity
-     * @return object|null Istanza dell'entity
+     * @param int $entityType Valore che indica quale entity restituire.
+     * @param int $property Valore che indica attraverso quale identificativo si ottiene l'entity.
+     * @param int $id Identificativo dell'entity richiesta o attraverso la quale è possibile ottenere tale entity.
+     * @return object|null Istanza dell'entity.
      * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
      * creazione di alcune delle istanze entity.
      */
@@ -219,7 +221,7 @@ class FPersistentManager
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @param string $email Email dell'utente da recuperare
      * @return EUser|null Istanza recuperata
-     * @throws ValidationException Eccezione lanciate nel momento in cui si verifica un errore nella validazione dei
+     * @throws ValidationException Eccezione lanciata nel momento in cui si verifica un errore nella validazione dei
      * dati al momento della creazione dell'istanza di EUser, EModeratore o EAdmin.
      */
     public function loadUserByEmail(string $email): ?EUser
@@ -251,9 +253,9 @@ class FPersistentManager
      * - ENTITY_USER;
      * - ENTITY_MODERATORE;
      * - ENTITY_ADMIN;
-     * @param int $entityType Valore che indica il tipo di entity passata
-     * @param object $entity Entity con cui eseguire l'update
-     * @return bool L'esito dell'operazione.
+     * @param int $entityType Valore che indica il tipo di entity passata.
+     * @param object $entity Entity con cui eseguire l'update.
+     * @return bool Esito dell'operazione.
      */
     public function update(int $entityType, object $entity): bool
     {
@@ -268,9 +270,9 @@ class FPersistentManager
     /**
      * Permette di aggiornare la categoria memorizzata nella base dati, assegnando il moderatore che la gestisce.
      * Se l'operazione va a buon fine allora viene restituito true, false altrimenti.
-     * @param ECategoria $categoria Categoria a cui si deve assegnare il moderatore
-     * @param EModeratore $user Moderatore da assegnare alla categoria scelta
-     * @return bool Esito dell'operazione
+     * @param ECategoria $categoria Categoria a cui si deve assegnare il moderatore.
+     * @param EModeratore $user Moderatore da assegnare alla categoria scelta.
+     * @return bool Esito dell'operazione.
      */
     public function updateModeratoreCategoria(ECategoria $categoria, EModeratore $user): bool
     {
@@ -279,11 +281,11 @@ class FPersistentManager
     }
 
     /**
-     * Permette di esprimere un giudizio ad un thread.
-     * @param EValutazione $valutazione Valutazione da aggiornare con il nuovo giudizio
-     * @param int $tipologiaValutazione Tipo di giudizio espresso
-     * @param EUser $user Utente che ha espresso il giudizio
-     * @return bool Esito dell'operazione
+     * Permette di aggiornare una valutazione presente nella base dati, in base al giudizio espresso dall'utente.
+     * @param EValutazione $valutazione Valutazione da aggiornare con il nuovo giudizio.
+     * @param int $tipologiaValutazione Tipo di giudizio espresso.
+     * @param EUser $user Utente che ha espresso il giudizio.
+     * @return bool Esito dell'operazione.
      */
     public function updateValutazione(EValutazione $valutazione, int $tipologiaValutazione, EUser $user): bool
     {
@@ -299,9 +301,9 @@ class FPersistentManager
      * - ENTITY_THREAD;
      * - ENTITY_CATEGORIA;
      * - ENTITY_MESSAGGIO.
-     * @param int $entityType Valore che indica il tuo di entity da memorizzare nella base dati
-     * @param object $entity Entity da memorizzare nella base dati
-     * @return bool Esito dell'operazione
+     * @param int $entityType Valore che indica il tuo di entity da memorizzare nella base dati.
+     * @param object $entity Entity da memorizzare nella base dati.
+     * @return bool Esito dell'operazione.
      */
     public function store(int $entityType, object $entity): bool
     {
@@ -325,9 +327,9 @@ class FPersistentManager
     /**
      * Permette di memorizzare all'interno della base dati una risposta relativa ad un thread.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
-     * @param ERisposta $risposta Risposta da memorizzare nella base dati
-     * @param int $threadID Thread a cui la risposta è associata
-     * @return bool Esito dell'operazione
+     * @param ERisposta $risposta Risposta da memorizzare nella base dati.
+     * @param int $threadID Thread a cui la risposta è associata.
+     * @return bool Esito dell'operazione.
      */
     public function storeRispostaThread(ERisposta $risposta, int $threadID): bool
     {
@@ -336,12 +338,12 @@ class FPersistentManager
     }
 
     /**
-     * Permette di elminare dalla base dati le informazioni relative ad una istanza di una classe entity, stabilita in
+     * Permette di eliminare dalla base dati le informazioni relative ad una istanza di una classe entity, stabilita in
      * base all'entityType scelto.
      * Se l'operazione va buon fine allora viene restituito true, false altrimenti.
-     * @param int $entityType Valore che indica il tipo di entity da eliminare dalla base dati
-     * @param int $id Identificativo dell'entity da eliminare
-     * @return bool Esito dell'operazione
+     * @param int $entityType Valore che indica il tipo di entity da eliminare dalla base dati.
+     * @param int $id Identificativo dell'entity da eliminare.
+     * @return bool Esito dell'operazione.
      */
     public function delete(int $entityType, int $id): bool
     {
@@ -380,11 +382,11 @@ class FPersistentManager
      * - ENTITY_CATEGORIA.
      * @param int $entityType Valore che indica la tipologia di entity da recuperare dalla base dati.
      * @param int $property Valore che indica se è necessario l'identificativo e quale entity è riferito, per effettuare
-     * l'operazione
-     * @param int|null $id Identificativo dell'entity che permette di effettuare il recupero
-     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
-     * @param int $numeroRighe Valore che indica quanti record recuperare
-     * @return array|null Elenco contenente il risultato dell'operazione
+     * l'operazione.
+     * @param int|null $id Identificativo dell'entity che permette di effettuare il recupero.
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero.
+     * @param int $numeroRighe Valore che indica quanti record recuperare.
+     * @return array|null Elenco contenente il risultato dell'operazione.
      * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
      * creazione di alcune delle istanze entity.
      */
@@ -424,8 +426,8 @@ class FPersistentManager
      * Restituisce un elenco di threads, i quali sono quelli con il maggior numero di risposte. Quanti threads
      * recuperare viene stabilito in base al valore del parametro che viene richiesto in ingresso.
      * Se l'operazione non va a buon fine allora viene restituito null.
-     * @param int $numeroThreads Valore che indica il numero di threads da recuperare
-     * @return array|null Elenco di threads recuperati
+     * @param int $numeroThreads Valore che indica il numero di threads da recuperare.
+     * @return array|null Elenco di threads recuperati.
      * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
      * creazione delle istanze EThread.
      */
@@ -439,8 +441,8 @@ class FPersistentManager
      * Restituisce un elenco di threads, i quali sono quelli con la valutazione maggiore. Quanti threads recuperare
      * viene stabilito in base al valore del parametro che viene richiesto in ingresso.
      * Se l'operazione non va a buon fine allora viene restituito null.
-     * @param int $numeroThreads Valore che indica il numero di threads da recuperare
-     * @return array|null Elenco di threads recuperati
+     * @param int $numeroThreads Valore che indica il numero di threads da recuperare.
+     * @return array|null Elenco di threads recuperati.
      * @throws ValidationException Eccezione lanciata in caso di problemi con la validazione dei dati nel momento della
      * creazione delle istanze EThread.
      */
@@ -451,9 +453,11 @@ class FPersistentManager
     }
 
     /**
-     * Restituisce un elenco di messaggi, i quali sono stati pubblicati nelle ultime 24 ore.
+     * Restituisce un elenco dei messaggi che sono stati pubblicati nelle ultime 24 ore.
      * Se l'operazione non va a buon fine allora viene restituito null.
      * @return array|null Elenco contenente i messaggi pubblicati nelle ultime 24 ore
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati al momento
+     * della creazione delle istanze di EUser (gli autori dei messaggi).
      */
     public function loadMessaggiUltime24ore(): ?array
     {
@@ -467,6 +471,8 @@ class FPersistentManager
      * In caso di errori viene restituito null.
      * @param int $ultimoMessaggioId Identificativo del messaggio da cui iniziare a recuperare i nuovi messaggi.
      * @return array|null Elenco dei messaggi pubblicati dopo un determinato messaggio.
+     * @throws ValidationException Eccezione lanciata nel caso ci fossero problemi di validazione dei dati al momento
+     * della creazione delle istanze di EUser (gli autori dei messaggi).
      */
     public function loadNuoviMessaggi(int $ultimoMessaggioId): ?array
     {
@@ -477,8 +483,8 @@ class FPersistentManager
     /**
      * Verifica che un utente sia presente nella base dati fornendo la sua email.
      * Restituisce true se l'utente è presente, false se l'utente non è presente o null se vi sono stati errori.
-     * @param string $email Email dell'utente di cui si deve verificare la presenza nella base dati
-     * @return null|bool Esito dell'operazione
+     * @param string $email Email dell'utente di cui si deve verificare la presenza nella base dati.
+     * @return null|bool Esito dell'operazione.
      */
     public function existsUserByEmail(string $email): ?bool
     {
@@ -489,9 +495,9 @@ class FPersistentManager
     /**
      * Verifica che l'utente sia un moderatore o un admin, in base all'entityType fornito in ingresso.
      * Restituisce true se l'utente è un moderatore o un admin, false se non lo è o null se vi sono stati errori.
-     * @param int $entityType Valore che indica il ruolo da verificare
-     * @param int $id Identificativo dell'entity di cui si deve verificare il ruolo
-     * @return null|bool Esito dell'operazione
+     * @param int $entityType Valore che indica il ruolo da verificare.
+     * @param int $id Identificativo dell'entity di cui si deve verificare il ruolo.
+     * @return null|bool Esito dell'operazione.
      */
     public function isA(int $entityType, int $id): ?bool
     {
@@ -510,25 +516,26 @@ class FPersistentManager
      * Permette di restituire un certo numero di EThread, i quali presentano nel titolo alcune o tutte le parole che
      * vengono passate in ingresso. I thread vengono restituiti ordinati a partire da quello che ha il titolo con il
      * maggior numero di parole uguali e nello stesso ordine di quelle fornite in ingresso.
-     * Se ha che searchType è SEARCH_TYPE_TITOLO allora ci si limita a questo, altrimenti (SEARCH_TYPE_TITOLO_CATEGORIE)
-     * deve essere fornito un array di identificativi delle categorie affinché sia effettuata la ricerca solo in quelle
-     * categorie.
+     * Se ha che searchType è SEARCH_TYPE_TITOLO allora ci si limita a questo, altrimenti (SEARCH_TYPE_TITOLO_CATEGORIA)
+     * deve essere fornito un identificativo della categoria affinché sia effettuata la ricerca solo in quella
+     * categoria.
      * Viene restituito un array di istanze di Ethread, eventualmente vuoto, ma se si utilizza una combinazione errata
      * di input o ci sono errori durante l'esecuzione dei metodi richiamati, allora viene restituito null.
-     * @param int $searchType Valore che indica il tipo di ricerca
-     * @param string $titolo Titolo del thread da cercare nella base dati
-     * @param int|null $id Elenco di categorie a cui i threads trovati devono appartenere
-     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero
-     * @param int $numeroRighe Valore che indica quanti record recuperare
-     * @return array|null Elenco contenente il risultato della ricerca
-     * @throws ValidationException Eccezione lanciata nel momento in cui ci sono problemi con la validazione dei dati.
+     * @param int $searchType Valore che indica il tipo di ricerca.
+     * @param string $titolo Titolo del thread da cercare nella base dati.
+     * @param int|null $id Identificativo della categoria a cui i threads trovati devono appartenere.
+     * @param int $rigaPartenza Valore che indica da quale record iniziare il recupero.
+     * @param int $numeroRighe Valore che indica quanti record recuperare.
+     * @return array|null Elenco contenente il risultato della ricerca.
+     * @throws ValidationException Eccezione lanciata nel momento in cui ci sono problemi con la validazione dei dati al
+     * momento della crezione delle istanze di EThread.
      */
     public function ricercaThreads(int $searchType, string $titolo, ?int $id, int $rigaPartenza, int $numeroRighe): ?array
     {
         if ($searchType == self::SEARCH_TYPE_TITOLO && !isset($id)) {
             $fThread = FThread::getInstance();
             return $fThread->ricercaPerTitolo($titolo, $rigaPartenza, $numeroRighe);
-        } else if ($searchType == self::SEARCH_TYPE_TITOLO_CATEGORIE && isset($id)) {
+        } else if ($searchType == self::SEARCH_TYPE_TITOLO_CATEGORIA && isset($id)) {
             $fThread = FThread::getInstance();
             return $fThread->ricercaPerTitoloECategoria($titolo, $id, $rigaPartenza, $numeroRighe);
         } else {
@@ -539,9 +546,9 @@ class FPersistentManager
     /**
      * Permette di rimuovere l'assegnazione del ruolo di moderatore di una categoria ad un utente.
      * Se l'operazione va buon fine allora viene resituito true, false altrimenti.
-     * @param int $categoriaID Identificativo della categoria da cui si deve rimuovere il moderatore
-     * @param EModeratore $moderatore Moderatore da rimuovere dal suo ruolo
-     * @return bool Esito dell'operazione
+     * @param int $categoriaID Identificativo della categoria da cui si deve rimuovere il moderatore.
+     * @param EModeratore $moderatore Moderatore da rimuovere dal suo ruolo.
+     * @return bool Esito dell'operazione.
      */
     public function rimuoviModeratoreCategoria(int $categoriaID, EModeratore $moderatore): bool
     {
@@ -553,7 +560,8 @@ class FPersistentManager
      * Permette di ottenere il numero di entities memorizzati all'interno della base dati.
      * Quali entities contare viene specificato dall'attributo entityType.
      * In base alla property passata può essere necessario specificare l'identificativo attraverso cui eseguire un
-     * filtro su cosa restituire (PROPERTY_BY_CATEGORIA) oppure se non è neccessarcio specificare nulla si passa null
+     * filtro su cosa restituire (PROPERTY_BY_CATEGORIA), specificare il titolo usato in una ricerca (PROPERTY_BY_SEARCH)
+     * se si vuole contare i threads ottenuti da essa oppure se non è neccessarcio specificare nulla si passa null
      * (PROPERTY_DEFAULT).
      * Se la combinazione di input risulta essere errata o vi sono errori durante l'esecuzione dei metodi chiamati
      * allora viene restituito null.
@@ -561,11 +569,11 @@ class FPersistentManager
      * - ENTITY_USER;
      * - ENTITY_THREAD;
      * - ENTITY_CATEGORIA.
-     * @param int $entityType Valore che indica la tipologia di entity da contare
-     * @param int $property Valore che indica attraverso quale identificativo, se necessario, si ottiene il conteggio
-     * @param int|null $id
-     * @param string|null $titolo
-     * @return int|null Risultato del conteggio
+     * @param int $entityType Valore che indica la tipologia di entity da contare.
+     * @param int $property Valore che indica attraverso quale identificativo, se necessario, si ottiene il conteggio.
+     * @param int|null $id Identificativo dell'entity che permette di effettuare il conteggio.
+     * @param string|null $titolo Titolo usato nella ricerca.
+     * @return int|null Risultato del conteggio.
      */
     public function contaEntities(int $entityType, int $property, ?int $id, ?string $titolo): ?int
     {
