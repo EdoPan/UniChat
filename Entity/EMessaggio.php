@@ -5,7 +5,7 @@
 
 
 /**
- * La classe EMessaggio ci permette di instanziare messaggi di chat.
+ * La classe EMessaggio ci permette d'instanziare messaggi di chat.
  */
 class EMessaggio implements JsonSerializable {
 
@@ -133,6 +133,10 @@ class EMessaggio implements JsonSerializable {
         $this->autoreMessaggio = $autoreMessaggio;
     }
 
+    /**
+     * Restituisce lo stato di un oggetto EMessaggio in formato JSON.
+     * @return array Stato dell'oggetto in formato JSON.
+     */
     public function jsonSerialize(): array
     {
         $result = array(

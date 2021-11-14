@@ -122,11 +122,13 @@
                             <input type="search" name="testoricerca" id="testo-ricerca"
                                    class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
+
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
+
                         </div>
                     </form>
 
@@ -140,9 +142,11 @@
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
+
                             <button class="btn btn-primary dropdown-toggle" type="button" id="ricerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filtra
                             </button>
+
                             <div class="dropdown-menu animated&#45;&#45 fade-in" aria-labelledby="ricerca" style="">
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
@@ -163,6 +167,7 @@
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
+
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
@@ -180,11 +185,13 @@
                                     <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
+
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -203,65 +210,65 @@
 
                             {if $loggato}
 
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
-                                <img class="img-profile rounded-circle"
-                                     src="data:{$iconaTipo};base64,{$iconaImmagine}">
-                            </a>
-
-
-                            <!-- Tendina -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-
-
-                                <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profilo
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{$nome} {$cognome}</span>
+                                    <img class="img-profile rounded-circle"
+                                         src="data:{$iconaTipo};base64,{$iconaImmagine}">
                                 </a>
 
-                                {if $controlpanel}
 
-                                    <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
-                                        <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Pannello di Controllo
+                                <!-- Tendina -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+
+
+                                    <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profilo
                                     </a>
 
-                                {/if}
+                                    {if $controlpanel}
+
+                                        <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
+                                            <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Pannello di Controllo
+                                        </a>
+
+                                    {/if}
 
 
 
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Logout
+                                    </a>
+                                </div>
 
                             {else}
 
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <button class="btn btn-primary">Entra</button>
-                            </a>
-
-                            <!-- Tendina -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-
-
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Login
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-primary">Entra</button>
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
-                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Registrazione
-                                </a>
+                                <!-- Tendina -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
 
 
-                                {/if}
+                                    <a class="dropdown-item" href="/UniChat/Utenti/login">
+                                        <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Login
+                                    </a>
+
+                                    <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                        <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Registrazione
+                                    </a>
+
+
+                            {/if}
 
 
                         </li>
@@ -274,9 +281,9 @@
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
 
-                <!-- Messaggio -->
-
+                <!-- Messaggio Errore/Conferma -->
                 {if $messaggio == true}
+
                     <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
                         {$testo}
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -285,7 +292,6 @@
                     </div>
 
                 {/if}
-
                 <!-- Fine messaggio -->
 
                 <!-- Intestazione della pagina -->
@@ -299,18 +305,19 @@
                     <!-- Chat -->
                     <div class="col-lg">
                         <div class="card border-bottom-info mb-2">
-                            <div class="card-header bg-info" >
 
-                                <!-- Titolo e icona contenitore -->
+                            <!-- Header Box Chat -->
+                            <div class="card-header bg-info" >
 
                                 <div class="row justify-content-center" >
 
+                                    <!-- Icona Chat -->
                                     <img src="/UniChat/Immagini/icona_chat.png" style="max-width: 64px; margin-right: 10px">
+
+                                    <!-- Titolo -->
                                     <h4 class="py-0 text-white mt-3"><b>Chat</b></h4>
 
                                 </div>
-
-
 
                             </div>
 
@@ -322,30 +329,32 @@
 
                                 </div>
                                 <!-- Fine contenitore scrollable -->
+
                                 <form>
                                     <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
                                 </form>
 
                                 {if $log eq true}
-                                <!-- Form invio messaggio -->
-                                <form class="row mb-2">
+                                    <!-- Form invio messaggio -->
+                                    <form class="row mb-2">
 
-                                    <!-- Inserimento testo -->
-                                    <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input type="text" autocomplete="off" class="form-control" id="usrmsg" placeholder="Messaggio">
-                                    </div>
+                                        <!-- Inserimento testo -->
+                                        <div class="col-sm-9 mb-3 mb-sm-0">
+                                            <input type="text" autocomplete="off" class="form-control" id="usrmsg" placeholder="Messaggio">
+                                        </div>
 
-                                    <!-- Pulsante invio -->
-                                    <div class="col-sm-3">
-                                        <button type="submit" class="btn btn-success btn-icon-split" id="submitmsg">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-arrow-right"></i>
-                                            </span>
-                                            <span class="text">Invia</span>
-                                        </button>
-                                    </div>
-                                </form>
-                                <!-- Fine form invio messaggio -->
+                                        <!-- Pulsante invio -->
+                                        <div class="col-sm-3">
+                                            <button type="submit" class="btn btn-success btn-icon-split" id="submitmsg">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </span>
+                                                <span class="text">Invia</span>
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                    <!-- Fine form invio messaggio -->
                                 {/if}
 
                             </div>
@@ -360,13 +369,16 @@
                     <div class="col-lg">
 
                         <div class="card mb-4 border-bottom-primary">
-                            <div class="card-header bg-primary" >
 
-                                <!-- Titolo e icona contenitore -->
+                            <!-- Header Box Thread Popolari -->
+                            <div class="card-header bg-primary" >
 
                                 <div class="row justify-content-center" >
 
+                                    <!-- Icona Thread Popolari -->
                                     <img src="/UniChat/Immagini/post_popolari.png" style="max-width: 64px; margin-right: 10px">
+
+                                    <!-- Titolo -->
                                     <h4 class="py-0 text-white mt-3"><b>Thread Popolari</b></h4>
 
                                 </div>
@@ -376,7 +388,6 @@
                             <div class="card-body">
 
                                 <!-- Thread più votati -->
-
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
@@ -388,10 +399,10 @@
                                     <div class="collapse show" id="piuvotati" style="">
                                         <div class="card-body">
 
-                                            <!--Carousel Wrapper-->
+                                            <!-- Carousel Wrapper -->
                                             <div id="multi-item-piuvotati" class="carousel slide carousel-multi-item" data-ride="carousel">
 
-                                                <!--Controls-->
+                                                <!-- Controls -->
                                                 <div class="row justify-content-center mb-3">
 
                                                     <div class="controls-top">
@@ -399,6 +410,7 @@
                                                         <a class="btn-floating" href="#multi-item-piuvotati" data-slide="next"><i class="fas fa-chevron-right"></i></a>
                                                     </div>
                                                     <!--/.Controls-->
+
                                                 </div>
 
 
@@ -427,8 +439,6 @@
                                                     {/for}
 
 
-
-
                                                 </div>
                                                 <!-- Fine contenitore slides -->
 
@@ -439,11 +449,11 @@
 
 
                                 </div>
+                                <!-- Fine thread più votati-->
 
-                                <!-- fine thread più votati-->
+
 
                                 <!-- Thread con più risposte -->
-
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
@@ -455,10 +465,10 @@
                                     <div class="collapse show" id="piurisposte" style="">
                                         <div class="card-body">
 
-                                            <!--Carousel Wrapper-->
+                                            <!-- Carousel Wrapper -->
                                             <div id="multi-item-piurisposte" class="carousel slide carousel-multi-item" data-ride="carousel">
 
-                                                <!--Controls-->
+                                                <!-- Controls -->
                                                 <div class="row justify-content-center mb-3">
 
                                                     <div class="controls-top">
@@ -466,6 +476,7 @@
                                                         <a class="btn-floating" href="#multi-item-piurisposte" data-slide="next"><i class="fas fa-chevron-right"></i></a>
                                                     </div>
                                                     <!--/.Controls-->
+
                                                 </div>
 
                                                 <!-- Inizio contenitore slides -->
@@ -496,7 +507,6 @@
                                     </div>
 
                                 </div>
-
                                 <!-- Fine Thread con più risposte -->
 
                             </div>
@@ -536,7 +546,8 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+
+        <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -558,11 +569,6 @@
 
 
 
-
-
-
-
-
 <!-- Bootstrap core JavaScript-->
 <script src="/UniChat/Template/vendor/jquery/jquery.min.js"></script>
 <script src="/UniChat/Template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -580,6 +586,7 @@
 <script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
 <script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
 
+<!-- Script per verificare se i cookie sono abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -753,6 +760,8 @@
     }
 
 </script>
+
+
 <script type="text/javascript">
 
     /**
@@ -783,6 +792,7 @@
 
     }
 </script>
+
 </body>
 
 </html>

@@ -44,7 +44,7 @@ class CGestioneUtenti
         $mail->Port = "587";
 
         //Imposto l'username Gmail
-        $mail->Username = "critellinino@gmail.com";
+        $mail->Username = "";
 
         //Imposto la password dell'account Gmail
         $mail->Password = "";
@@ -53,7 +53,7 @@ class CGestioneUtenti
         $mail->Subject = "Recupero Password UniChat";
 
         //Imposto il mittente
-        $mail->setFrom('critellinino@gmail.com');
+        $mail->setFrom("");
 
         //Abilito HTML
         $mail->isHTML(true);

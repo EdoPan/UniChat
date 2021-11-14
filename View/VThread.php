@@ -19,7 +19,7 @@ class VThread
     const ERROR = "OPS.. sembra si sia verificato un errore.";
 
     /**
-     * Costante per non visualizzare l'alert.
+     * Costante per non visualizzare il messaggio di errore.
      */
     const NULLA = "";
 
@@ -97,10 +97,11 @@ class VThread
     }
 
     /**
+     * @param bool $messaggio
      * @param string $tipologiaMessaggio
-     * Metodo responsabile dell'assegnazione della variabile richiamata in thread.tpl per la visualizzazione di un alert
-     * con un messaggio di conferma o errore (questo metodo viene richiamato solo per l'eliminazione del thread
-     * o di una risposta).
+     * @param string|null $colore
+     * Metodo responsabile dell'assegnazione dei valori e della visualizzazione del tipo di messaggio (Errore/Conferma)
+     * e del relativo colore ('danger'/'success').
      */
     public function setMessaggio(bool $messaggio, string $tipologiaMessaggio, ?string $colore): void {
         $this->smarty->assign('testo', $tipologiaMessaggio);

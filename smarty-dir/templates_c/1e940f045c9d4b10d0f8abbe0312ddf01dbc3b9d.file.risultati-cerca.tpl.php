@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 11:40:10
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 16:05:31
          compiled from "smarty-dir\templates\risultati-cerca.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:1447419577618902f1dd8b36-84132183%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1e940f045c9d4b10d0f8abbe0312ddf01dbc3b9d' => 
     array (
       0 => 'smarty-dir\\templates\\risultati-cerca.tpl',
-      1 => 1636886370,
+      1 => 1636626733,
       2 => 'file',
     ),
   ),
@@ -67,8 +67,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/UniChat/Template/css/pannello_di_controllo.css" rel="stylesheet">
 
-
-    <!-- Controllo JS disabilitato -->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -89,11 +87,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             <div class="sidebar-brand-text mx-3">UniChat <sup>1.0</sup></div>
         </a>
 
+
         <!-- Divisore -->
         <hr class="sidebar-divider my-0">
 
-
-        <!-- Inizio Menu laterale categorie -->
+        <!-- Menu laterale categorie -->
         <li class="nav-item active">
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
@@ -104,8 +102,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
 
-
-                    <!-- Voce di menù corrispondente ad ogni categoria -->
                     <?php  $_smarty_tpl->tpl_vars['c'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['c']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['cate']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['c']->key => $_smarty_tpl->tpl_vars['c']->value){
@@ -120,8 +116,6 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
                 </div>
             </div>
         </li>
-        <!-- Fine Menu laterale categorie -->
-
 
         <!-- Divisore -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -134,10 +128,11 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
     </ul>
     <!-- Fine della Sidebar -->
 
+
     <!-- Inizio del Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Inizio del Main Content -->
+        <!-- Contenuto principale -->
         <div id="content">
 
             <!-- Topbar -->
@@ -153,11 +148,10 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
                 <!-- Topbar Search -->
                 <div class="col justify-content-center" style="display: grid">
 
-                    <!-- Inizio Form Ricerca -->
                     <form method="get" action="/UniChat/threads/ricerca/1"
                           class="d-none d-sm-inline-block form-inline mr-0 ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <!-- Bottone Filtra ricerca -->
+
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
                                     Filtra
@@ -194,7 +188,7 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                             </div>
                         </div>
                     </form>
-                    <!-- Fine Form Ricerca -->
+
                 </div>
 
 
@@ -202,7 +196,6 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                 <ul class="navbar-nav ml-auto">
 
 
-                    <!-- Filtra ricerca mod. XS -->
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
@@ -227,19 +220,23 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                             </div>
                         </div>
+
                     </div>
 
 
+
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+
                     <li class="nav-item dropdown no-arrow d-sm-none">
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
                         </a>
                         <!-- Dropdown - Cerca -->
+
+
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
-                            <!-- Inizio Form Ricerca XS -->
                             <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
@@ -255,8 +252,8 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     </div>
                                 </div>
                             </form>
-                            <!-- Fine Form Ricerca XS -->
                         </div>
+
 
                     </li>
 
@@ -266,12 +263,10 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <!-- Menù utente -->
+                        <!-- Informazioni profilo loggato e relativa tendina -->
                         <li class="nav-item dropdown no-arrow">
 
-
                             <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
-                            <!-- Se l'utente è loggato, mostrare nome cognome e icona dell'img di profilo -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -289,7 +284,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-                                <!-- Visualizzazione voce di menù "Profilo" per accedere alle info personali -->
+
                                 <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profilo
@@ -297,7 +292,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                                 <?php if ($_smarty_tpl->tpl_vars['controlpanel']->value){?>
 
-                                    <!-- Se l'utente è l'Admin, visualizzare il Pannello di Controllo -->
                                     <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
                                         <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Pannello di Controllo
@@ -306,7 +300,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <?php }?>
 
 
-                                <!-- Voce di menù per effettuare il Logout-->
+
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
@@ -314,8 +308,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             </div>
 
                             <?php }else{ ?>
-
-                            <!-- Vista del top menù nel caso non l'utente non fosse loggato -->
 
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -326,25 +318,27 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
 
-                                <!-- Voce di menù per effettuare il Login -->
+
                                 <a class="dropdown-item" href="/UniChat/Utenti/login">
                                     <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Login
                                 </a>
 
-                                <!-- Voce di menù per effettuare la Registrazione -->
                                 <a class="dropdown-item" href="/UniChat/Utenti/registrazione">
                                     <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Registrazione
                                 </a>
+
+
                                 <?php }?>
 
+
                         </li>
-                        <!-- Fine menù utente -->
                     </ul>
                 </ul>
             </nav>
             <!-- Fine della Topbar -->
+
 
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
@@ -354,7 +348,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <h1 class="h3 mb-0 text-gray-800">Risultato Ricerca</h1>
                 </div>
 
-                <!-- Dati della ricerca -->
                 <div class="container-fluid">
                     <h6>Hai cercato:
                         <?php echo $_smarty_tpl->tpl_vars['titoloCercato']->value;?>
@@ -380,7 +373,6 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
                             <div class="row">
 
-                                <!-- 1° thread della riga -->
                                 <div class="col">
 
                                     <!-- Contenitore Thread  -->
@@ -391,7 +383,7 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
                                             <div class="row">
 
-                                                <!-- Nome, valutazione e autore del thread -->
+
                                                 <div class="col mr-4">
                                                     <h5 class="m-0 font-weight-bold text-primary"><?php echo $_smarty_tpl->tpl_vars['listathread']->value[$_smarty_tpl->tpl_vars['j']->value]->getTitolo();?>
 <sup><?php echo $_smarty_tpl->tpl_vars['listathread']->value[$_smarty_tpl->tpl_vars['j']->value]->getValutazione()->getTotale();?>
@@ -410,15 +402,18 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
                                                 <div class="ml-2 mt-2 mr-2" style="position: absolute; top: 0; right: 0;">
 
-                                                    <!-- Pulsante thread leggi tutto -->
+                                                    <!-- Pulsante thread specifico -->
                                                     <a href="\UniChat\Threads\visualizzaThread\<?php echo $_smarty_tpl->tpl_vars['listathread']->value[$_smarty_tpl->tpl_vars['j']->value]->getID();?>
 " class="btn btn-info btn-icon-split">
-                                                        <span class="icon text-white-600">
-                                                            <i class="fas fa-arrow-right"></i>
-                                                        </span>
+                                                    <span class="icon text-white-600">
+                                                        <i class="fas fa-arrow-right"></i>
+                                                    </span>
                                                     </a>
                                                 </div>
+
+
                                             </div>
+
                                         </div>
 
                                         <!-- Descrizione Thread -->
@@ -442,7 +437,6 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
                                 <?php if ($_smarty_tpl->tpl_vars['j']->value+1<$_smarty_tpl->tpl_vars['posizioneMax']->value){?>
 
-                                    <!-- 2° thread della riga -->
                                     <div class="col">
 
                                         <!-- Contenitore Thread  -->
@@ -453,7 +447,7 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
                                                 <div class="row">
 
-                                                    <!-- Titolo, valutazione e autore del thread -->
+
                                                     <div class="col mr-4">
                                                         <h5 class="m-0 font-weight-bold text-primary"><?php echo $_smarty_tpl->tpl_vars['listathread']->value[$_smarty_tpl->tpl_vars['j']->value+1]->getTitolo();?>
 <sup><?php echo $_smarty_tpl->tpl_vars['listathread']->value[$_smarty_tpl->tpl_vars['j']->value+1]->getValutazione()->getTotale();?>
@@ -480,7 +474,10 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                                                                             </span>
                                                         </a>
                                                     </div>
+
+
                                                 </div>
+
                                             </div>
 
                                             <!-- Descrizione Thread -->
@@ -501,13 +498,11 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                                         <!-- Fine Thread -->
 
                                     </div>
-                                    <!-- Fine 2° thread della riga -->
 
                                 <?php }?>
 
                             </div>
 
-                            <!-- Contatore per unaa nuova riga -->
                             <?php $_smarty_tpl->tpl_vars['j'] = new Smarty_variable($_smarty_tpl->tpl_vars['j']->value+2, null, 0);?>
 
                         <?php }} ?>
@@ -520,13 +515,14 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                         <div class="pagination mt-3 mb-3" style="justify-content: center">
 
                             <?php if ($_smarty_tpl->tpl_vars['activePage']->value!=1){?>
-                                <!-- Bottone vai a pagina precedente -->
+
                                 <a href="\UniChat\threads\ricerca\<?php echo $_smarty_tpl->tpl_vars['activePage']->value-1;?>
 ?categoriaID=<?php echo $_smarty_tpl->tpl_vars['categoriaIdRicerca']->value;?>
 &testoricerca=<?php echo $_smarty_tpl->tpl_vars['testoRicerca']->value;?>
 ">&laquo;</a>
 
                             <?php }?>
+
 
 
                             <?php $_smarty_tpl->tpl_vars['pagThread'] = new Smarty_Variable;$_smarty_tpl->tpl_vars['pagThread']->step = 1;$_smarty_tpl->tpl_vars['pagThread']->total = (int)ceil(($_smarty_tpl->tpl_vars['pagThread']->step > 0 ? $_smarty_tpl->tpl_vars['numeroPagine']->value+1 - (1) : 1-($_smarty_tpl->tpl_vars['numeroPagine']->value)+1)/abs($_smarty_tpl->tpl_vars['pagThread']->step));
@@ -536,7 +532,6 @@ $_smarty_tpl->tpl_vars['pagThread']->first = $_smarty_tpl->tpl_vars['pagThread']
 
                                 <?php if ($_smarty_tpl->tpl_vars['pagThread']->value==$_smarty_tpl->tpl_vars['activePage']->value){?>
 
-                                    <!-- La pagina che si sta visualizzando viene evidenziata -->
                                     <a href="\UniChat\threads\ricerca\<?php echo $_smarty_tpl->tpl_vars['pagThread']->value;?>
 ?categoriaID=<?php echo $_smarty_tpl->tpl_vars['categoriaIdRicerca']->value;?>
 &testoricerca=<?php echo $_smarty_tpl->tpl_vars['testoRicerca']->value;?>
@@ -545,7 +540,6 @@ $_smarty_tpl->tpl_vars['pagThread']->first = $_smarty_tpl->tpl_vars['pagThread']
 
                                 <?php }else{ ?>
 
-                                    <!-- Le altre pagine presenti -->
                                     <a href="\UniChat\threads\ricerca\<?php echo $_smarty_tpl->tpl_vars['pagThread']->value;?>
 ?categoriaID=<?php echo $_smarty_tpl->tpl_vars['categoriaIdRicerca']->value;?>
 &testoricerca=<?php echo $_smarty_tpl->tpl_vars['testoRicerca']->value;?>
@@ -558,7 +552,6 @@ $_smarty_tpl->tpl_vars['pagThread']->first = $_smarty_tpl->tpl_vars['pagThread']
 
                             <?php if ($_smarty_tpl->tpl_vars['activePage']->value!=$_smarty_tpl->tpl_vars['numeroPagine']->value){?>
 
-                                <!-- Bottone vai a pagina successiva -->
                                 <a href="\UniChat\threads\ricerca\<?php echo $_smarty_tpl->tpl_vars['activePage']->value+1;?>
 ?categoriaID=<?php echo $_smarty_tpl->tpl_vars['categoriaIdRicerca']->value;?>
 &testoricerca=<?php echo $_smarty_tpl->tpl_vars['testoRicerca']->value;?>
@@ -566,12 +559,12 @@ $_smarty_tpl->tpl_vars['pagThread']->first = $_smarty_tpl->tpl_vars['pagThread']
 
                             <?php }?>
 
+
                         </div>
 
                         <!--fine paginazione-->
 
 
-                        <!-- Caso: nessun risultato prodotto dalla ricerca -->
                     <?php }else{ ?>
 
                         <h5 class="h5 mb-0 text-gray-800 mt-0">Nessun Thread presente in questa Categoria.</h5>
@@ -645,7 +638,6 @@ $_smarty_tpl->tpl_vars['pagThread']->first = $_smarty_tpl->tpl_vars['pagThread']
 <script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
 <script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
 
-<!-- Controllo cookie disabilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

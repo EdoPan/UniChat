@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 11:40:33
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 11:34:01
          compiled from "smarty-dir\templates\recupero-password.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:15149743026185471d2b71f5-85161802%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'b80972bd4bfb04e2acf721582c16c88a7dfcce3d' => 
     array (
       0 => 'smarty-dir\\templates\\recupero-password.tpl',
-      1 => 1636885985,
+      1 => 1636626733,
       2 => 'file',
     ),
   ),
@@ -54,8 +54,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
-
-    <!-- Controllo JS disattivato.-->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -82,7 +80,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                                 <!-- Form di recupero account -->
                                 <form class="user" method="post" action="/UniChat/utenti/recuperoPassword">
 
-                                    <!-- Visualizzazione messaggio di conferma o errore -->
                                     <?php if ($_smarty_tpl->tpl_vars['messaggio']->value==true){?>
                                         <div class="alert alert-<?php echo $_smarty_tpl->tpl_vars['colore']->value;?>
  alert-dismissible fade show" role="alert">
@@ -130,7 +127,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                                     <?php }?>
                                     <!-- Fine messaggio errore -->
 
-                                    <!-- Inserisci email -->
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
@@ -183,7 +179,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
-<!-- Controllo cookie disabilitati -->
 <script>
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

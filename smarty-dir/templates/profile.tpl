@@ -47,11 +47,13 @@
 
         <!-- Menu laterale categorie -->
         <li class="nav-item active">
+
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
+
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
@@ -63,6 +65,7 @@
                     {/foreach}
                 </div>
             </div>
+
         </li>
 
 
@@ -123,11 +126,13 @@
                             <input type="search" name="testoricerca" id="testo-ricerca"
                                    class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
+
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
+
                         </div>
                     </form>
 
@@ -141,9 +146,11 @@
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
+
                             <button class="btn btn-primary dropdown-toggle" type="button" id="ricerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filtra
                             </button>
+
                             <div class="dropdown-menu animated&#45;&#45 fade-in" aria-labelledby="ricerca" style="">
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
@@ -164,6 +171,7 @@
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
+
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
@@ -181,11 +189,13 @@
                                     <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
+
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -287,13 +297,15 @@
 
                             <!-- Titolo Contenitore -->
                             <div class="card-header">Immagine di Profilo</div>
+
+                            <!-- Contenitore immagine profilo -->
                             <div class="card-body text-center">
 
-                                <!-- Immagine profilo -->
                                 <img class="img-account-profile mb-2" src="data:{$tipo};base64,{$immagine}"
                                      alt="" style="max-width: 100%">
 
                             </div>
+
                         </div>
                     </div>
 
@@ -301,22 +313,27 @@
                     <div class="col-xl-8">
                         <div class="card mb-4">
 
-                            <!-- Titolo contenitore -->
+                            <!-- Titolo -->
                             <div class="card-header">Dettagli account</div>
+
                             <div class="card-body">
 
                                 <!-- Informazioni utente -->
                                 <form>
 
+                                    <!-- Nome Utente -->
                                     <h5 class="text-primary mb-1">Nome:</h5>
                                     <h6 class="text-dark mb-4">{$nomeUtente}</h6>
 
+                                    <!-- Cognome Utente -->
                                     <h5 class="text-primary mb-1">Cognome:</h5>
                                     <h6 class="text-dark mb-4">{$cognomeUtente}</h6>
 
+                                    <!-- Email Utente -->
                                     <h5 class="text-primary mb-1">Email:</h5>
                                     <h6 class="text-dark mb-4">{$emailUtente}</h6>
 
+                                    <!-- Corso di Studio Utente -->
                                     <h5 class="text-primary mb-1">Corso di Studio:</h5>
                                     <h6 class="text-dark mb-4">{$corsoUtente}</h6>
 
@@ -389,6 +406,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per verificare se i cookie sono abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

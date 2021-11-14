@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 11:24:29
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:06:07
          compiled from "smarty-dir\templates\pagina-creazione-thread.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:18003090506189322ba030a8-62366755%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '7fe033bb2ab45f621643d51896a349ad6d9ac8ae' => 
     array (
       0 => 'smarty-dir\\templates\\pagina-creazione-thread.tpl',
-      1 => 1636885468,
+      1 => 1636894606,
       2 => 'file',
     ),
   ),
@@ -386,6 +386,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                 <button class="btn btn-secondary btn-user btn-block"
                                         type="button" id="custom-button"><i class="fas fa-upload pr-2" aria-hidden="true"></i>
                                     Inserisci allegati</button>
+
                                 <span style="display: block; position: relative; text-align: center;" id="custom-text">Nessun allegato caricato</span><br><br>
 
                             </div>

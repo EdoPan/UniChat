@@ -11,9 +11,9 @@ class CGestioneThreads
     /**
      * @throws ValidationException
      * Metodo responsabile della creazione di un thread. Recupera i valori passati dall'utente nelle form e salva
-     * il nuovo thread nel DB. Se l'operazione va a buon fine verremo reindirizzati sulla pagina del thread
-     * appena creato e visualizzeremo un alert di successo altrimenti verremo reindirizzati sulla pagina
-     * della categoria dove si intendeva pubblicare il thread e visualizzeremo un messaggio d'errore.
+     * il nuovo thread nel DB. Se l'operazione va a buon fine verremo reindirizzati sulla pagina della categoria dove
+     * è stato appena pubblicato il Thread e visualizzeremo un messaggio di conferma. Se qualcosa dovesse andare storto
+     * invece visualizzeremo un messaggio d'errore.
      */
     public function creaThread(int $categoriaID): void {
 
@@ -113,8 +113,8 @@ class CGestioneThreads
 
     /**
      * Metodo responsabile della pubblicazione di una risposta sotto un thread. Recupera i valori inseriti dall'utente
-     * nelle form, crea la risposta e la salva nel DB. Se l'operazione va a buon fine visualizzeremo un alert di successo altrimenti
-     * visualizzeremo un alert di errore.
+     * nelle form, crea la risposta e la salva nel DB. Se l'operazione va a buon fine visualizzeremo un messaggio di conferma
+     * altrimenti visualizzeremo un messaggio di errore.
      */
     public function rispondiThread(): void {
 
@@ -205,7 +205,7 @@ class CGestioneThreads
      * Metodo responsabile della visualizzazione di uno specifico thread in base al suo id. Il metodo imposterà tutte
      * le componenti visualizzate nella schermata verificando in oltre se l'utente è abilitato alla visualizzazione di
      * determinati elementi, come ad esempio i cestini di eliminazione (thread/risposta) o la form per l'invio
-     * della risposta. Se per qualche motivo il thread non dovesse essere trovato a quel punto l'utente verrà
+     * della risposta. Se per qualche motivo il thread non dovesse essere trovato a quel punto l'utente sarà
      * reindirizzato sulla pagina di errore dedicata (404 NOT FOUND).
      */
     public function visualizzaThread(int $threadID): void {
@@ -249,6 +249,7 @@ class CGestioneThreads
 
                     $vPage->setMenuLeft($categorie);
                     $vPage->setBottoneFiltra($categorie);
+                    $vPage->setMenuUtente($user, false);
 
 
 
@@ -257,11 +258,12 @@ class CGestioneThreads
                      */
                     if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) == true) {
 
+                        $vPage->setMenuUtente($user, true);
                         $vThread->setBottoniElimina(true);
                     }
 
                     /*
-                     * Condizione per utente Moderatore e Admin (Visualizza bottone elimina thread/risposta)
+                     * Condizione per utente Moderatore (Visualizza bottone elimina thread/risposta)
                      */
                     if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
 
@@ -277,7 +279,6 @@ class CGestioneThreads
                     }
 
                     $vThread->setFormRisposta(true);
-                    $vPage->setMenuUtente($user, false);
                     $vThread->setBottoniValutazione(true, null);
                     $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
 
@@ -297,16 +298,16 @@ class CGestioneThreads
                 }
 
                 /*
-                 * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa dell'alert
-                 * con l'eventuale messaggio di conferma o errore.
+                 * Condizione per passare i valori alla variabile smarty $messaggio che gestisce la comparsa del
+                 * messaggio di conferma o errore.
                  */
                 if (func_num_args() == 2) {
                     if (func_get_arg(1) == "conferma") {
-                        $vThread->setMessaggio(true, VCategoria::SUCCESS, 'success');
+                        $vThread->setMessaggio(true, VThread::SUCCESS, 'success');
                     } else if (func_get_arg(1) == "errore") {
-                        $vThread->setMessaggio(true, VCategoria::ERROR, 'danger');
+                        $vThread->setMessaggio(true, VThread::ERROR, 'danger');
                     } else {
-                        $vThread->setMessaggio(false, VCategoria::NULLA, null);
+                        $vThread->setMessaggio(false, VThread::NULLA, null);
                     }
                 } else {
 
@@ -390,6 +391,10 @@ class CGestioneThreads
 
                 }
 
+            } else {
+
+                header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
+
             }
 
         }
@@ -452,6 +457,11 @@ class CGestioneThreads
                     header("Location: /UniChat/threads/visualizzaThread/$threadID");
 
                 }
+
+            } else {
+
+                header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
+
             }
 
         }
@@ -462,15 +472,7 @@ class CGestioneThreads
 
     /**
      * @param int $numeroPagina
-     * Metodo per la ricerca di threads nel sito. Vengono recuperati i valori inseriti nelle form
-     * dall'utente, successivamente vengono recuperati tutti i thread che hanno un match con le parole inserite
-     * dall'utente e con l'eventuale categoria di filtraggio selezionata. In seguito l'utente verrà reindirizzato
-     * alla schermata di ricerca dedicata.
-     *
-     * N.B.
-     * Il metodo prende in ingresso il numero della pagina in quanto verrà richiamato
-     * a ogni passaggio da una pagina all'altra poiché pagina dopo pagina dovranno essere caricati
-     * i successivi (o precedenti) 6 thread.
+     * IL COMMENTO DEVE ESSERE DI ANTONIO
      */
     public function ricerca(int $numeroPagina): void {
 
@@ -519,14 +521,14 @@ class CGestioneThreads
 
                     if (isset($categoriaID)) {
 
-                        /**
+                        /*
                          * Ricerca in base al titolo e rispetto ad una categoria.
                          */
                         $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO_CATEGORIE, $titoloCercato, $categoriaID, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
                         $numeroThreads = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_SEARCH, $categoriaID, $titoloCercato);
                     } else {
 
-                        /**
+                        /*
                          * Ricerca in base al titolo e rispetto a tutte le categorie.
                          */
                         $threads = $pm->ricercaThreads(FPersistentManager::SEARCH_TYPE_TITOLO, $titoloCercato, null, $rigaDiPartenza, VRicerca::NUMERO_THREAD_PER_PAGINA);
@@ -548,7 +550,7 @@ class CGestioneThreads
 
                     } else {
 
-                        /**
+                        /*
                          * Se non si riescono a recuperare i threads e il numero di threads ottenuti e se in particolare
                          * risulta che l'utente ha impostato una categoria di ricerca, ma la categoria non viene recuperata
                          * allora vuol dire che la base dati non è raggiungibile, quindi viene mostrata la pagina di errore.
@@ -562,7 +564,7 @@ class CGestioneThreads
 
                     if (array_key_exists('categoriaID', $valori) && $valori['categoriaID'] != 0) {
 
-                        /**
+                        /*
                          * Se l'utente effettua una ricerca senza testo, ma selezionando una categoria allora si viene
                          * riamdanti alla pagina della categoria selezionata.
                          */
@@ -571,7 +573,7 @@ class CGestioneThreads
 
                     } else {
 
-                        /**
+                        /*
                          * Se l'utente sottomette al server una ricerca senza testo e senza specificare una categoria
                          * allora vengono visualizzati tutti i thread.
                          */
@@ -585,7 +587,7 @@ class CGestioneThreads
                             $vRicerca->showRicerca();
                         } else {
 
-                            /**
+                            /*
                              * Se non si riescono a recuperare i dati allora vuol dire che la base dati non è raggiungibile,
                              * quindi viene mostrata la pagina di errore.
                              */
@@ -597,7 +599,7 @@ class CGestioneThreads
                 }
             } catch (ValidationException $e) {
 
-                /**
+                /*
                  * Se si hannno problemi con la validazione dei dati presenti nella base dati vuol dire che i dati in
                  * essa presenti sono stati manomessi o che il codice di validazione è stato modificato ed i dati presenti
                  * nella base dati non sono più validi.
@@ -610,7 +612,7 @@ class CGestioneThreads
 
         } else {
 
-            /**
+            /*
              * Se non si riescono a recuperare le categorie allora vuol dire che la base dati non è raggiungibile,
              * quindi viene mostrata la pagina di errore.
              */

@@ -1,9 +1,16 @@
 <?php
 require_once __DIR__ . "\..\utility.php";
 
+/**
+ * Classe View per le risposte dei Thread.
+ */
 class VRisposta
 {
 
+    /**
+     * Metodo per il recupero dei valori passati dall'utente nelle POST.
+     * @return array|null
+     */
     public function getValori(): ?array {
 
         $result = array();

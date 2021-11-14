@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 13:53:44
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:05:15
          compiled from "smarty-dir\templates\home.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:16780641426186697c03e093-22876535%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f7991df612003edf60b241ad3f9c3fa7391bdcf9' => 
     array (
       0 => 'smarty-dir\\templates\\home.tpl',
-      1 => 1636634858,
+      1 => 1636894686,
       2 => 'file',
     ),
   ),
@@ -179,11 +179,13 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                             <input type="search" name="testoricerca" id="testo-ricerca"
                                    class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
+
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
+
                         </div>
                     </form>
 
@@ -197,9 +199,11 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
+
                             <button class="btn btn-primary dropdown-toggle" type="button" id="ricerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filtra
                             </button>
+
                             <div class="dropdown-menu animated&#45;&#45 fade-in" aria-labelledby="ricerca" style="">
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
@@ -226,6 +230,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
+
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
@@ -243,11 +248,13 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
+
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -266,69 +273,69 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                             <?php if ($_smarty_tpl->tpl_vars['loggato']->value){?>
 
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_smarty_tpl->tpl_vars['nome']->value;?>
  <?php echo $_smarty_tpl->tpl_vars['cognome']->value;?>
 </span>
-                                <img class="img-profile rounded-circle"
-                                     src="data:<?php echo $_smarty_tpl->tpl_vars['iconaTipo']->value;?>
+                                    <img class="img-profile rounded-circle"
+                                         src="data:<?php echo $_smarty_tpl->tpl_vars['iconaTipo']->value;?>
 ;base64,<?php echo $_smarty_tpl->tpl_vars['iconaImmagine']->value;?>
 ">
-                            </a>
-
-
-                            <!-- Tendina -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-
-
-                                <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profilo
                                 </a>
 
-                                <?php if ($_smarty_tpl->tpl_vars['controlpanel']->value){?>
 
-                                    <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
-                                        <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Pannello di Controllo
+                                <!-- Tendina -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
+
+
+                                    <a class="dropdown-item" href="/UniChat/Utenti/editShowPersonalProfile">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profilo
                                     </a>
 
-                                <?php }?>
+                                    <?php if ($_smarty_tpl->tpl_vars['controlpanel']->value){?>
+
+                                        <a class="dropdown-item" href="/UniChat/Admin/visualizzaPannelloDiControllo">
+                                            <i class="fas fa-tools fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Pannello di Controllo
+                                        </a>
+
+                                    <?php }?>
 
 
 
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Logout
+                                    </a>
+                                </div>
 
                             <?php }else{ ?>
 
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <button class="btn btn-primary">Entra</button>
-                            </a>
-
-                            <!-- Tendina -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-
-
-                                <a class="dropdown-item" href="/UniChat/Utenti/login">
-                                    <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Login
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-primary">Entra</button>
                                 </a>
 
-                                <a class="dropdown-item" href="/UniChat/utenti/registrazione">
-                                    <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Registrazione
-                                </a>
+                                <!-- Tendina -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="userDropdown">
 
 
-                                <?php }?>
+                                    <a class="dropdown-item" href="/UniChat/Utenti/login">
+                                        <i class="fas fa-sign-in-alt  fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Login
+                                    </a>
+
+                                    <a class="dropdown-item" href="/UniChat/utenti/registrazione">
+                                        <i class="fas fa-user-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Registrazione
+                                    </a>
+
+
+                            <?php }?>
 
 
                         </li>
@@ -341,9 +348,9 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
             <!-- Inizio del Page Content -->
             <div class="container-fluid">
 
-                <!-- Messaggio -->
-
+                <!-- Messaggio Errore/Conferma -->
                 <?php if ($_smarty_tpl->tpl_vars['messaggio']->value==true){?>
+
                     <div class="alert alert-<?php echo $_smarty_tpl->tpl_vars['colore']->value;?>
  alert-dismissible fade show" role="alert">
                         <?php echo $_smarty_tpl->tpl_vars['testo']->value;?>
@@ -354,7 +361,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     </div>
 
                 <?php }?>
-
                 <!-- Fine messaggio -->
 
                 <!-- Intestazione della pagina -->
@@ -368,18 +374,19 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <!-- Chat -->
                     <div class="col-lg">
                         <div class="card border-bottom-info mb-2">
-                            <div class="card-header bg-info" >
 
-                                <!-- Titolo e icona contenitore -->
+                            <!-- Header Box Chat -->
+                            <div class="card-header bg-info" >
 
                                 <div class="row justify-content-center" >
 
+                                    <!-- Icona Chat -->
                                     <img src="/UniChat/Immagini/icona_chat.png" style="max-width: 64px; margin-right: 10px">
+
+                                    <!-- Titolo -->
                                     <h4 class="py-0 text-white mt-3"><b>Chat</b></h4>
 
                                 </div>
-
-
 
                             </div>
 
@@ -391,30 +398,32 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                                 </div>
                                 <!-- Fine contenitore scrollable -->
+
                                 <form>
                                     <input type="text" hidden name="ultimoMessaggio" id="ultimoMessaggio"/>
                                 </form>
 
                                 <?php if ($_smarty_tpl->tpl_vars['log']->value==true){?>
-                                <!-- Form invio messaggio -->
-                                <form class="row mb-2">
+                                    <!-- Form invio messaggio -->
+                                    <form class="row mb-2">
 
-                                    <!-- Inserimento testo -->
-                                    <div class="col-sm-9 mb-3 mb-sm-0">
-                                        <input type="text" autocomplete="off" class="form-control" id="usrmsg" placeholder="Messaggio">
-                                    </div>
+                                        <!-- Inserimento testo -->
+                                        <div class="col-sm-9 mb-3 mb-sm-0">
+                                            <input type="text" autocomplete="off" class="form-control" id="usrmsg" placeholder="Messaggio">
+                                        </div>
 
-                                    <!-- Pulsante invio -->
-                                    <div class="col-sm-3">
-                                        <button type="submit" class="btn btn-success btn-icon-split" id="submitmsg">
-                                            <span class="icon text-white-50">
-                                                <i class="fas fa-arrow-right"></i>
-                                            </span>
-                                            <span class="text">Invia</span>
-                                        </button>
-                                    </div>
-                                </form>
-                                <!-- Fine form invio messaggio -->
+                                        <!-- Pulsante invio -->
+                                        <div class="col-sm-3">
+                                            <button type="submit" class="btn btn-success btn-icon-split" id="submitmsg">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </span>
+                                                <span class="text">Invia</span>
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                    <!-- Fine form invio messaggio -->
                                 <?php }?>
 
                             </div>
@@ -429,13 +438,16 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <div class="col-lg">
 
                         <div class="card mb-4 border-bottom-primary">
-                            <div class="card-header bg-primary" >
 
-                                <!-- Titolo e icona contenitore -->
+                            <!-- Header Box Thread Popolari -->
+                            <div class="card-header bg-primary" >
 
                                 <div class="row justify-content-center" >
 
+                                    <!-- Icona Thread Popolari -->
                                     <img src="/UniChat/Immagini/post_popolari.png" style="max-width: 64px; margin-right: 10px">
+
+                                    <!-- Titolo -->
                                     <h4 class="py-0 text-white mt-3"><b>Thread Popolari</b></h4>
 
                                 </div>
@@ -445,7 +457,6 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                             <div class="card-body">
 
                                 <!-- Thread più votati -->
-
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
@@ -457,10 +468,10 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     <div class="collapse show" id="piuvotati" style="">
                                         <div class="card-body">
 
-                                            <!--Carousel Wrapper-->
+                                            <!-- Carousel Wrapper -->
                                             <div id="multi-item-piuvotati" class="carousel slide carousel-multi-item" data-ride="carousel">
 
-                                                <!--Controls-->
+                                                <!-- Controls -->
                                                 <div class="row justify-content-center mb-3">
 
                                                     <div class="controls-top">
@@ -468,6 +479,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                                         <a class="btn-floating" href="#multi-item-piuvotati" data-slide="next"><i class="fas fa-chevron-right"></i></a>
                                                     </div>
                                                     <!--/.Controls-->
+
                                                 </div>
 
 
@@ -506,8 +518,6 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                                                     <?php }} ?>
 
 
-
-
                                                 </div>
                                                 <!-- Fine contenitore slides -->
 
@@ -518,11 +528,11 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
 
 
                                 </div>
+                                <!-- Fine thread più votati-->
 
-                                <!-- fine thread più votati-->
+
 
                                 <!-- Thread con più risposte -->
-
                                 <div class="card shadow mb-4">
 
                                     <!-- Titolo contenitore -->
@@ -534,10 +544,10 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                                     <div class="collapse show" id="piurisposte" style="">
                                         <div class="card-body">
 
-                                            <!--Carousel Wrapper-->
+                                            <!-- Carousel Wrapper -->
                                             <div id="multi-item-piurisposte" class="carousel slide carousel-multi-item" data-ride="carousel">
 
-                                                <!--Controls-->
+                                                <!-- Controls -->
                                                 <div class="row justify-content-center mb-3">
 
                                                     <div class="controls-top">
@@ -545,6 +555,7 @@ $_smarty_tpl->tpl_vars['i']->first = $_smarty_tpl->tpl_vars['i']->iteration == 1
                                                         <a class="btn-floating" href="#multi-item-piurisposte" data-slide="next"><i class="fas fa-chevron-right"></i></a>
                                                     </div>
                                                     <!--/.Controls-->
+
                                                 </div>
 
                                                 <!-- Inizio contenitore slides -->
@@ -585,7 +596,6 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
                                     </div>
 
                                 </div>
-
                                 <!-- Fine Thread con più risposte -->
 
                             </div>
@@ -625,7 +635,8 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- Logout Modal-->
+
+        <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -647,11 +658,6 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
 
 
 
-
-
-
-
-
 <!-- Bootstrap core JavaScript-->
 <script src="/UniChat/Template/vendor/jquery/jquery.min.js"></script>
 <script src="/UniChat/Template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -669,6 +675,7 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
 <script src="/UniChat/Template/js/demo/chart-area-demo.js"></script>
 <script src="/UniChat/Template/js/demo/chart-pie-demo.js"></script>
 
+<!-- Script per verificare se i cookie sono abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
@@ -842,6 +849,8 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
     }
 
 </script>
+
+
 <script type="text/javascript">
 
     /**
@@ -872,6 +881,7 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
 
     }
 </script>
+
 </body>
 
 </html><?php }} ?>

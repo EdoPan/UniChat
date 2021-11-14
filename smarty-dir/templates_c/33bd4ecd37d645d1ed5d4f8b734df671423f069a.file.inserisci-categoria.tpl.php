@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 11:01:48
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:06:21
          compiled from "smarty-dir\templates\inserisci-categoria.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:20579440526189329c5d8657-32719891%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '33bd4ecd37d645d1ed5d4f8b734df671423f069a' => 
     array (
       0 => 'smarty-dir\\templates\\inserisci-categoria.tpl',
-      1 => 1636884098,
+      1 => 1636894606,
       2 => 'file',
     ),
   ),
@@ -61,6 +61,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <!-- Custom styles for this template-->
     <link href="/UniChat/Template/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Controllo JS disattivato.-->
     <noscript><meta http-equiv="refresh" content="0;URL=/UniChat/client/javascriptDisabilitati"></noscript>
 
 </head>
@@ -345,7 +346,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                 <h1 class="h3 mb-4 text-gray-800">Crea una categoria</h1>
 
 
-                <!-- Box creazione thread -->
+                <!-- Box creazione Categoria -->
                 <div class="card shadow mb-4 mr-5 ml-5">
 
 

@@ -46,11 +46,13 @@
 
         <!-- Menu laterale categorie -->
         <li class="nav-item active">
+
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
+
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
@@ -101,9 +103,11 @@
                         <div class="input-group">
 
                             <div class="dropdown">
+
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius: 5px 0px 0px 5px">
                                     Filtra
                                 </button>
+
                                 <div class="dropdown-menu animated&#45;&#45;fade-in" aria-labelledby="dropdownMenuButton" style="">
 
                                     <label class="filtro-categorie dropdown-item" id="0-categoria" onclick="seleziona(this)">TUTTE</label>
@@ -123,11 +127,13 @@
                             <input type="search" name="testoricerca" id="testo-ricerca"
                                    class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
+
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
+
                         </div>
                     </form>
 
@@ -164,6 +170,7 @@
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
+
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
@@ -173,6 +180,7 @@
 
                         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                              aria-labelledby="searchDropdown">
+
                             <form method="get" action="/UniChat/threads/ricerca/1" class="form-inline mr-auto w-100 navbar-search">
                                 <div class="input-group">
 
@@ -181,11 +189,13 @@
                                     <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
+
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -237,6 +247,7 @@
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
+
                             </div>
 
                             {else}
@@ -276,8 +287,7 @@
             <div class="container-fluid">
 
 
-                <!-- Messaggio -->
-
+                <!-- Messaggio Errore/Conferma -->
                 {if $messaggio == true}
                     <div class="alert alert-{$colore} alert-dismissible fade show" role="alert">
                         {$testo}
@@ -287,11 +297,10 @@
                     </div>
 
                 {/if}
-
                 <!-- Fine messaggio -->
 
 
-                <!-- Barra di navigazione -->
+                <!-- Barra di navigazione (URL) -->
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/UniChat/home/visualizzaHome">Home</a></li>
@@ -306,21 +315,26 @@
                     <div class="card-header py-3">
 
                         <div class="row">
+
                             <div class="col" style="max-width: max-content">
 
+                                <!-- Immagine profilo autore -->
                                 <img src="data:{$tipo};base64,{$immagine}" alt="" style="max-width: 80px"> <br>
 
+                                <!-- Nome e cognome autore -->
                                 <h6 class="m-0 font-weight-normal text-dark"><a href="/UniChat/utenti/showProfile/{$idAutoreThread}">{$nomeAutoreThread} {$cognomeAutoreThread}</a></h6>
                             </div>
 
                             <div class="col-sm">
 
+                                <!-- Titolo Thread -->
                                 <h2 class="m-0 font-weight-bold text-primary" style="margin-bottom: 5px">{$titoloThread}</h2>
 
                                 <!-- Data pubblicazione Thread -->
                                 <div class="py-0">
                                     <span><b>Pubblicato il:</b> {$dataThread}</span>
                                 </div>
+
                             </div>
 
                             <div class="col">
@@ -329,44 +343,52 @@
 
                                     <div class="col">
 
+                                        <!-- Valutazione Thread -->
                                         <div class="text font-weight-bold text-primary" style="text-align: right; margin-top: 10px; padding-right: 5px;
                       margin-right: -10px; border-right: 2px solid #e3e6f0">
                                             <a>{$valutazioneThread}<i class="fas fa-star"></i></a>
                                         </div>
+
                                     </div>
 
 
 
                                     {if $loggato2 eq true}
-                                    <div class="col" style="max-width: max-content" >
+
                                         <!-- Pulsanti valutazione -->
-                                        <a href="/UniChat/threads/valutaThread/1/{$idThread}">
-                                            <button id="bottoneInSu" class="btn btn-icon btn-success" onclick="coloraBottoneInSu()">
-                                                <i class="fas fa-thumbs-up"></i>
-                                            </button>
-                                        </a>
+                                        <div class="col" style="max-width: max-content" >
 
-                                        <a href="/UniChat/threads/valutaThread/-1/{$idThread}">
-                                            <button id="bottoneInGiu" class="btn btn-icon btn-danger" onclick="coloraBottoneInGiu()">
-                                                <i class="fas fa-thumbs-down"></i>
-                                            </button>
-                                        </a>
+                                            <!-- Pulsante valutazione positiva -->
+                                            <a href="/UniChat/threads/valutaThread/1/{$idThread}">
+                                                <button id="bottoneInSu" class="btn btn-icon btn-success" onclick="coloraBottoneInSu()">
+                                                    <i class="fas fa-thumbs-up"></i>
+                                                </button>
+                                            </a>
 
-                                    </div>
+                                            <!-- Pulsante valutazione negativa -->
+                                            <a href="/UniChat/threads/valutaThread/-1/{$idThread}">
+                                                <button id="bottoneInGiu" class="btn btn-icon btn-danger" onclick="coloraBottoneInGiu()">
+                                                    <i class="fas fa-thumbs-down"></i>
+                                                </button>
+                                            </a>
+
+                                        </div>
+
                                     {/if}
 
 
                                     {if $moderatoreAdmin eq true}
-                                    <div class="col" style="max-width: max-content; margin-left:-15px" >
 
+                                        <div class="col" style="max-width: max-content; margin-left:-15px">
 
-                                        <!-- Pulsante eliminazione thread -->
-                                        <a href="/UniChat/threads/rimuoviThread/{$idThread}" class="btn btn-danger btn-icon-split float-lg-right" >
-                                          <span class="icon text-white-50">
-                                              <i class="fas fa-trash text-white"></i>
-                                          </span>
-                                        </a>
-                                    </div>
+                                            <!-- Pulsante eliminazione Thread -->
+                                            <a href="/UniChat/threads/rimuoviThread/{$idThread}" class="btn btn-danger btn-icon-split float-lg-right" >
+                                              <span class="icon text-white-50">
+                                                  <i class="fas fa-trash text-white"></i>
+                                              </span>
+                                            </a>
+                                        </div>
+
                                     {/if}
 
 
@@ -415,62 +437,64 @@
 
 
                         {if $loggato1 eq true}
-                        <!-- Form invio messaggio -->
-                        <form method="post" action="/UniChat/threads/rispondiThread" class="row mb-2 py-3">
+                            <!-- Form invio messaggio -->
+                            <form method="post" action="/UniChat/threads/rispondiThread" class="row mb-2 py-3">
 
-                            <!-- Inserimento testo -->
-                            <div class="col-sm-9 mb-3 mb-sm-0">
-                                <input type="text" autocomplete="off" name="testo" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
-                                <input type="text" name="threadID" hidden value="{$idThread}">
-                            </div>
+                                <!-- Inserimento testo -->
+                                <div class="col-sm-9 mb-3 mb-sm-0">
+                                    <input type="text" autocomplete="off" name="testo" class="form-control" id="messaggio" placeholder="Inserisci una risposta...">
+                                    <input type="text" name="threadID" hidden value="{$idThread}">
+                                </div>
 
-                            <!-- Pulsante invio -->
-                            <div class="col-sm-3">
-                                <button type="submit" class="btn btn-success btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-arrow-right"></i>
-                                    </span>
-                                    <span class="text">Invia</span>
-                                </button>
-                            </div>
-                        </form>
-                        <!-- Fine form invio messaggio -->
+                                <!-- Pulsante invio -->
+                                <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                        <span class="text">Invia</span>
+                                    </button>
+                                </div>
+
+                            </form>
+                            <!-- Fine form invio messaggio -->
                         {/if}
 
 
-                        <!-- Ciclo recupero messaggi -->
+                        <!-- Ciclo recupero risposte -->
                         <div class="card-body" style="height: 800px; line-height: 3em;overflow-y:scroll">
 
                             {foreach from=$risposteThread item=risposta}
-                            <!-- Messaggio -->
-                            <div class="card shadow mb-2">
+                                <!-- Risposta -->
+                                <div class="card shadow mb-2">
 
-                                <!-- Utente -->
-                                <div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary"><a href="/UniChat/utenti/showProfile/{$risposta->getAutoreRisposta()->getId()}">{$risposta->getAutoreRisposta()->getNome()}
-                                            {$risposta->getAutoreRisposta()->getCognome()}</a></h6>
+                                    <!-- Utente -->
+                                    <div class="card-header mr-0 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary"><a href="/UniChat/utenti/showProfile/{$risposta->getAutoreRisposta()->getId()}">{$risposta->getAutoreRisposta()->getNome()}
+                                                {$risposta->getAutoreRisposta()->getCognome()}</a></h6>
 
-                                    {if $moderatoreAdmin eq true}
-                                    <!-- Pulsante eliminazione risposta -->
-                                    <a href="/UniChat/threads/rimuoviRisposta/{$risposta->getId()}/{$idThread}" class="btn btn-danger btn-circle btn-sm">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                    {/if}
+                                        {if $moderatoreAdmin eq true}
+                                            <!-- Pulsante eliminazione risposta -->
+                                            <a href="/UniChat/threads/rimuoviRisposta/{$risposta->getId()}/{$idThread}" class="btn btn-danger btn-circle btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {/if}
 
 
-                                </div>
-
-                                <!-- Testo -->
-                                <div class="card-body py-2">{$risposta->getTesto()}</div>
-
-                                <!-- Data invio messaggio -->
-                                <div class="container my-auto py-1">
-                                    <div class="copyright text-center my-auto">
-                                        <span>{$risposta->getData()}</span>
                                     </div>
+
+                                    <!-- Testo -->
+                                    <div class="card-body py-2">{$risposta->getTesto()}</div>
+
+                                    <!-- Data invio messaggio -->
+                                    <div class="container my-auto py-1">
+                                        <div class="copyright text-center my-auto">
+                                            <span>{$risposta->getData()}</span>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
-                            <!-- Fine messaggio -->
+                                <!-- Fine messaggio -->
                             {/foreach}
 
                         </div>
@@ -621,6 +645,7 @@
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per verificare se i cookie sono abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');

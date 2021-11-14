@@ -33,12 +33,13 @@
 
     <div class="container-fluid">
 
-        <!-- Messaggio di errore (404 Error) -->
+        <!-- Messaggio di errore -->
         <div class="text-center">
             <div class="error mx-auto" data-text="{$codiceErrore}">{$codiceErrore}</div>
             <p class="lead text-gray-800 mb-5">{$tipoErrore}</p>
             <a href="/UniChat/home/visualizzaHome">&larr; Torna alla Home</a>
         </div>
+
     </div>
 
 </div>
@@ -70,6 +71,13 @@
 
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+<!-- Script per verificare se i cookie sono abilitati -->
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 </body>
 

@@ -19,10 +19,13 @@ class VHome
     const ERROR = "OPS.. sembra si sia verificato un errore.";
 
     /**
-     * Costante per non visualizzare l'alert.
+     * Costante per non visualizzare il messaggio di errore.
      */
     const NULLA = "";
 
+    /**
+     * Costante per il numero massimo di threads da visualizzare nel box thread più polari.
+     */
     const NUMERO_MAX_THREADS = 3;
 
     private Smarty $smarty;
@@ -71,30 +74,47 @@ class VHome
 
     /**
      * @param string $tipologiaMessaggio
-     * Metodo responsabile dell'assegnazione della variabile richiamata in home.tpl per la visualizzazione di un alert
-     * con un messaggio di conferma o errore (questo metodo viene richiamato solo per l'eliminazione
-     * dei messaggi della chat).
+     * Metodo responsabile dell'assegnazione dei valori e della visualizzazione del tipo di messaggio (Errore/Conferma)
+     * e del relativo colore ('danger'/'success').
      */
     public function setMessaggio(bool $messaggio, string $tipologiaMessaggio, ?string $colore): void {
         $this->smarty->assign('testo', $tipologiaMessaggio);
         $this->smarty->assign('messaggio', $messaggio);
-        $this->smarty->assign('colore', $colore);    }
+        $this->smarty->assign('colore', $colore);
+    }
 
+
+    /**
+     * Metodo per il recupero del messaggio inserito nella form dall'utente.
+     * @return string|null
+     */
     public function getTestoNuovoMessaggio(): ?string
     {
         if ($_POST['text'] != "") {
+
             return $_POST['text'];
+
         } else {
+
             return null;
+
         }
     }
 
+    /**
+     * Metodo per il recupero dell'id dell'ultimo messaggio inviato.
+     * @return int|null
+     */
     public function getIdUltimoMessaggio(): ?int
     {
         if ($_POST['idMessage'] != "") {
+
             return (int)$_POST['idMessage'];
+
         } else {
+
             return null;
+
         }
     }
 

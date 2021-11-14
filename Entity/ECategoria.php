@@ -4,7 +4,7 @@
     require_once __DIR__ . "\..\utility.php";
 
 /**
- * ECategoria permette di instanziare oggetti responsabili del mantenimento dei valori delle categoria dei thread.
+ * ECategoria permette d'instanziare oggetti responsabili del mantenimento dei valori delle categorie dei thread.
  */
 class ECategoria implements JsonSerializable {
 
