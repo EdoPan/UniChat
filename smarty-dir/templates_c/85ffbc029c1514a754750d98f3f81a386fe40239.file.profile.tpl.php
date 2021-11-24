@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-11 17:56:08
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-24 00:54:30
          compiled from "smarty-dir\templates\profile.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:18693435576186999acde8b0-74464491%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '85ffbc029c1514a754750d98f3f81a386fe40239' => 
     array (
       0 => 'smarty-dir\\templates\\profile.tpl',
-      1 => 1636627400,
+      1 => 1637711071,
       2 => 'file',
     ),
   ),
@@ -89,11 +89,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
         <!-- Menu laterale categorie -->
         <li class="nav-item active">
+
             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
                aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Categorie</span>
             </a>
+
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
@@ -111,6 +113,7 @@ $_smarty_tpl->tpl_vars['c']->_loop = true;
                     <?php } ?>
                 </div>
             </div>
+
         </li>
 
 
@@ -177,11 +180,13 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                             <input type="search" name="testoricerca" id="testo-ricerca"
                                    class="form-control bg-light border-0 small" placeholder="Cerca tra i thread..."
                                    aria-label="Search" aria-describedby="basic-addon2">
+
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
+
                         </div>
                     </form>
 
@@ -195,9 +200,11 @@ $_smarty_tpl->tpl_vars['categoria']->_loop = true;
                     <div class="dropdown">
 
                         <div class="nav-item dropdown no-arrow d-sm-none mt-3">
+
                             <button class="btn btn-primary dropdown-toggle" type="button" id="ricerca" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Filtra
                             </button>
+
                             <div class="dropdown-menu animated&#45;&#45 fade-in" aria-labelledby="ricerca" style="">
 
                                 <label class="dropdown-item" id="0cat" onclick="seleziona(this)">TUTTE</label>
@@ -224,6 +231,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
 
                     <li class="nav-item dropdown no-arrow d-sm-none">
+
                         <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-search fa-fw"></i>
@@ -241,11 +249,13 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                                     <input type="search" name="testoricerca" class="form-control bg-light border-0 small"
                                            placeholder="Cerca tra i thread..." aria-label="Search"
                                            aria-describedby="basic-addon2">
+
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-search fa-sm"></i>
                                         </button>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -351,15 +361,17 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 
                             <!-- Titolo Contenitore -->
                             <div class="card-header">Immagine di Profilo</div>
+
+                            <!-- Contenitore immagine profilo -->
                             <div class="card-body text-center">
 
-                                <!-- Immagine profilo -->
                                 <img class="img-account-profile mb-2" src="data:<?php echo $_smarty_tpl->tpl_vars['tipo']->value;?>
 ;base64,<?php echo $_smarty_tpl->tpl_vars['immagine']->value;?>
 "
                                      alt="" style="max-width: 100%">
 
                             </div>
+
                         </div>
                     </div>
 
@@ -367,25 +379,30 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
                     <div class="col-xl-8">
                         <div class="card mb-4">
 
-                            <!-- Titolo contenitore -->
+                            <!-- Titolo -->
                             <div class="card-header">Dettagli account</div>
+
                             <div class="card-body">
 
                                 <!-- Informazioni utente -->
                                 <form>
 
+                                    <!-- Nome Utente -->
                                     <h5 class="text-primary mb-1">Nome:</h5>
                                     <h6 class="text-dark mb-4"><?php echo $_smarty_tpl->tpl_vars['nomeUtente']->value;?>
 </h6>
 
+                                    <!-- Cognome Utente -->
                                     <h5 class="text-primary mb-1">Cognome:</h5>
                                     <h6 class="text-dark mb-4"><?php echo $_smarty_tpl->tpl_vars['cognomeUtente']->value;?>
 </h6>
 
+                                    <!-- Email Utente -->
                                     <h5 class="text-primary mb-1">Email:</h5>
                                     <h6 class="text-dark mb-4"><?php echo $_smarty_tpl->tpl_vars['emailUtente']->value;?>
 </h6>
 
+                                    <!-- Corso di Studio Utente -->
                                     <h5 class="text-primary mb-1">Corso di Studio:</h5>
                                     <h6 class="text-dark mb-4"><?php echo $_smarty_tpl->tpl_vars['corsoUtente']->value;?>
 </h6>
@@ -459,6 +476,7 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
 
+<!-- Script per verificare se i cookie sono abilitati -->
 <script type="text/javascript">
     if (navigator.cookieEnabled === false) {
         window.location.replace('/UniChat/client/cookieDisabilitati');
