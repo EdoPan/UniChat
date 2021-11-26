@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -8,10 +8,7 @@ require_once "VSmarty.php";
  */
 class VAmministrazione
 {
-    /**
-     * @var Smarty
-     */
-    private Smarty $smarty;
+    private $smarty;
 
     /**
      * Costante che indica il numero di utenti da visualizzare, volta per volta, nella pagina del pannello di controllo.

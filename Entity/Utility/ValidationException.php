@@ -14,12 +14,13 @@ class ValidationException extends Exception
     /**
      * Costante che indica il messaggio di errore ottenuto se si inserisce una email non istituzionale.
      */
-    const ERROR_EMAIL_MESSAGE = "L'email fornita non è quella istituzionale.";
+    //const ERROR_EMAIL_MESSAGE = "L'email fornita non è quella istituzionale.";
+    const ERROR_EMAIL_MESSAGE = "L'email non è valida.";
 
     /**
      * Costante che indica il messaggio di errore ottenuto se si inserisce una email non valida.
      */
-    const ERROR_EMAIL_LENGTH_MESSAGE = "L'email non è valida.";
+    //const ERROR_EMAIL_LENGTH_MESSAGE = "L'email non è valida.";
 
     /**
      * Costante che indica il messaggio di errore ottenuto se si inserisce una password che presenta caratteri non ammessi.
@@ -64,7 +65,7 @@ class ValidationException extends Exception
     /**
      * Costante che indica il codice di errore ottenuto se si inserisce una email non valida.
      */
-    const ERROR_EMAIL_LENGTH_CODE = 3;
+    //const ERROR_EMAIL_LENGTH_CODE = 3;
 
     /**
      * Costante che indica il codice di errore ottenuto se si inserisce una password che presenta caratteri non ammessi.

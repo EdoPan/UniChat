@@ -1,7 +1,7 @@
 <?php
 
     declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+    require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * ECategoria permette d'instanziare oggetti responsabili del mantenimento dei valori delle categorie dei thread.
@@ -12,19 +12,19 @@ class ECategoria implements JsonSerializable {
      * Identificativo dell'oggetto ECategoria.
      * @var int
      */
-    private int $id;
+    private  $id;
 
     /**
      * Nome della categoria.
      * @var string
      */
-    private string $nome;
+    private  $nome;
 
     /**
      * Icona della categoria.
      * @var array
      */
-    private array $icona = array(
+    private  $icona = array(
             "id"=> 0,
             "nome" => "",
             "dimensione" => "",
@@ -36,7 +36,7 @@ class ECategoria implements JsonSerializable {
      * Testo contenente la descrizione della categoria.
      * @var string
      */
-    private string $descrizione;
+    private  $descrizione;
 
     /**
      * @param int|null $id

@@ -39,7 +39,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -569,7 +569,7 @@
     /**
      * La funzione permette di richiedere al server un elenco di utenti o di categorie e poi li dispone sulla pagina.
      * Quali utenti/categorie visualizzare viene stabilito dal numero di pagina che viene passato come parametro.
-     * La funzione contatta il server all'URL: /UniChat/utenti/elencaUsers oppure /Unichat/categorie/elencaCategorie
+     * La funzione contatta il server all'URL: /utenti/elencaUsers oppure /categorie/elencaCategorie
      * mediante una richiesta HTTP POST.
      * Il corpo della richiesta contiene il numero di pagina.
      * Se la richiesta va a buon fine allora viene ripulita la sezione utenti/categorie della pagina e vengono poi
@@ -737,7 +737,7 @@
 
     /**
      * Recupera dal server le informazioni sul moderatore di una categoria di cui viene fornito in ingresso l'identificativo.
-     * La funzione contatta il server all'URL: /UniChat/categorie/visualizzaModeratoreCategoria ed esegue una richiesta HTTP POST.
+     * La funzione contatta il server all'URL: /categorie/visualizzaModeratoreCategoria ed esegue una richiesta HTTP POST.
      * @param categoriaID Identificativo della categoria di cui si vuole conoscere il moderatore.
      * @param posizione Indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
      */
@@ -760,7 +760,7 @@
 
     /**
      * Recupera dal server il numero di threads presenti in una categoria di cui viene fornito in ingresso l'identificativo.
-     * La funzione contatta il server all'URL: /UniChat/categorie/contaThreadsCategoria ed esegue una richiesta HTTP POST.
+     * La funzione contatta il server all'URL: /categorie/contaThreadsCategoria ed esegue una richiesta HTTP POST.
      * @param categoriaID Identificativo della categoria di cui si vuole conoscere il numero di threads.
      * @param posizione Indica la posizione nella sezione delle categorie, in cui si devono disporre le informazioni recuperate.
      */

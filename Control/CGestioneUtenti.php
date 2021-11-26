@@ -1,11 +1,11 @@
 <?php
 
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
-require_once __DIR__. "\..\lib\phpmailer\includes\PHPMailer.php";
-require_once __DIR__. "\..\lib\phpmailer\includes\SMTP.php";
-require_once __DIR__. "\..\lib\phpmailer\includes\Exception.php";
+require_once __DIR__. DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "phpmailer" . DIRECTORY_SEPARATOR . "includes" . DIRECTORY_SEPARATOR . "PHPMailer.php";
+require_once __DIR__. DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "phpmailer" . DIRECTORY_SEPARATOR . "includes" . DIRECTORY_SEPARATOR . "SMTP.php";
+require_once __DIR__. DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "phpmailer" . DIRECTORY_SEPARATOR . "includes" . DIRECTORY_SEPARATOR . "Exception.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -65,6 +65,7 @@ class CGestioneUtenti
         $mail->addAddress($ricevente);
 
         //Invio l'email
+
         if ($mail->send()) {
             $inviato=true;
         } else {
@@ -75,6 +76,21 @@ class CGestioneUtenti
         $mail->smtpClose();
 
         return $inviato;
+
+        /*
+        $mail = new PHPMailer(true);
+        $mail->isHTML(true);
+        $mail->From='unichat@altervista.org';
+        $mail->FromName='UniChat';
+        $mail->addAddress($ricevente);
+        $mail->Subject='Recupero password';
+        $mail->Body = "<h1>Recupero Password UniChat</h1></br><p>Ciao! La tua nuova password è: $nuovapassword </p>";
+        if ($mail->send()) {
+            return true;
+        } else {
+            return false;
+        }
+        */
 }
 
 
@@ -318,7 +334,7 @@ class CGestioneUtenti
             }
             //Se già loggato, l'utente viene reindirizzato verso la home
         } else {
-            header('/UniChat/');
+            header('Location: /UniChat');
         }
 
     }
@@ -401,7 +417,7 @@ class CGestioneUtenti
                                         $session = new USession();
                                         $session->setValue('user', $userLoggato);
 
-                                        header("Location: /UniChat/");
+                                        header("Location: /UniChat");
                                     } else {
 
                                         /**
@@ -490,7 +506,7 @@ class CGestioneUtenti
             $session->deleteSession();
         }
 
-        header('Location: /UniChat/');
+        header('Location: /UniChat');
 
     }
 

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe entity di Thread.
@@ -12,25 +12,25 @@ class EThread
      * Identificativo del thread.
      * @var int
      */
-    private int $id;
+    private  $id;
 
     /**
      * Titolo del thread.
      * @var string
      */
-    private string $titolo;
+    private  $titolo;
 
     /**
      * Testo del thread.
      * @var string
      */
-    private string $testo;
+    private  $testo;
 
     /**
      * Data e ora di creazione del thread.
      * @var string|false
      */
-    private string $data;
+    private  $data;
 
     /**
      * Allegati aggiuntivi del thread. Si tratta di un array contente array associativi che rappresentano il file
@@ -39,37 +39,37 @@ class EThread
      * BASE64.
      * @var array
      */
-    private array $allegati;
+    private $allegati;
 
     /**
      * Constante che riporta il formato di data ed ora utlizzato per tenere traccia di quando è stato creato il thread.
      */
-    private static string  $formatoData = "Y-m-d H:i:s";
+    private static   $formatoData = "Y-m-d H:i:s";
 
     /**
      * Autore del thread.
      * @var EUser
      */
-    private EUser $autoreThread;
+    private  $autoreThread;
 
     /**
      * Categoria di appartenenza del thread.
      * @var ECategoria
      */
-    private ECategoria $categoriaThread;
+    private  $categoriaThread;
 
     /**
      * Valutazione del thread da parte di altri utenti.
      * @var EValutazione
      */
-    private EValutazione $valutazione;
+    private  $valutazione;
 
 
     /**
      * Risposte al thread. Si tratta un array di ERisposta.
      * @var array
      */
-    private array $risposte;
+    private  $risposte;
 
     /**
      * Costruttore di EThread

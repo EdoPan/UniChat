@@ -11,57 +11,58 @@ class Validazione
      * Regular Expression rappresentante stringhe con soli caratteri alfabetici.
      * @var string
      */
-    private string $STRING_PATTERN = '/^[a-z A-z]+$/';
+    private $STRING_PATTERN = '/^[a-z A-z]+$/';
 
     /**
      * Regular Expression rappresentante stringhe che devono finire con @student.univaq.it e presentare alemeno un
      * carattere alfanumerico prima di @.
      * @var string
      */
-    private string $EMAIL_PATTERN = '/[a-z.A-Z0-9]+@student.univaq.it$/';
+    //private $EMAIL_PATTERN = '/[a-z.A-Z0-9]+@student.univaq.it$/';
+    private $EMAIL_PATTERN = '/[a-z.A-Z0-9]+@/';
 
     /**
      * Valore che indica la lunghezza minima di una email.
      * @var int
      */
-    private int $MIN_EMAIL_LENGTH = 18;
+    //private $MIN_EMAIL_LENGTH = 18;
 
     /**
      * Regular Expression rappresentante stringhe che devono presentare solo caratteri alfanumerici, i caratteri speciali
      * '@', '.', '\', '-', '_' e che devono essere lunghe almeno 8 caratteri.
      * @var string
      */
-    private string $PASSWORD_PATTERN = '/^[a-zA-z0-9@.\-_]{8,}$/';
+    private $PASSWORD_PATTERN = '/^[a-zA-z0-9@.\-_]{8,}$/';
 
     /**
      * Valore che indica la lunghezza minima di una password.
      * @var int
      */
-    private int $MIN_PASSWORD_LENGTH = 8;
+    private $MIN_PASSWORD_LENGTH = 8;
 
     /**
      * Array contenente i formati immagini ammessi.
      * @var array|string[]
      */
-    private array $IMAGE_MIME_TYPE = array("image/jpeg", "image/png", "image/gif");
+    private $IMAGE_MIME_TYPE = array("image/jpeg", "image/png", "image/gif");
 
     /**
      * Valore che rappresenta la dimensione massima, espressa in Byte, di una immagine.
      * @var int
      */
-    private int $IMAGE_MAX_SIZE = 2097152;      //2 MB espresso in Byte
+    private $IMAGE_MAX_SIZE = 2097152;      //2 MB espresso in Byte
 
     /**
      * Array contenente i formati ammessi per gli allegati.
      * @var array|string[]
      */
-    private array $ATTACHMENT_MIME_TYPE = array("image/jpeg", "image/png", "application/pdf");
+    private $ATTACHMENT_MIME_TYPE = array("image/jpeg", "image/png", "application/pdf");
 
     /**
      * Valore che rappresenta la dimensione massima, espressa in Byte, di una immagine.
      * @var int
      */
-    private int $ATTACHMENT_MAX_SIZE = 5242880;     //5 MB espresso in Byte
+    private $ATTACHMENT_MAX_SIZE = 5242880;     //5 MB espresso in Byte
 
     /**
      * Istanza della classe Validazione, si utilizza per il singleton.
@@ -108,11 +109,11 @@ class Validazione
     public function validaEmail(string $email): void
     {
         if (!preg_match($this->EMAIL_PATTERN, $email)) {
-            if (strlen($email) <= $this->MIN_EMAIL_LENGTH) {
-                throw new ValidationException(ValidationException::ERROR_EMAIL_LENGTH_MESSAGE, ValidationException::ERROR_EMAIL_LENGTH_CODE);
-            } else {
+            //if (strlen($email) <= $this->MIN_EMAIL_LENGTH) {
+            //    throw new ValidationException(ValidationException::ERROR_EMAIL_LENGTH_MESSAGE, ValidationException::ERROR_EMAIL_LENGTH_CODE);
+            //} else {
                 throw new ValidationException(ValidationException::ERROR_EMAIL_MESSAGE, ValidationException::ERROR_EMAIL_CODE);
-            }
+            //}
         }
     }
 

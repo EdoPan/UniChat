@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe di controllo a cui sono affidate tutte le operazioni in cui sono coinvolte le categorie dei Threads.
@@ -26,7 +26,7 @@ class CGestioneCategorie {
 
         $pm = FPersistentManager::getInstance();
         $vCategoria = new VCategoria();
-        $vPage = new vPage($vCategoria->getSmarty());
+        $vPage = new VPage($vCategoria->getSmarty());
 
 
         //Recupero della categoria da DB
@@ -161,12 +161,12 @@ class CGestioneCategorie {
 
                 //Se l'utente non è l'amministratore si viene reindirizzati in home page.
             } else {
-                header('/UniChat/');
+                header('Location: /UniChat');
             }
 
             //Se l'utente non è loggato si viene reindirizzati verso la pagina di login.
         } else {
-            header('/UniChat/Utenti/login');
+            header('Location: /UniChat/Utenti/login');
         }
     }
 
@@ -208,12 +208,12 @@ class CGestioneCategorie {
 
                 //Se l'utente non è l'amministratore si viene reindirizzati in home page.
             } else {
-                header('/UniChat/');
+                header('Location: /UniChat');
             }
 
             //Se l'utente non è loggato si viene reindirizzati verso la pagina di login.
         } else {
-            header('/UniChat/Utenti/login');
+            header('Location: /UniChat/Utenti/login');
         }
     }
 }

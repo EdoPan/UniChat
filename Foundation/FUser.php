@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe Foundation di User.
@@ -315,10 +315,16 @@ class FUser
     public function update(EUser $user): bool
     {
         $userID = $user->getId();
+        $userEmail = $user->getEmail();
+
+        if(!$this->existsByEmail($userEmail)) {
+            return false;
+        }
 
         if ($userID == 1) {
             return false;
         }
+
 
         $password = $user->getPassword();
         $fotoProfilo = $user->getFotoProfilo();

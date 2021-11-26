@@ -1,7 +1,7 @@
 <?php
 
     declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+    require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe che gestisce attributi e metodi degli ogg. EModeratore.
@@ -17,7 +17,7 @@
          * Oggetto di tipo ECategoria. Indica la categoria gestita dal moderatore.
          * @var ?ECategoria
          */
-        private ?ECategoria $categoriaGestita;
+        private $categoriaGestita;
 
 
         //Costruttore

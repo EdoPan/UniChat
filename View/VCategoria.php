@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
-//require_once "VPage.php";
+
 
 /**
  * Classe che gestisce la visualizzazione della pagina di Categoria dei Thread.
@@ -27,7 +27,7 @@ class VCategoria
 
     const NUMERO_THREAD_PER_PAGINA = 6;
 
-	private Smarty $smarty;
+	private $smarty;
 
 
 

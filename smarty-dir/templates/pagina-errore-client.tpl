@@ -52,7 +52,15 @@
 
 </div>
 <!-- Fine del Page Wrapper -->
-
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        if (window.location.pathname !== "/UniChat/client/cookieDisabilitati") {
+            window.location.replace('/UniChat/client/cookieDisabilitati');
+        }
+    } else {
+        window.location.replace('/UniChat');
+    }
+</script>
 </body>
 
 </html>

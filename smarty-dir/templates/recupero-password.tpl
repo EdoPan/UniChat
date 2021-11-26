@@ -96,7 +96,7 @@
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
-                                               placeholder="Inserisci la tua Email..." pattern="[a-z.A-Z0-9]+@student.univaq.it$" title="Sono ammesse solo email del dominio student.univaq.it valide." required>
+                                               placeholder="Inserisci la tua Email..." title="Sono ammesse solo email valide." required>
                                     </div>
 
                                     <!-- Bottone conferma email inserita -->
@@ -122,7 +122,7 @@
 
                                 <!-- Link torna alla home  -->
                                 <div class="text-center">
-                                    <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
+                                    <a href="/UniChat" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                                 </div>
 
                             </div>

@@ -35,7 +35,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/home/visualizzaHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -605,21 +605,19 @@
         /*
          * Al click sul bottone Invia viene eseguita la seguente funzione.
          * Viene recuperato il contenuto del campo input contenente il testo del nuovo messaggio e mandato con il metodo
-         * HTTP POST alla URL riportata (/UniChat/chat/creaMessaggio).
-         * Sempre al click del bottone viene anche richiesto l'aggiornamento della chat mediante la funzione loadLastMessages().
+         * HTTP POST alla URL riportata (/chat/creaMessaggio).
          */
         $("#submitmsg").click(function () {
             var clientmsg = document.getElementById('usrmsg').value;
             $.post("/UniChat/chat/creaMessaggio", { text: clientmsg });
             document.getElementById('usrmsg').value = "";
-            loadLastMessages();
             return false;
         });
 
         /**
          * La funzione permette di aggiornare la chat riportando gli ultimi messaggi pubblicati e gestisce l'auto-scrolling.
          * Si utlizza ajax per eseguire una richiesta al server e poi elaborarne la risposta.
-         * Ajax contatta il server con l'url autodescrittiva /UniChat/chat/aggiornaChat utilizzando il metodo POST.
+         * Ajax contatta il server con l'url autodescrittiva /chat/aggiornaChat utilizzando il metodo POST.
          * Al server viene fornito l'id dell'ultimo messaggio presente nella chat e il server fornisce un array JSON
          * contenente i messaggi presenti nel database aventi identificativo successivo a quello fornito.
          * La risposta del server viene ripresa e formattata per poi essere mostrata a schermo, inoltre viene aggiornato
@@ -743,7 +741,7 @@
      * Permette di recuperare l'id associato all'ultimo messaggio pesente nella base dati e risulta utile quando la
      * chat risulta essere vuota in quanto non ci sono messaggi nelle ultime 24 ore.
      * Nell'apposito input viene riportato l'ultimo id ottenuto dal server, altrimenti si ottiene un messaggio di errore.
-     * La funzione contatta il server all'url /UniChat/chat/ultimoMessaggio con una HTTP POST.
+     * La funzione contatta il server all'url /chat/ultimoMessaggio con una HTTP POST.
      */
     function ultimoMessId() {
         $.ajax({

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 /**
  * Classe di controllo contenente tutti i metodi con operazioni in cui sono coinvolti Threads.
  */
@@ -107,6 +107,8 @@ class CGestioneThreads
 
             }
 
+        } else {
+            header("Location: /UniChat/utenti/login");
         }
 
     }
@@ -157,6 +159,8 @@ class CGestioneThreads
 
             }
 
+        } else {
+            header("Location: /UniChat/utenti/login");
         }
 
     }
@@ -185,15 +189,14 @@ class CGestioneThreads
             $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
             $giudizio = $valutazione->valuta($user, $valore);
 
-            $pm->updateValutazione($valutazione, $giudizio , $user);
-
+            $esito = $pm->updateValutazione($valutazione, $giudizio , $user);
 
             header("Location: /UniChat/threads/visualizzaThread/$threadID");
 
 
         } else {
 
-            header('Location: /UniChat/home/visualizzaHome');
+            header('Location: /UniChat/utenti/login');
 
         }
 
@@ -347,37 +350,21 @@ class CGestioneThreads
         $pm = FPersistentManager::getInstance();
 
         $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
-        $categoriaID = $thread->getCategoriaThread()->getID();
 
-        if (isset($utente)) {
+        if(isset($thread)) {
 
-            $user = unserialize($utente);
+            $categoriaID = $thread->getCategoriaThread()->getID();
 
-            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true){
+            if (isset($utente)) {
 
-                if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
+                $user = unserialize($utente);
 
-                    header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
-
-
-                } else {
-
-                    header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
-
-                }
-
-            }
-
-            elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
-
-                $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
-                $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-
-                if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
+                if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getID()) == true) {
 
                     if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
 
-                        header("Location: /UniChat/categoria/visualizzaCategoria/$categoriaID/1/conferma");
+                        header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
+
 
                     } else {
 
@@ -385,18 +372,43 @@ class CGestioneThreads
 
                     }
 
+                } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
+
+                    $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+                    $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+
+                    if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
+
+                        if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
+
+                            header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
+
+                        } else {
+
+                            header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
+
+                        }
+
+                    } else {
+
+                        header("Location: /UniChat/threads/visualizzaThread/$threadID");
+
+                    }
+
                 } else {
 
-                    header("Location: /UniChat/threads/visualizzaThread/$threadID");
+                    header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
 
                 }
 
             } else {
-
-                header("Location: /UniChat/threads/visualizzaThread/$threadID/errore");
-
+                header("Location: /UniChat/utenti/login");
             }
 
+        } else {
+            $vError=new VError();
+            $vError->setValoriErrore(VError::CODE_404, VError::TYPE_404);
+            $vError->showError();
         }
 
     }
@@ -464,6 +476,8 @@ class CGestioneThreads
 
             }
 
+        } else {
+            header("Location: /UniChat/utenti/login");
         }
 
 

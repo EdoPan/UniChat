@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe entity di User.
@@ -11,31 +11,31 @@ class EUser implements JsonSerializable
      * Identificativo dell'utente.
      * @var int
      */
-    private int $id;
+    private  $id;
 
     /**
      * Nome dell'utente.
      * @var string
      */
-    private string $nome;
+    private  $nome;
 
     /**
      * Cognome dell'utente.
      * @var string
      */
-    private string $cognome;
+    private  $cognome;
 
     /**
      * Email dell'utente.
      * @var string
      */
-    private string $email;
+    private  $email;
 
     /**
      * Password dell'utente cifrata con funzione di hash.
      * @var string
      */
-    private string $password;
+    private  $password;
 
     /**
      * Foto profilo dell'utente, viene rappresentata attraverso un array associativo dove vengono riportati, in questo
@@ -43,7 +43,7 @@ class EUser implements JsonSerializable
      * formato stringa e codificata in BASE64.
      * @var array
      */
-    private array $fotoProfilo = array(
+    private  $fotoProfilo = array(
             "id" => 0,
             "nome" => "",
             "dimensione" => "",
@@ -55,7 +55,7 @@ class EUser implements JsonSerializable
      * Corso di studio frequentato dall'utente.
      * @var string
      */
-    private string $corsoStudio;
+    private  $corsoStudio;
 
     /**
      * Costruttore di EUser.

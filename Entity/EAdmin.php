@@ -1,7 +1,7 @@
 <?php
 
     declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+    require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * EAdmin è il nostro super user, l'utente in grado di poter gestire qualunque cosa sulla piattaforma UniChat.

@@ -1,7 +1,7 @@
 <?php
 
     declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+    require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 
 /**
@@ -14,31 +14,31 @@ class EMessaggio implements JsonSerializable {
      * Identificativo dell'oggetto EMessaggio.
      * @var int
      */
-    private int $id;
+    private  $id;
 
     /**
      * Testo del messaggio.
      * @var string
      */
-    private string $testo;
+    private  $testo;
 
     /**
      * Data di pubblicazione del messaggio.
      * @var string|false
      */
-    private string $data;
+    private  $data;
 
     /**
      * Imposta il formato del metodo data.
      * @var string
      */
-    private static string $formatoData = "Y-m-d H:i:s";
+    private static  $formatoData = "Y-m-d H:i:s";
 
     /**
      * Utente che ha pubblicato il messaggio.
      * @var EUser
      */
-    private EUser $autoreMessaggio;
+    private  $autoreMessaggio;
 
     /**
      * @param int|null $id

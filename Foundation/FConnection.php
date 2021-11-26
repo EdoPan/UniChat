@@ -10,25 +10,25 @@ class FConnection
      * Indirizzo IP o nome dell'host in cui risiede il DBMS.
      * @var string
      */
-    private static string $host = "localhost";
+    private static $host = "localhost";
 
     /**
      * Nome dell'utente con cui effettuare la connessione al DBMS.
      * @var string
      */
-    private static string $user = "root";
+    private static $user = "root";
 
     /**
      * Password dell'utente con cui effettuare la connessione al DBMS.
      * @var string
      */
-    private static string $password = "";
+    private static $password = "";  
 
     /**
      * Nome del database che si vuole utilizzare.
      * @var string
      */
-    private static string $database = "unichat";
+    private static $database = "unichat";
 
     /**
      * Istanza della classe FConnection, si utilizza per il singleton.

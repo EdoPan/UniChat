@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 
 /**
@@ -10,7 +10,7 @@ class VRicerca
 
     const NUMERO_THREAD_PER_PAGINA = 6;
 
-    private Smarty $smarty;
+    private $smarty;
 
     public function __construct() {
 

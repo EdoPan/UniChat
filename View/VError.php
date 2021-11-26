@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -91,7 +91,7 @@ class VError
     const TYPE_509 = "Bandwidth Limit Exceeded";
 
 
-    private Smarty $smarty;
+    private $smarty;
 
     public function __construct() {
         $this->smarty = VSmarty::start();

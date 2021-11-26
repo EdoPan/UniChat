@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe entity di Valutazione.
@@ -12,25 +12,25 @@ class EValutazione
      * Identificativo della valutazione del thread.
      * @var int
      */
-    private int $id;
+    private  $id;
 
     /**
      * Valore della valutazione del thread.
      * @var int
      */
-    private int $totale;
+    private  $totale;
 
     /**
      * Array contenente gli utenti che hanno valutato positivamente il thread.
      * @var array
      */
-    private array $utentiPositivi;
+    private  $utentiPositivi;
 
     /**
      * Array contenente gli utenti che hanno valutato negativamente il thread.
      * @var array
      */
-    private array $utentiNegativi;
+    private  $utentiNegativi;
 
     /**
      * Costante con cui si indica il fatto che ci sia stato un problema con l'aggiornamento della valutazione.

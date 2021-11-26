@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe responsabile dell'esecuzione dei casi d'uso in cui è necessaria l'interazione con un Admin.
@@ -42,7 +42,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -121,7 +121,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -193,7 +193,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -330,7 +330,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -374,7 +374,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -427,7 +427,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
@@ -481,14 +481,14 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('/UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*
              * Se la variabile di sessione non è presente allora vuol dire che non si risulta loggati, si viene quindi
              * rimandati nella pagina di login per effettuare l'accesso.
              */
-            header('/UniChat/utenti/login');
+            header('Location: /UniChat/utenti/login');
         }
     }
 
@@ -581,7 +581,7 @@ class CGestioneAdmin
                  * Se l'utente presente nella variabile di sessione non è un admin allora non deve avere accesso a tale
                  * operazione e viene quindi riportato sulla home page.
                  */
-                header('Location: /UniChat/');
+                header('Location: /UniChat');
             }
         } else {
             /*

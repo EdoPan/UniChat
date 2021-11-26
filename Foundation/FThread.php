@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe Foundation di Thread.
@@ -461,6 +461,36 @@ class FThread
 
 
     /**
+     * Verifica la presenza nella base dati di un thread di cui viene fornito l'identificativo.
+     * Se il thread è presente allora viene restituito true, altrimenti false.
+     * Viene restituito false anche se ci sono problemi.
+     * @param int $threadID Identificativo del thread di cui si deve verificare l'esistenza nella base dati.
+     * @return bool Esito della ricerca.
+     */
+    private function exists(int $threadID): bool
+    {
+        try {
+            $dbConnection = FConnection::getInstance();
+            $pdo = $dbConnection->connect();
+
+            $sql = ("SELECT threadID FROM threads WHERE threadID = :threadID");
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':threadID' => $threadID
+            ));
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($rows) == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
      * Permette di rimuovere un thread dalla base dati. Quando un thread viene eliminato allora viene rimossa anche la
      * valutazione, tutti gli allegati e tutte le risposte ad esso associati.
      * Se l'operazione va a buon fine viene restituito true, false altrimenti.
@@ -473,58 +503,65 @@ class FThread
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            /*
-             * Recupero identificativo della valutazione associata al thread.
-             */
-            $sql = ("SELECT valutazioneThreadID FROM threads WHERE threadID = :threadID");
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(array(
-                ':threadID' => $threadID
-            ));
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (count($rows) == 1) {
-                $valutazioneID = (int)$rows[0]["valutazioneThreadID"];
+            if ($this->exists($threadID)) {
+
+                /*
+                * Recupero identificativo della valutazione associata al thread.
+                */
+
+                $sql = ("SELECT valutazioneThreadID FROM threads WHERE threadID = :threadID");
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute(array(
+                    ':threadID' => $threadID
+                ));
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($rows) == 1) {
+                    $valutazioneID = (int)$rows[0]["valutazioneThreadID"];
+                } else {
+                    return false;
+                }
+
+                /*
+                 * L'eliminazione del thread dalla base dati comporta una serie di operazioni, queste vengono eseguite
+                 * una di seguito all'altra e le modifiche sulla base dati devono essere effettuate solo se tutte vanno
+                 * a buon fine.
+                 * Tali operazioni sono:
+                 * - eliminazione della valutazione associata al thread;
+                 * - eliminazione del thread.
+                 * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
+                 * operazioni sopra descritte vengono eseguite in mutua esclusione.
+                 */
+
+                $pdo->query("SET autocommit = 0");
+                $pdo->query("LOCK TABLES threads WRITE, valutazioni WRITE");
+
+                /*
+                 * Eliminazione della valutazione
+                 */
+                $fValutazione = FValutazione::getInstance();
+                $resultDeleteValutazione = $fValutazione->delete($pdo, $valutazioneID);
+
+                /*
+                 * Eliminazione del thread.
+                 */
+                $sql = ("DELETE FROM threads WHERE threadID = " . $threadID);
+                $stmt = $pdo->prepare($sql);
+                $resultDeleteThread = $stmt->execute();
+
+                if ($resultDeleteValutazione == true && $resultDeleteThread == true) {
+                    $pdo->query("COMMIT");
+                    $pdo->query("UNLOCK TABLES");
+                    return true;
+                } else {
+                    $pdo->query("ROLLBACK");
+                    $pdo->query("UNLOCK TABLES");
+                    return false;
+                }
             } else {
-                return false;
-            }
-
-            /*
-             * L'eliminazione del thread dalla base dati comporta una serie di operazioni, queste vengono eseguite
-             * una di seguito all'altra e le modifiche sulla base dati devono essere effettuate solo se tutte vanno
-             * a buon fine.
-             * Tali operazioni sono:
-             * - eliminazione della valutazione associata al thread;
-             * - eliminazione del thread.
-             * Inoltre, per evitare inconsistenza sui dati causata dall'accesso concorrente alle stesse risorse, le
-             * operazioni sopra descritte vengono eseguite in mutua esclusione.
-             */
-            $pdo->query("SET autocommit = 0");
-            $pdo->query("LOCK TABLES threads WRITE, valutazioni WRITE");
-
-            /*
-             * Eliminazione della valutazione
-             */
-            $fValutazione = FValutazione::getInstance();
-            $resultDeleteValutazione = $fValutazione->delete($pdo, $valutazioneID);
-
-            /*
-             * Eliminazione del thread.
-             */
-            $sql = ("DELETE FROM threads WHERE threadID = " . $threadID);
-            $stmt = $pdo->prepare($sql);
-            $resultDeleteThread = $stmt->execute();
-
-            if ($resultDeleteValutazione == true && $resultDeleteThread == true) {
-                $pdo->query("COMMIT");
-                $pdo->query("UNLOCK TABLES");
-                return true;
-            } else {
-                $pdo->query("COMMIT");
-                $pdo->query("UNLOCK TABLES");
                 return false;
             }
         } catch (PDOException $e) {
-            return false;
+                return false;
         }
     }
 

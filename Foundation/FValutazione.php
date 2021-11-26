@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe Foundation di Valutazione.
@@ -165,6 +165,13 @@ class FValutazione
     {
         $valutazioneID = $valutazione->getId();
         $totale = $valutazione->getTotale();
+
+        $userEmail = $userVotante->getEmail();
+        $fUser = FUser::getInstance();
+        if (!$fUser->existsByEmail($userEmail)) {
+            return false;
+        }
+
 
         try {
             /*
@@ -339,7 +346,7 @@ class FValutazione
     private function deleteVotiPositivi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
         try {
-            $sql = ("DELETE FROM votiPositivi WHERE valutazioneID = :valutazioneID AND userID = :userID");
+            $sql = ("DELETE FROM votipositivi WHERE valutazioneID = :valutazioneID AND userID = :userID");
             $stmt = $pdo->prepare($sql);
             $result = $stmt->execute(array(
                 ':valutazioneID' => $valutazioneID,
@@ -361,7 +368,7 @@ class FValutazione
     private function deleteVotiNegativi(PDO $pdo, int $valutazioneID, int $userID): bool
     {
         try {
-            $sql = ("DELETE FROM votiNegativi WHERE valutazioneID = :valutazioneID AND userID = :userID");
+            $sql = ("DELETE FROM votinegativi WHERE valutazioneID = :valutazioneID AND userID = :userID");
             $stmt = $pdo->prepare($sql);
             $result = $stmt->execute(array(
                 ':valutazioneID' => $valutazioneID,

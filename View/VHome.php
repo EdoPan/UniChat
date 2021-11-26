@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -28,7 +28,7 @@ class VHome
      */
     const NUMERO_MAX_THREADS = 3;
 
-    private Smarty $smarty;
+    private $smarty;
 
     public function __construct() {
         $this->smarty = VSmarty::start();

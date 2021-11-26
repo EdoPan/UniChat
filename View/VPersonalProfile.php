@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -12,7 +12,7 @@ class VPersonalProfile
     /**
      * @var Smarty
      */
-    private Smarty $smarty;
+    private $smarty;
 
     /**
      * Costruttore, inizializza Smarty.

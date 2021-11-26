@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . "\..\utility.php";
+declare(strict_types = 1);
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -7,7 +8,11 @@ require_once "VSmarty.php";
  */
 class VLogin
 {
-    private Smarty $smarty;
+    /**
+     * Istanza del template engine.
+     * @var Smarty
+     */
+    private $smarty;
 
     public function __construct() {
 
@@ -29,7 +34,7 @@ class VLogin
         $this->smarty->assign('messaggioErrorePassword', '');
 
         if (isset($codiceErrore) && isset($messaggioErrore)) {
-            if ($codiceErrore == ValidationException::ERROR_EMAIL_CODE || $codiceErrore == ValidationException::ERROR_EMAIL_LENGTH_CODE ) {
+            if ($codiceErrore == ValidationException::ERROR_EMAIL_CODE) {
                 $this->smarty->assign('erroreEmail', true);
                 $this->smarty->assign('messaggioErroreEmail', $messaggioErrore);
             } else if ($codiceErrore == ValidationException::ERROR_PASSWORD_CODE || $codiceErrore == ValidationException::ERROR_PASSWORD_LENGTH_CODE) {

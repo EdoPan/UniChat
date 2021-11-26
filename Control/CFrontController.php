@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe responsabile di richiamare le classi di controllo ed i metodi in esse presenti responsabili di eseguire le
@@ -23,6 +23,7 @@ class CFrontController
         array_shift($urlComponents);
         array_shift($urlComponents);
 
+        $urlComponents[0] = strtolower($urlComponents[0]);
         if ($urlComponents[0] != "") {
 
             /*
@@ -64,9 +65,21 @@ class CFrontController
                                     /*
                                     * Verifica che il primo parametro sia una stringa o meno.
                                     */
-                                    $controller->$method($params[0]);
+                                    try {
+                                        $controller->$method($params[0]);
+                                    } catch (TypeError $e) {
+                                        $vError = new VError();
+                                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                        $vError->showError();
+                                    }
                                 } else {
-                                    $controller->$method((int)$params[0]);
+                                    try {
+                                        $controller->$method((int)$params[0]);
+                                    } catch (TypeError $e) {
+                                        $vError = new VError();
+                                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                        $vError->showError();
+                                    }
                                 }
                             } elseif (count($params) == 2) {
                                 /*
@@ -76,9 +89,21 @@ class CFrontController
                                     /*
                                     * Verifica che il secondo parametro sia una stringa o meno.
                                     */
-                                    $controller->$method((int)$params[0], $params[1]);
+                                    try {
+                                        $controller->$method((int)$params[0], $params[1]);
+                                    } catch (TypeError $e) {
+                                            $vError = new VError();
+                                            $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                            $vError->showError();
+                                    }
                                 } else {
-                                    $controller->$method((int)$params[0], (int)$params[1]);
+                                    try {
+                                        $controller->$method((int)$params[0], (int)$params[1]);
+                                    } catch (TypeError $e) {
+                                            $vError = new VError();
+                                            $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                            $vError->showError();
+                                    }
                                 }
                             } else if (count($params) == 3) {
                                 /*
@@ -88,13 +113,35 @@ class CFrontController
                                     /*
                                     * Verifica che il terzo parametro sia una stringa o meno.
                                     */
-                                    $controller->$method((int)$params[0], (int)$params[1], $params[2]);
+                                    try {
+                                        $controller->$method((int)$params[0], (int)$params[1], $params[2]);
+                                    } catch (TypeError $e) {
+                                        $vError = new VError();
+                                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                        $vError->showError();
+                                    }
                                 } else {
-                                    $controller->$method((int)$params[0], (int)$params[1], (int)$params[2]);
+                                    try {
+                                        $controller->$method((int)$params[0], (int)$params[1], (int)$params[2]);
+                                    } catch (TypeError $e) {
+                                        $vError = new VError();
+                                        $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                        $vError->showError();
+                                    }
                                 }
+                            } else {
+                                $vError = new VError();
+                                $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                $vError->showError();
                             }
                         } else {
-                            $controller->$method();
+                            try {
+                                $controller->$method();
+                            } catch (ArgumentCountError $e) {
+                                $vError = new VError();
+                                $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                                $vError->showError();
+                            }
                         }
                     } else {
                         /*
@@ -103,6 +150,7 @@ class CFrontController
                         */
                         $vError = new VError();
                         $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                        $vError->showError();
                     }
                 } else {
                     /*
@@ -111,6 +159,7 @@ class CFrontController
                      */
                     $vError = new VError();
                     $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                    $vError->showError();
                 }
             } else {
                 /*
@@ -119,6 +168,7 @@ class CFrontController
                  */
                 $vError = new VError();
                 $vError->setValoriErrore(VError::CODE_400, VError::TYPE_400);
+                $vError->showError();
             }
         } else {
             /*

@@ -1,7 +1,7 @@
 <?php
 
     declare(strict_types = 1);
-    require_once __DIR__ . "\..\utility.php";
+    require_once __DIR__.DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 
 /**
  * Classe che gestisce attributi e metodi delle risposte,
@@ -18,33 +18,33 @@
          * @var string
          */
 
-        private static string $formatoData = "Y-m-d H:i:s";
+        private static  $formatoData = "Y-m-d H:i:s";
 
         /**
          * Numero identificativo della risposta.
          * @var int
          */
 
-        private int $id;
+        private  $id;
 
         /**
          * Testo della risposta.
          * @var string
          */
 
-        private string $testo;
+        private  $testo;
 
         /**
          * Data della risposta.
          * @var string|false
          */
-        private string $data;
+        private  $data;
 
         /**
          * Autore della risposta.
          * @var EUser
          */
-        private ?EUser $autoreRisposta;
+        private  $autoreRisposta;
 
         //Costruttore
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "\..\utility.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "utility.php";
 require_once "VSmarty.php";
 
 /**
@@ -9,7 +9,7 @@ require_once "VSmarty.php";
  */
 class VPage {
 	
-	private Smarty $smarty;
+	private $smarty;
 
 
     public function __construct(Smarty $smarty) {
