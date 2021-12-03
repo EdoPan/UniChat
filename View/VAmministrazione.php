@@ -99,7 +99,7 @@ class VAmministrazione
     }
 
     /**
-     * Imposta o meno la visualizzazione di un messaggio di avviso ralativo al tentativo da parte dell'amministratore
+     * Imposta o meno la visualizzazione di un messaggio di avviso relativo al tentativo da parte dell'amministratore
      * di rimuovere dal ruolo di moderatore un utente che di fatto non è un moderatore.
      * @param bool $visualizza Valore che indica se visualizzare o meno il messaggio di avviso.
      */

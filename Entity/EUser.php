@@ -335,12 +335,21 @@ class EUser implements JsonSerializable
             $scelta = rand(1, 3);
             switch($scelta){
                 case 1:
+                    /*
+                     * Introduce una cifra.
+                     */
                     $newPassword = $newPassword . chr(rand(48, 57));
                     break;
                 case 2:
+                    /*
+                     * Introduce un carattere maiuscolo.
+                     */
                     $newPassword = $newPassword .chr(rand(65, 90));
                     break;
                 case 3:
+                    /*
+                     * Introduce un carattere minuscolo.
+                     */
                     $newPassword = $newPassword . chr(rand(97, 122));
                     break;
             }

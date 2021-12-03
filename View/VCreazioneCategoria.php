@@ -62,10 +62,10 @@ class VCreazioneCategoria
              if (isset($codiceErrore) && isset($messaggioErrore)) {
                  if($codiceErrore == ValidationException::ERROR_STRING_CODE) {
                      $this->smarty->assign('erroreDenominazione', true);
-                     $this->smarty->assign('messaggioDenominazione', $messaggioErrore);
+                     $this->smarty->assign('messaggioErroreDenominazione', $messaggioErrore);
                  } else if ($codiceErrore == ValidationException::ERROR_IMAGE_MIME_TYPE_CODE || $codiceErrore == ValidationException::ERROR_IMAGE_SIZE_CODE) {
                      $this->smarty->assign('erroreImmagine', true);
-                     $this->smarty->assign('messaggioImmagine', $messaggioErrore);
+                     $this->smarty->assign('messaggioErroreImmagine', $messaggioErrore);
                  }
              }
 

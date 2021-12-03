@@ -255,7 +255,7 @@ class FMessaggio
             $dbConnection = FConnection::getInstance();
             $pdo = $dbConnection->connect();
 
-            $sql = ('SELECT messID FROM messaggi WHERE messID > :id ORDER BY messID DESC');
+            $sql = ('SELECT messID FROM messaggi WHERE messID > :id ORDER BY messID ASC');
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array(
                 ":id" => $ultimoMessaggioId

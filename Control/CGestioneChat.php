@@ -21,7 +21,11 @@ class CGestioneChat
     {
         $pm = FPersistentManager::getInstance();
 
-        $messaggi = $pm->loadMessaggiUltime24ore();
+        try {
+            $messaggi = $pm->loadMessaggiUltime24ore();
+        } catch (ValidationException $e) {
+            $messaggi = null;
+        }
         if (isset($messaggi)) {
             $messaggiJson = json_encode($messaggi);
             echo $messaggiJson;
@@ -44,7 +48,11 @@ class CGestioneChat
         $messID = $vHome->getIdUltimoMessaggio();
         if (isset($messID)) {
             $pm = FPersistentManager::getInstance();
-            $nuoviMessaggi = $pm->loadNuoviMessaggi($messID);
+            try {
+                $nuoviMessaggi = $pm->loadNuoviMessaggi($messID);
+            } catch (ValidationException $e) {
+                $nuoviMessaggi = null;
+            }
             if (isset($nuoviMessaggi)) {
                 $messaggiJson = json_encode($nuoviMessaggi);
                 echo $messaggiJson;

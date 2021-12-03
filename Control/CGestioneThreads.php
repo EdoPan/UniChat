@@ -9,7 +9,6 @@ class CGestioneThreads
 
 
     /**
-     * @throws ValidationException
      * Metodo responsabile della creazione di un thread. Recupera i valori passati dall'utente nelle form e salva
      * il nuovo thread nel DB. Se l'operazione va a buon fine verremo reindirizzati sulla pagina della categoria dove
      * è stato appena pubblicato il Thread e visualizzeremo un messaggio di conferma. Se qualcosa dovesse andare storto
@@ -29,82 +28,100 @@ class CGestioneThreads
             $user = unserialize($utente);
 
             $vCreazioneThread = new VCreazioneThread();
-
             $vPage = new VPage($vCreazioneThread->getSmarty());
-            $vPage->setBottoneFiltra($pm->loadAllCategorie());
-            $vPage->setMenuLeft($pm->loadAllCategorie());
-            $vPage->setMenuUtente($user, false);
 
-            if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) || $pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getId())) {
+            try {
+                $categorie = $pm->loadAllCategorie();
+                $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+            } catch (ValidationException $e) {
+                $categorie = null;
+                $categoria = null;
+            }
+
+            if (isset($categorie) && isset($categoria)) {
+                $vPage->setBottoneFiltra($categorie);
+                $vPage->setMenuLeft($categorie);
+                //$vPage->setMenuUtente($user, false);
+
+                //if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) || $pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getId())) {
                 if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId())) {
                     $vPage->setMenuUtente($user, true);
                 } else {
                     $vPage->setMenuUtente($user, false);
                 }
-            }
+                //}
 
+                if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                    //$categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA,FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
 
-                $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA,FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+                    $vCreazioneThread->setCategoriaCreazioneThread($categoria);
+                    $vCreazioneThread->setCampiObbligatoriMancanti(false);
+                    $vCreazioneThread->setErroreValidazione(null, null);
+                    $vCreazioneThread->showCreaThread();
 
+                } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                $vCreazioneThread->setCategoriaCreazioneThread($categoria);
-                $vCreazioneThread->setErroreValidazione(null, null);
-                $vCreazioneThread->showCreaThread();
+                    //$categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
+                    $valutazione = new EValutazione(null, null, null, null);
 
-            } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    $valori = $vCreazioneThread->getValori();
 
-                $categoria = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_DEFAULT, $categoriaID);
-                $valutazione = new EValutazione(null, null, null, null);
+                    if (isset($valori)) {
 
-                $valori = $vCreazioneThread->getValori();
+                        $titolo = $valori['titolo'];
+                        $testo = $valori['testo'];
 
-                if (isset($valori)) {
+                        if (array_key_exists('allegati', $valori)) {
 
-                    $titolo = $valori['titolo'];
-                    $testo = $valori['testo'];
-
-                    if (array_key_exists('allegati', $valori)) {
-
-                        $allegati = $valori['allegati'];
-
-                    } else {
-
-                        $allegati = null;
-
-                    }
-
-                    try {
-
-                        $thread = new EThread(null, $titolo, $testo, null, $allegati, $user, $categoria, $valutazione, null);
-
-                        if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
-
-                            header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
+                            $allegati = $valori['allegati'];
 
                         } else {
 
-                            header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
+                            $allegati = null;
 
                         }
 
-                    } catch (ValidationException $e) {
+                        try {
 
-                        $vCreazioneThread->setErroreValidazione($e->getCode(), $e->getMessage());
+                            $thread = new EThread(null, $titolo, $testo, null, $allegati, $user, $categoria, $valutazione, null);
+
+                            if ($pm->store(FPersistentManager::ENTITY_THREAD, $thread) == true) {
+
+                                header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/conferma");
+
+                            } else {
+
+                                header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
+
+                            }
+
+                        } catch (ValidationException $e) {
+
+                            $vCreazioneThread->setErroreValidazione($e->getCode(), $e->getMessage());
+                            $vCreazioneThread->setCategoriaCreazioneThread($categoria);
+                            $vCreazioneThread->setCampiObbligatoriMancanti(false);
+                            $vCreazioneThread->showCreaThread();
+
+                        }
+
+
+                    } else {
+
                         $vCreazioneThread->setCategoriaCreazioneThread($categoria);
-                        $vCreazioneThread->setCampiObbligatoriMancanti(false);
+                        $vCreazioneThread->setCampiObbligatoriMancanti(true);
+                        $vCreazioneThread->setErroreValidazione(null, null);
                         $vCreazioneThread->showCreaThread();
+
+                        //header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
 
                     }
 
-
-                } else {
-
-                    header("Location: /UniChat/categorie/visualizzaCategoria/$categoriaID/1/errore");
-
                 }
-
+            } else {
+                $vError = new VError();
+                $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                $vError->showError();
             }
 
         } else {
@@ -168,7 +185,6 @@ class CGestioneThreads
     /**
      * @param int $valore
      * @param int $threadID
-     * @throws ValidationException
      * Metodo responsabile della valutazione di un thread. In particolare il metodo prenderà come parametro il valore
      * (Positivo -> 1, Negativo-> 2) e l'id del thread che si sta andando a valutare, poi si verificherà se l'utente
      * ha già espresso un giudizio sul thread in passato di modo da aggiornarlo, altrimenti si procederà a valutarlo
@@ -178,7 +194,6 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-
         $session = new USession();
         $utente = $session->getValue('user');
 
@@ -186,13 +201,24 @@ class CGestioneThreads
 
             $user = unserialize($utente);
 
-            $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-            $giudizio = $valutazione->valuta($user, $valore);
+            try {
+                $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+            } catch (ValidationException $e) {
+                $valutazione = null;
+            }
 
-            $esito = $pm->updateValutazione($valutazione, $giudizio , $user);
+            if (isset($valutazione)) {
+                $giudizio = $valutazione->valuta($user, $valore);
 
-            header("Location: /UniChat/threads/visualizzaThread/$threadID");
+                $esito = $pm->updateValutazione($valutazione, $giudizio , $user);
 
+                header("Location: /UniChat/threads/visualizzaThread/$threadID");
+
+            } else {
+                $vError = new VError();
+                $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                $vError->showError();
+            }
 
         } else {
 
@@ -204,7 +230,6 @@ class CGestioneThreads
 
     /**
      * @param int $threadID
-     * @throws ValidationException
      * Metodo responsabile della visualizzazione di uno specifico thread in base al suo id. Il metodo imposterà tutte
      * le componenti visualizzate nella schermata verificando in oltre se l'utente è abilitato alla visualizzazione di
      * determinati elementi, come ad esempio i cestini di eliminazione (thread/risposta) o la form per l'invio
@@ -214,12 +239,15 @@ class CGestioneThreads
     public function visualizzaThread(int $threadID): void {
 
         $pm = FPersistentManager::getInstance();
-        $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
 
-        $categorie = $pm->loadAllCategorie();
-
+        try {
+            $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
+            $categorie = $pm->loadAllCategorie();
+        } catch (ValidationException $e) {
+            $thread = null;
+            $categorie = null;
+        }
         $vThread = new VThread();
-
         $vPage = new VPage($vThread->getSmarty());
 
         $session = new USession();
@@ -242,49 +270,62 @@ class CGestioneThreads
 
                     $user = unserialize($utente);
 
-                    $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $thread->getID());
-
-                    $vThread->setBottoniElimina(false);
-                    $vThread->setFormRisposta(true);
-                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
-                    $vThread->setURLNavigazione($thread);
-                    $vThread->setThread($thread);
-
-                    $vPage->setMenuLeft($categorie);
-                    $vPage->setBottoneFiltra($categorie);
-                    $vPage->setMenuUtente($user, false);
-
-
-
-                    /*
-                     * Condizione per utente Admin (Visualizza bottone elimina thread/risposta)
-                     */
-                    if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) == true) {
-
-                        $vPage->setMenuUtente($user, true);
-                        $vThread->setBottoniElimina(true);
+                    try {
+                        $valutazione = $pm->load(FPersistentManager::ENTITY_VALUTAZIONE, FPersistentManager::PROPERTY_BY_THREAD, $thread->getID());
+                    } catch (ValidationException $e) {
+                        $valutazione = null;
                     }
+                    if (isset($valutazione)) {
+                        $vThread->setBottoniElimina(false);
+                        $vThread->setFormRisposta(true);
+                        $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
+                        $vThread->setURLNavigazione($thread);
+                        $vThread->setThread($thread);
 
-                    /*
-                     * Condizione per utente Moderatore (Visualizza bottone elimina thread/risposta)
-                     */
-                    if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
+                        $vPage->setMenuLeft($categorie);
+                        $vPage->setBottoneFiltra($categorie);
+                        $vPage->setMenuUtente($user, false);
 
-                        $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
-                        $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
 
-                        if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
+                        /*
+                         * Condizione per utente Admin (Visualizza bottone elimina thread/risposta)
+                         */
+                        if ($pm->isA(FPersistentManager::ENTITY_ADMIN, $user->getId()) == true) {
 
+                            $vPage->setMenuUtente($user, true);
                             $vThread->setBottoniElimina(true);
+                        }
+
+                        /*
+                         * Condizione per utente Moderatore (Visualizza bottone elimina thread/risposta)
+                         */
+                        if ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
+
+                            try {
+                                $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+                                $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+                            } catch (ValidationException $e) {
+                                $mod = null;
+                                $cat = null;
+                            }
+
+                            if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
+
+                                $vThread->setBottoniElimina(true);
+
+                            }
 
                         }
 
+                        //$vThread->setFormRisposta(true);
+                        //$vThread->setBottoniValutazione(true, null);
+                        //$vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
+
+                    } else {
+                        $vError = new VError();
+                        $vError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
+                        $vError->showError();
                     }
-
-                    $vThread->setFormRisposta(true);
-                    $vThread->setBottoniValutazione(true, null);
-                    $vThread->setBottoniValutazione(true, $valutazione->espressoGiudizio($user));
-
 
                 //Condizione per utente non loggato.
                 } else {
@@ -328,16 +369,12 @@ class CGestioneThreads
                 $vError->showError();
 
             }
-
         }
-
-
     }
 
 
     /**
      * @param int $threadID
-     * @throws ValidationException
      * Metodo responsabile dell'eliminazione di un thread specifico mediante l'id di quest'ultimo. Verrà verificato
      * se l'utente loggato è un Admin o il Moderatore della categoria dove è stato pubblicato il thread, in tal caso
      * verrà eliminato il thread dal DB e se l'operazione è andata a buon fine visualizzeremo un messaggio di successo.
@@ -349,7 +386,11 @@ class CGestioneThreads
 
         $pm = FPersistentManager::getInstance();
 
-        $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
+        try {
+            $thread = $pm->load(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_DEFAULT, $threadID);
+        } catch (ValidationException $e) {
+            $thread = null;
+        }
 
         if(isset($thread)) {
 
@@ -374,9 +415,13 @@ class CGestioneThreads
 
                 } elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
 
-                    $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
-                    $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-
+                    try {
+                        $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+                        $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+                    } catch (ValidationException $e) {
+                        $mod = null;
+                        $cat = null;
+                    }
                     if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
 
                         if ($pm->delete(FPersistentManager::ENTITY_THREAD, $threadID) == true) {
@@ -416,7 +461,6 @@ class CGestioneThreads
     /**
      * @param int $rispostaID
      * @param int $threadID
-     * @throws ValidationException
      * Metodo responsabile dell'eliminazione di una risposta specifica mediante l'id di quest'ultima e l'id del thread.
      * Verrà verificato se l'utente loggato è un Admin o il Moderatore della categoria del thread dove è stato pubblicata
      * la risposta, in tal caso verrà eliminata la risposta dal DB e se l'operazione è andata a buon fine visualizzeremo
@@ -449,9 +493,13 @@ class CGestioneThreads
 
             elseif ($pm->isA(FPersistentManager::ENTITY_MODERATORE, $user->getID()) == true) {
 
-                $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
-                $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
-
+                try {
+                    $mod = $pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_DEFAULT, $user->getID());
+                    $cat = $pm->load(FPersistentManager::ENTITY_CATEGORIA, FPersistentManager::PROPERTY_BY_THREAD, $threadID);
+                } catch (ValidationException $e) {
+                    $mod = null;
+                    $cat = null;
+                }
                 if (isset($mod) && isset($cat) && $mod->getCategoriaGestita()->getNome() == $cat->getNome()) {
 
                     if ($pm->delete(FPersistentManager::ENTITY_RISPOSTA, $rispostaID) == true) {

@@ -30,7 +30,7 @@
 
 <!-- Al caricamento della pagina viene eseguito del codice JavaScript per la corretta visualizzazione degli elementi
     paginati -->
-<body id="page-top" onload="loadElementiPaginati(1, 'utenti');loadElementiPaginati(1, 'categorie');contaThreads(1, 0)">
+<body id="page-top" onload="loadElementiPaginati(1, 'utenti');loadElementiPaginati(1, 'categorie');">
 
 <!-- Inizio del Page Wrapper -->
 <div id="wrapper">

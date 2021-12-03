@@ -53,6 +53,7 @@
          * @param EThread
          * @return bool
          */
+        /*
         public function verificaCategoria(EThread $thread): bool
         {
             $categoriaThread = $thread->getCategoriaThread()->getNome();
@@ -61,7 +62,7 @@
             } else {
                 return false;
             }
-        }
+        }*/
 
         /**
          * Restituisce lo stato di un oggetto EModeratore in formato JSON.

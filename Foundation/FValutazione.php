@@ -210,14 +210,14 @@ class FValutazione
             } else if ($tipologiaVoto == EValutazione::VOTO_POSITIVO_ANNULlATO) {
                 $resultDeleteVotiPositivi = $this->deleteVotiPositivi($pdo, $valutazioneID, $userVotante->getId());
             } else if ($tipologiaVoto == EValutazione::VOTO_POSITIVO_CAMBIATO) {
-                $resultDeleteVotiPositivi = $this->deleteVotiNegativi($pdo, $valutazioneID, $userVotante->getId());
-                $resultStoreVotiNegativi = $this->storeVotiPositivi($pdo, $valutazioneID, $userVotante->getId());
+                $resultDeleteVotiNegativi = $this->deleteVotiNegativi($pdo, $valutazioneID, $userVotante->getId());
+                $resultStoreVotiPositivi = $this->storeVotiPositivi($pdo, $valutazioneID, $userVotante->getId());
             } else if ($tipologiaVoto == EValutazione::VOTO_NEGATIVO) {
                 $resultStoreVotiNegativi == $this->storeVotiNegativi($pdo, $valutazioneID, $userVotante->getId());
             } else if ($tipologiaVoto == EValutazione::VOTO_NEGATIVO_ANNULLATO) {
                 $resultDeleteVotiNegativi = $this->deleteVotiNegativi($pdo, $valutazioneID, $userVotante->getId());
             } else if ($tipologiaVoto == EValutazione::VOTO_NEGATIVO_CAMBIATO) {
-                $resultDeleteVotiNegativi = $this->deleteVotiPositivi($pdo, $valutazioneID, $userVotante->getId());
+                $resultDeleteVotiPositivi = $this->deleteVotiPositivi($pdo, $valutazioneID, $userVotante->getId());
                 $resultStoreVotiNegativi == $this->storeVotiNegativi($pdo, $valutazioneID, $userVotante->getId());
             }
 

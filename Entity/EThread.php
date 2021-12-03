@@ -42,7 +42,7 @@ class EThread
     private $allegati;
 
     /**
-     * Constante che riporta il formato di data ed ora utlizzato per tenere traccia di quando è stato creato il thread.
+     * Constante che riporta il formato di data ed ora utilizzato per tenere traccia di quando è stato creato il thread.
      */
     private static   $formatoData = "Y-m-d H:i:s";
 

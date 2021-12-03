@@ -47,7 +47,7 @@ class CGestioneUtenti
         $mail->Username = "unichatappweb@gmail.com";
 
         //Imposto la password dell'account Gmail
-        $mail->Password = "unichat2021";
+        $mail->Password = "";
 
         //Oggetto dell'email
         $mail->Subject = "Recupero Password UniChat";
@@ -172,7 +172,7 @@ class CGestioneUtenti
 
                         else {
 
-                            /**
+                            /*
                              * Se l'operazione non va a buon fine allora la form viene riproposta all'utente con un
                              * messaggio di operazione fallita.
                              */
@@ -193,7 +193,7 @@ class CGestioneUtenti
 
                 } else {
 
-                    /**
+                    /*
                      * Se l'utente non fornisce tutti i dati obbligatori, allora la form di registrazione viene riproposta
                      * con un messaggio di errore.
                      */
@@ -367,15 +367,15 @@ class CGestioneUtenti
             header("Location: /UniChat/Utenti/editShowPersonalProfile");
         } else {
 
-            /**
-             * Se non si è loggati allora si può aver contattato questo metodo per visualizare la form da compilare
+            /*
+             * Se non si è loggati allora si può aver contattato questo metodo per visualizzare la form da compilare
              * o per voler elaborare i dati sottomessi alla form di login.
              */
 
             //Se richiesta GET visualizzo la form
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-                /**
+                /*
                  * Visualizza la form di login.
                  */
                 $vLogin->setErroreValidazione(null, null);
@@ -384,17 +384,17 @@ class CGestioneUtenti
                 $vLogin->showLogin();
 
                 //Se richiesta POST recupero i dati inseriti, verifico che le credenziali siano corrette e
-                // apro una nuova sessione per l'utente.
+                // creo una nuova variabile di sessione per l'utente.
             } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                /**
+                /*
                  * Recupera i dati dalla form di login.
                  */
                 $valori = $vLogin->getValori();
 
                 if (isset($valori)) {
 
-                    /**
+                    /*
                      * Se i campi obbligatori sono stati compilati dall'utente, allora si procede a valutarli.
                      */
                     $email = $vLogin->getValori()['email'];
@@ -412,7 +412,7 @@ class CGestioneUtenti
                                     //verifica password
                                     if ($userLoggato->verificaPassword($password)) {
 
-                                        //avvio sessione
+                                        //variabile sessione
                                         $userLoggato = serialize($userLoggato);
                                         $session = new USession();
                                         $session->setValue('user', $userLoggato);
@@ -420,7 +420,7 @@ class CGestioneUtenti
                                         header("Location: /UniChat");
                                     } else {
 
-                                        /**
+                                        /*
                                          * L'utente ha inserito una password errata e quindi gli viene
                                          * riproposta la form con un messaggio di errore di credenziali errate.
                                          */
@@ -432,7 +432,7 @@ class CGestioneUtenti
 
                                 } else {
 
-                                    /**
+                                    /*
                                      * Caso in cui non sia stato possibile caricare l'utente da DB. Viene visualizzata
                                      * una pagina di errore (500)
                                      */
@@ -442,7 +442,7 @@ class CGestioneUtenti
 
                             } else {
 
-                                /**
+                                /*
                                  * L'utente ha fornito un email non presente nella base dati e quindi gli viene
                                  * riproposta la form con un messaggio di errore di credenziali errate.
                                  */
@@ -454,8 +454,8 @@ class CGestioneUtenti
                             }
                         } else {
 
-                            /**
-                             * Se si è ottenuto un null allora vuol dire che il databse è offline.
+                            /*
+                             * Se si è ottenuto un null allora vuol dire che il database è offline.
                              */
                             $viewError->setValoriErrore(VError::CODE_500, VError::TYPE_500);
                             $viewError->showError();
@@ -463,7 +463,7 @@ class CGestioneUtenti
 
                     } catch (ValidationException $e) {
 
-                        /**
+                        /*
                          * L'utente he compilato i campi con dati non ammessi e quindi gli viene riproposta la form con
                          * un messaggio di errore.
                          */
@@ -475,7 +475,7 @@ class CGestioneUtenti
                     }
                 } else {
 
-                    /**
+                    /*
                      * L'utente non ha compilato tutti i campi obbligatori e quindi gli viene riproposta la form con un
                      * messaggio di errore di campi obbligatori mancanti.
                      */
@@ -615,6 +615,7 @@ class CGestioneUtenti
 
                     if (array_key_exists('nomeNuovaFotoProfilo', $valori)) {
                         $nuovaFotoProfilo = array();
+                        $nuovaFotoProfilo['id'] = 0;
                         $nuovaFotoProfilo['nome'] = $valori['nomeNuovaFotoProfilo'];
                         $nuovaFotoProfilo['dimensione'] = $valori['dimensioneNuovaFotoProfilo'];
                         $nuovaFotoProfilo['tipo'] = $valori['tipoNuovaFotoProfilo'];
@@ -643,7 +644,7 @@ class CGestioneUtenti
 
                         if ($updUtente) {
 
-                            //Aggiorno la sessione dell'utente
+                            //Aggiorno la variabile di sessione dell'utente
                             $user=serialize($user);
                             $session->updateValue('user', $user);
 

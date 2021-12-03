@@ -624,7 +624,7 @@
          * il campo input contenente l'id dell'ulitmo messaggio.
          */
         function loadLastMessages() {
-            var oldscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height before the request
+            var oldscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height before the request
 
             var idMessage = document.getElementById('ultimoMessaggio').value;
             $.ajax({
@@ -661,7 +661,7 @@
 
                         //Auto-scroll
 
-                        var newscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height after the request
+                        var newscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height after the request
                         if(newscrollHeight > oldscrollHeight){
                             $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
                         }

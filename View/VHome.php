@@ -92,7 +92,7 @@ class VHome
     {
         if ($_POST['text'] != "") {
 
-            return $_POST['text'];
+            return filter_var($_POST['text'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         } else {
 

@@ -8,9 +8,13 @@ class USession
 {
 
     /**
-     * Nel momento in cui si crea una istanza allora viene anche attivata o recuperata la sessione.
+     * Nel momento in cui si crea una istanza allora viene anche attivata o recuperata la sessione, ma solo dopo aver
+     * impostato i parametri di utilizzo.
      */
     public function __construct() {
+        //ini_set('session.gc_maxlifetime', '1200');
+        //ini_set('session.gc_probability', '1');
+        //ini_set('session.gc_divisor', '5');
         session_start();
     }
 

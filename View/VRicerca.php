@@ -90,9 +90,8 @@ class VRicerca
 
 
     /**
-     * Imposta la visualizzazone del bottone relativo alla pagina che si sta visitando
+     * Imposta la visualizzazione del bottone relativo alla pagina che si sta visitando
      * nella paginazione dei Thread.
-     *
      */
 
     public function setActivePage(int $numeroPagina): void {

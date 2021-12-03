@@ -31,10 +31,10 @@ class VCreazioneThread
     {
         if ($campiMancanti) {
             $this->smarty->assign('erroreDatiObbligatori', true);
-            $this->smarty->assign('messggioErroreDatiObbligatori', "Dati obbligatori mancanti.");
+            $this->smarty->assign('messaggioErroreDatiObbligatori', "Dati obbligatori mancanti.");
         } else {
             $this->smarty->assign('erroreDatiObbligatori', false);
-            $this->smarty->assign('messggioErroreDatiObbligatori', "");
+            $this->smarty->assign('messaggioErroreDatiObbligatori', "");
         }
     }
 

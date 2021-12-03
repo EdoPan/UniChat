@@ -139,24 +139,26 @@ class CGestioneCategorie {
 
                     try {
                         $moderatore=$pm->load(FPersistentManager::ENTITY_MODERATORE, FPersistentManager::PROPERTY_BY_CATEGORIA , $idCategoria);
-                        if (isset($moderatore)) {
-                            echo json_encode($moderatore);
-                        } else {
-                            echo json_encode(array
-                            ('nome' => 'Non',
-                                'cognome' => 'Assegnato' ,
-                                'email' => '-'
-                            ));
-                        }
                     } catch(ValidationException $e) {
                         $moderatore=null;
                     }
 
-                } else {
+                    if (isset($moderatore)) {
+                        echo json_encode($moderatore);
+                    } else {
+                        echo json_encode(array
+                        ('nome' => 'Non',
+                            'cognome' => 'Assegnato' ,
+                            'email' => '-'
+                        ));
+                    }
+
+                }
+                /*else {
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
                     $view->showError();
-                }
+                }*/
 
 
                 //Se l'utente non è l'amministratore si viene reindirizzati in home page.
@@ -194,17 +196,18 @@ class CGestioneCategorie {
                 if (isset($idCategoria)) {
                     try {
                         $numeroThread = $pm->contaEntities(FPersistentManager::ENTITY_THREAD, FPersistentManager::PROPERTY_BY_CATEGORIA, $idCategoria, null);
-                        if (isset($numeroThread)) {
-                            echo json_encode(array('numeroThreads' => $numeroThread));
-                        }
                     } catch (ValidationException $e) {
                         $numeroThread = null;
                     }
-                } else {
+                    if (isset($numeroThread)) {
+                        echo json_encode(array('numeroThreads' => $numeroThread));
+                    }
+                }
+                /*else {
                     $view = new VError();
                     $view->setValoriErrore(VError::CODE_500, VError::TYPE_500 );
                     $view->showError();
-                }
+                }*/
 
                 //Se l'utente non è l'amministratore si viene reindirizzati in home page.
             } else {

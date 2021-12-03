@@ -81,7 +81,7 @@
                                     {/if}
                                     <!-- Fine messaggio errore -->
 
-                                    <!-- Inserimento password -->
+                                    <!-- Inserimento email -->
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"

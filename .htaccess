@@ -1,11 +1,30 @@
+# Verifica che l'ambiente supporti mod_rewrite.
 <IfModule mod_rewrite.c>
 
+# Attiva il motore di riscrittura delle URL
 RewriteEngine On
+
+# Base che viene anteposta nella riscrittura della nuova URL, subito dopo l'host name
 RewriteBase /
+
+# Verifica che la connessione stia avvenendo con HTTPS o meno.
 RewriteCond %{HTTPS} off
+# Verifica che il protocollo usato nella richiesta sia diverso da HTTPS.
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
+# Tutte le URL matchano con la REGEX, ma solo se le due precedenti condizioni sono verificate allora viene
+# riscritta la URL.
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Verifica che nel percorso del file system non sia presente un file avente nome quello riportato nella URL.
 RewriteCond %{REQUEST_FILENAME} !-f
+# Tutte le URL matchano con la REGEX, ma solo se la precedente condizione è verificata allora viene
+# riscritta la URL.
 RewriteRule . /UniChat/index.php [L]
 </IfModule>
+
+# Imposta la durata "massima" di una sessione a 20 minuti.
+php_value session.gc_maxlifetime 1200
+
+# Imposta la probabilità di chiamare il garbage collector al 20%.
+php_value session.gc_probability 1
+php_value session.gc_divisor 5

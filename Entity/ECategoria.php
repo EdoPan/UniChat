@@ -72,7 +72,7 @@ class ECategoria implements JsonSerializable {
             }
             $this->icona = $icona;
         } else {
-            $this->icona["id"] = 1; //arrray che regge l'immagine predefinito.jpg
+            $this->icona["id"] = 1; //array che regge l'immagine predefinita.
         }
         $this->descrizione = $descrizione;
     }
@@ -143,6 +143,7 @@ class ECategoria implements JsonSerializable {
     /**
      * Metodo per impostare l'icona della categoria.
      * @param array $icona
+     * @throws ValidationException
      */
     public function setIcona(array $icona): void
     {
