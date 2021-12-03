@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-24 00:54:21
+<?php /* Smarty version Smarty-3.1.13, created on 2021-12-03 22:45:28
          compiled from "smarty-dir\templates\home.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:16780641426186697c03e093-22876535%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f7991df612003edf60b241ad3f9c3fa7391bdcf9' => 
     array (
       0 => 'smarty-dir\\templates\\home.tpl',
-      1 => 1637711071,
+      1 => 1638543877,
       2 => 'file',
     ),
   ),
@@ -80,7 +80,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/home/visualizzaHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -694,28 +694,26 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
         /*
          * Al click sul bottone Invia viene eseguita la seguente funzione.
          * Viene recuperato il contenuto del campo input contenente il testo del nuovo messaggio e mandato con il metodo
-         * HTTP POST alla URL riportata (/UniChat/chat/creaMessaggio).
-         * Sempre al click del bottone viene anche richiesto l'aggiornamento della chat mediante la funzione loadLastMessages().
+         * HTTP POST alla URL riportata (/chat/creaMessaggio).
          */
         $("#submitmsg").click(function () {
             var clientmsg = document.getElementById('usrmsg').value;
             $.post("/UniChat/chat/creaMessaggio", { text: clientmsg });
             document.getElementById('usrmsg').value = "";
-            loadLastMessages();
             return false;
         });
 
         /**
          * La funzione permette di aggiornare la chat riportando gli ultimi messaggi pubblicati e gestisce l'auto-scrolling.
          * Si utlizza ajax per eseguire una richiesta al server e poi elaborarne la risposta.
-         * Ajax contatta il server con l'url autodescrittiva /UniChat/chat/aggiornaChat utilizzando il metodo POST.
+         * Ajax contatta il server con l'url autodescrittiva /chat/aggiornaChat utilizzando il metodo POST.
          * Al server viene fornito l'id dell'ultimo messaggio presente nella chat e il server fornisce un array JSON
          * contenente i messaggi presenti nel database aventi identificativo successivo a quello fornito.
          * La risposta del server viene ripresa e formattata per poi essere mostrata a schermo, inoltre viene aggiornato
          * il campo input contenente l'id dell'ulitmo messaggio.
          */
         function loadLastMessages() {
-            var oldscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height before the request
+            var oldscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height before the request
 
             var idMessage = document.getElementById('ultimoMessaggio').value;
             $.ajax({
@@ -752,7 +750,7 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
 
                         //Auto-scroll
 
-                        var newscrollHeight = $("#chatbox")[0].scrollHeight - 20; //Scroll height after the request
+                        var newscrollHeight = $("#chatbox")[0].scrollHeight; //Scroll height after the request
                         if(newscrollHeight > oldscrollHeight){
                             $("#chatbox").animate({ scrollTop: newscrollHeight }, 'normal'); //Autoscroll to bottom of div
                         }
@@ -832,7 +830,7 @@ $_smarty_tpl->tpl_vars['j']->first = $_smarty_tpl->tpl_vars['j']->iteration == 1
      * Permette di recuperare l'id associato all'ultimo messaggio pesente nella base dati e risulta utile quando la
      * chat risulta essere vuota in quanto non ci sono messaggi nelle ultime 24 ore.
      * Nell'apposito input viene riportato l'ultimo id ottenuto dal server, altrimenti si ottiene un messaggio di errore.
-     * La funzione contatta il server all'url /UniChat/chat/ultimoMessaggio con una HTTP POST.
+     * La funzione contatta il server all'url /chat/ultimoMessaggio con una HTTP POST.
      */
     function ultimoMessId() {
         $.ajax({

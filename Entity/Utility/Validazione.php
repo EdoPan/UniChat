@@ -19,7 +19,7 @@ class Validazione
      * @var string
      */
     //private $EMAIL_PATTERN = '/[a-z.A-Z0-9]+@student.univaq.it$/';
-    private $EMAIL_PATTERN = '/^[a-z.A-Z0-9]+@/';
+    private $EMAIL_PATTERN = '/^[a-z.\-A-Z0-9]+@/';
 
     /**
      * Valore che indica la lunghezza minima di una email.

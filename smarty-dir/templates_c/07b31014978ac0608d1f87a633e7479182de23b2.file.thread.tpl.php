@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-24 00:54:27
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-26 13:23:59
          compiled from "smarty-dir\templates\thread.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:15451808106187b4442d1cc2-54141489%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '07b31014978ac0608d1f87a633e7479182de23b2' => 
     array (
       0 => 'smarty-dir\\templates\\thread.tpl',
-      1 => 1637711071,
+      1 => 1637929261,
       2 => 'file',
     ),
   ),
@@ -93,7 +93,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/home/visualizzaHome">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>

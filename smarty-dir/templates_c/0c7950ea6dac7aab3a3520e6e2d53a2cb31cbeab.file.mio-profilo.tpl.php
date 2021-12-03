@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-13 14:35:55
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-26 13:22:34
          compiled from "smarty-dir\templates\mio-profilo.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:17333515276189612593d193-55536182%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0c7950ea6dac7aab3a3520e6e2d53a2cb31cbeab' => 
     array (
       0 => 'smarty-dir\\templates\\mio-profilo.tpl',
-      1 => 1636810542,
+      1 => 1637929261,
       2 => 'file',
     ),
   ),
@@ -84,7 +84,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
 
         <!-- Logo sito e Sidebar-->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat/">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/UniChat">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -572,13 +572,13 @@ cat" onclick="seleziona(this)"><?php echo $_smarty_tpl->tpl_vars['categoria']->v
      * La funzione ricerca l'elemento del menu di selezione che abbia l'attributo class con valore 'filtro-categorie
      * dropdown-item active' e procede ad assegnargli il valore 'filtro-categorie dropdown-item', così facendo la
      * categoria precedentemente scelta, viene deselezionata.
-     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e a questo
-     * elemento viene assegnato il valore 'filtro-categorie dropdown-item active' all'attributo class e così facendo
+     * La funzione prende in ingresso l'elemento HTML su cui si clicca per selezionare la categoria e all'attributo class
+     * di questo elemento viene assegnato il valore 'filtro-categorie dropdown-item active' e così facendo
      * risulterà evidenziato.
      * Il nome della categoria scelta viene mostrato sul bottone per la selezione.
      * L'id della categoria scelta viene posto in un input text con attributo hidden e poi usato dalla form per
      * passare la richiesta la server.
-     * @param elemento HTML rappresentante la categoria scelta per la ricerca.
+     * @param elemento Elemento del DOM rappresentante la categoria scelta per la ricerca.
      */
     function seleziona(elemento) {
         var categoriaID = parseInt(elemento.id);

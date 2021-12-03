@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-10 10:10:16
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-26 13:23:21
          compiled from "smarty-dir\templates\pagina-errore.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:20572815561869e3f568891-77147816%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '4aa5e5144ff0e6be93b5053608cc0961d9961936' => 
     array (
       0 => 'smarty-dir\\templates\\pagina-errore.tpl',
-      1 => 1636476867,
+      1 => 1637929261,
       2 => 'file',
     ),
   ),
@@ -60,7 +60,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
     <div class="container-fluid">
 
-        <!-- Messaggio di errore (404 Error) -->
+        <!-- Messaggio di errore -->
         <div class="text-center">
             <div class="error mx-auto" data-text="<?php echo $_smarty_tpl->tpl_vars['codiceErrore']->value;?>
 "><?php echo $_smarty_tpl->tpl_vars['codiceErrore']->value;?>
@@ -69,6 +69,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </p>
             <a href="/UniChat/home/visualizzaHome">&larr; Torna alla Home</a>
         </div>
+
     </div>
 
 </div>
@@ -100,6 +101,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
 <!-- Custom scripts for all pages-->
 <script src="/UniChat/Template/js/sb-admin-2.min.js"></script>
+
+<!-- Script per verificare se i cookie sono abilitati -->
+<script type="text/javascript">
+    if (navigator.cookieEnabled === false) {
+        window.location.replace('/UniChat/client/cookieDisabilitati');
+    }
+</script>
 
 </body>
 
