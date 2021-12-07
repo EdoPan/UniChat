@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-24 00:54:42
+<?php /* Smarty version Smarty-3.1.13, created on 2021-11-26 13:21:44
          compiled from "smarty-dir\templates\recupero-password.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:15149743026185471d2b71f5-85161802%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'b80972bd4bfb04e2acf721582c16c88a7dfcce3d' => 
     array (
       0 => 'smarty-dir\\templates\\recupero-password.tpl',
-      1 => 1637711071,
+      1 => 1637929261,
       2 => 'file',
     ),
   ),
@@ -134,7 +134,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
-                                               placeholder="Inserisci la tua Email..." pattern="[a-z.A-Z0-9]+@student.univaq.it$" title="Sono ammesse solo email del dominio student.univaq.it valide." required>
+                                               placeholder="Inserisci la tua Email..." title="Sono ammesse solo email valide." required>
                                     </div>
 
                                     <!-- Bottone conferma email inserita -->
@@ -160,7 +160,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
                                 <!-- Link torna alla home  -->
                                 <div class="text-center">
-                                    <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
+                                    <a href="/UniChat" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                                 </div>
 
                             </div>

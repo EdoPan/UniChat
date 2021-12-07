@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-24 00:54:40
+<?php /* Smarty version Smarty-3.1.13, created on 2021-12-03 23:06:37
          compiled from "smarty-dir\templates\registrazione.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:2079493896618931b5499851-06040689%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '1bf7231a39719df1d1be9b24b706ca96fd3ba77c' => 
     array (
       0 => 'smarty-dir\\templates\\registrazione.tpl',
-      1 => 1637711071,
+      1 => 1638569180,
       2 => 'file',
     ),
   ),
@@ -147,7 +147,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
                             <!-- Inserimento email -->
                             <div class="form-group">
-                                <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email" pattern="[a-z.A-Z0-9]+@student.univaq.it$" title="Sono ammesse solo email del dominio student.univaq.it valide." required>
+                                <input type="email" class="form-control form-control-user" id="email" name="email"
+                                       placeholder="Email" title="Sono ammesse solo email valide." required>
                             </div>
 
 
@@ -231,7 +232,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
                         <!-- Link torna alla home  -->
                         <div class="text-center">
-                            <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
+                            <a href="/UniChat" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                         </div>
                     </div>
                 </div>

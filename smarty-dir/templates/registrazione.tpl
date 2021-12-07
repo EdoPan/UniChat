@@ -107,7 +107,8 @@
 
                             <!-- Inserimento email -->
                             <div class="form-group">
-                                <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email" title="Sono ammesse solo email valide." required>
+                                <input type="email" class="form-control form-control-user" id="email" name="email"
+                                       placeholder="Email" title="Sono ammesse solo email valide." required>
                             </div>
 
 

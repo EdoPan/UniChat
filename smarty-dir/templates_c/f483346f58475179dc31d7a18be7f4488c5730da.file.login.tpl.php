@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2021-11-14 15:34:59
+<?php /* Smarty version Smarty-3.1.13, created on 2021-12-03 23:07:05
          compiled from "smarty-dir\templates\login.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:1150277287618546a07bee18-26084307%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f483346f58475179dc31d7a18be7f4488c5730da' => 
     array (
       0 => 'smarty-dir\\templates\\login.tpl',
-      1 => 1636900114,
+      1 => 1638569180,
       2 => 'file',
     ),
   ),
@@ -116,11 +116,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
                                     <?php }?>
                                     <!-- Fine messaggio errore -->
 
-                                    <!-- Inserimento password -->
+                                    <!-- Inserimento email -->
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                                id="email" name="email" aria-describedby="emailHelp"
-                                               placeholder="Email" pattern="[a-z.A-Z0-9]+@student.univaq.it$" title="Sono ammesse solo email del dominio student.univaq.it valide." required>
+                                               placeholder="Email"  title="Sono ammesse solo email valide." required>
                                     </div>
 
                                     <!-- Messaggio errore validazione password -->
@@ -166,7 +166,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 
                                 <!-- Link torna alla home  -->
                                 <div class="text-center">
-                                    <a href="/UniChat/" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
+                                    <a href="/UniChat" class="btn btn-google" role="button"><i class="fas fa-home pr-2" aria-hidden="true"></i>Torna alla Home</a>
                                 </div>
                             </div>
                         </div>
