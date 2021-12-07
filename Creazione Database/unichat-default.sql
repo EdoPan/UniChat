@@ -165,8 +165,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userID`, `nome`, `cognome`, `email`, `password`, `fotoProfiloID`, `corsoStudio`, `moderatore`, `admin`) VALUES
-(1, 'Utente', 'Sconosciuto', 'utente.sconosciuto@student.univaq.it', '$2y$10$IrAPsfTrsQR1UX1NdFrd/up1kovKZd8NJ6rhsC4n4yVtLZ4TXOYPK', 1, 'Sconosciuto', 0, 0),
-(2, 'Amministratore', 'Di Sistema', 'amministratore.disistema@student.univaq.it', '$2y$10$YFAhcDhqHzBq3jmCNvS9t.MdOiTjpQebz9Sm2NrSnBR2yDruFXq8S', 1, 'Ingegneria informatica', 0, 1);
+(1, 'Utente', 'Sconosciuto', 'utente.sconosciuto@unichat.it', '$2y$10$IrAPsfTrsQR1UX1NdFrd/up1kovKZd8NJ6rhsC4n4yVtLZ4TXOYPK', 1, 'Sconosciuto', 0, 0),
+(2, 'Amministratore', 'Di Sistema', 'amministratore.disistema@unichat.it', '$2y$10$YFAhcDhqHzBq3jmCNvS9t.MdOiTjpQebz9Sm2NrSnBR2yDruFXq8S', 1, 'Ingegneria informatica', 0, 1);
 
 -- --------------------------------------------------------
 

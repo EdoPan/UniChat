@@ -83,13 +83,13 @@
                                 <!-- Inserimento nome -->
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                     <input type="text" class="form-control form-control-user" id="nome"
-                                           name="nome" placeholder="Nome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici." required>
+                                           name="nome" placeholder="Nome" pattern="^[a-z A-zèéùàòì]+$" title="Sono ammessi solo caratteri alfabetici." required>
                                 </div>
 
                                 <!-- Inserimento cognome -->
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control form-control-user" id="cognome"
-                                           name="cognome" placeholder="Cognome" pattern="^[a-z A-z]+" title="Sono ammessi solo caratteri alfabetici." required>
+                                           name="cognome" placeholder="Cognome" pattern="^[a-z A-zèéùàòì]+$" title="Sono ammessi solo caratteri alfabetici." required>
                                 </div>
                             </div>
 

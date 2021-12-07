@@ -13,13 +13,13 @@
     * Avviare dalla GUI di XAMPP il server Apache e MySQL
     * Aprire nel proprio browser di fiducia [PhpMyAdmin](http://localhost/phpmyadmin/)
     * Creare un Database e denominarlo UniChat
-    * Importare il file `unichat-default.sql` presente nella cartella _Creazione Database_
+    * Importare il file `unichat-default.sql` presente nella cartella _Creazione Database_ nel caso si voglia l'applicazione con i dati essenziali. Se si vuole l'applicazione popolata utilizzare il file `dati_esempio_unichat.sql` presente nella stessa cartella
     * Chiudere il browser
     * Aprire il Text Editor o IDE scelto per visualizzare il codice
     * Visualizzare il file `FConnection.php` presente nella cartella _Foundation_ e settare la password di accesso al database
     * Per la configurazione del recupero password si rimanda alla documentazione ufficiale della libreria usata ([PHPMailer](https://github.com/PHPMailer/PHPMailer)). In particolare le righe di codice da modificare si trovano nel file `CGestioneUtenti.php` presente nella cartella _Control_
     * Aprire nel browser [UniChat](http://localhost/UniChat/)
     * Effettuare il login come utente Admin (così da avere il pieno controllo)
-      >Email: amministratore.disistema@student.univaq.it <br> Password: amministratore
+      >Email: amministratore.disistema@unichat.it <br> Password: amministratore
 * ### Documentazione:
   È possibile trovare ulteriore documentazione (UML, Casi d'uso e Bozze delle schermate) nella cartella _Documentazione_. Da notare che alcuni file presentano l'estensione `.drawio` per aprirli basterà recarsi su [Diagrams](https://app.diagrams.net/) e procedere da interfaccia grafica.

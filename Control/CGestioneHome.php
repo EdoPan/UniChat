@@ -79,7 +79,7 @@ class CGestioneHome
                     $vHome->setMessaggio(false, VHome::NULLA, null);
                 }
             } else {
-                $vHome->setMessaggio(false, VCategoria::NULLA, null);
+                $vHome->setMessaggio(false, VHome::NULLA, null);
             }
 
             $vHome->showHome();

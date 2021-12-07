@@ -11,7 +11,7 @@ class Validazione
      * Regular Expression rappresentante stringhe con soli caratteri alfabetici.
      * @var string
      */
-    private $STRING_PATTERN = '/^[a-z A-z]+$/';
+    private $STRING_PATTERN = '/^[a-z A-zèéùàòì]+$/';
 
     /**
      * Regular Expression rappresentante stringhe che devono finire con @student.univaq.it e presentare alemeno un

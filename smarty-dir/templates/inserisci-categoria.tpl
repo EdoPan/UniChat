@@ -318,7 +318,7 @@
                             <div class="row" style="justify-content: center">
 
                                 <!-- Inserimento nome categoria -->
-                                <input type="text" class="form-control mb-4 mt-4 mr-4 ml-4" autocomplete="off" id="name" name="nome" placeholder="Nome Categoria" required>
+                                <input type="text" class="form-control mb-4 mt-4 mr-4 ml-4" autocomplete="off" id="name" name="nome" placeholder="Nome Categoria" pattern="^[a-z A-zèéùàòì]+$" title="Sono ammessi solo caratteri alfabetici." required>
 
 
                                 <!-- Inserimento descrizione categoria -->
